@@ -1,0 +1,26 @@
+﻿Build started 2/16/2014 3:09:34 PM.
+     1>Project "C:\Users\polpolion\documents\visual studio 2013\Projects\App3\App3\App3.vcxproj" on node 2 (Build target(s)).
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(381,5): warning MSB8028: The intermediate directory (Debug\) contains files shared from another project (App3.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+     1>FxCompile:
+         C:\Program Files (x86)\Windows Kits\8.1\bin\x86\fxc.exe /nologo /E"main" /T ps_4_0_level_9_1 /Fo "C:\Users\polpolion\documents\visual studio 2013\Projects\App3\Debug\App3\PixelShader.cso" /Od /Zi PixelShader.hlsl 
+         compilation object save succeeded; see C:\Users\polpolion\documents\visual studio 2013\Projects\App3\Debug\App3\PixelShader.cso
+         C:\Program Files (x86)\Windows Kits\8.1\bin\x86\fxc.exe /nologo /E"main" /T vs_4_0_level_9_1 /Fo "C:\Users\polpolion\documents\visual studio 2013\Projects\App3\Debug\App3\VertexShader.cso" /Od /Zi VertexShader.hlsl 
+         compilation object save succeeded; see C:\Users\polpolion\documents\visual studio 2013\Projects\App3\Debug\App3\VertexShader.cso
+       ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"C:\Users\polpolion\documents\visual studio 2013\Projects\App3\App3\\" /IDebug\ /I"C:\Users\polpolion\documents\visual studio 2013\Projects\App3\App3\\" /I"Generated Files\\" /IDebug\ /ZI /ZW /ZW:nostdlib /nologo /W3 /WX- /sdl /MP /Od /Oy- /D _DEBUG /D _UNICODE /D UNICODE /D _DEBUG /D WINAPI_FAMILY=WINAPI_FAMILY_APP /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yc"pch.h" /Fp"Debug\pch.pch" /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /wd4453 /wd28204 /FU"C:\Program Files (x86)\Microsoft SDKs\Windows\v8.1\ExtensionSDKs\Microsoft.VCLibs\12.0\References\CommonConfiguration\neutral\platform.winmd" /FU"C:\Program Files (x86)\Windows Kits\8.1\References\CommonConfiguration\Neutral\Windows.winmd" /FU"C:\Program Files (x86)\Windows Kits\8.1\References\CommonConfiguration\Neutral\Windows.winmd" /analyze- /errorReport:prompt /bigobj pch.cpp
+         pch.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"C:\Users\polpolion\documents\visual studio 2013\Projects\App3\App3\\" /IDebug\ /I"C:\Users\polpolion\documents\visual studio 2013\Projects\App3\App3\\" /I"Generated Files\\" /IDebug\ /ZI /ZW /ZW:nostdlib /nologo /W3 /WX- /sdl /MP /Od /Oy- /D _DEBUG /D _UNICODE /D UNICODE /D _DEBUG /D WINAPI_FAMILY=WINAPI_FAMILY_APP /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"pch.h" /Fp"Debug\pch.pch" /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /wd4453 /wd28204 /FU"C:\Program Files (x86)\Microsoft SDKs\Windows\v8.1\ExtensionSDKs\Microsoft.VCLibs\12.0\References\CommonConfiguration\neutral\platform.winmd" /FU"C:\Program Files (x86)\Windows Kits\8.1\References\CommonConfiguration\Neutral\Windows.winmd" /FU"C:\Program Files (x86)\Windows Kits\8.1\References\CommonConfiguration\Neutral\Windows.winmd" /analyze- /errorReport:prompt /bigobj App.cpp CGame.cpp DrawableElement.cpp Entity.cpp Game.cpp main.cpp vec2d.cpp
+         App.cpp
+         CGame.cpp
+         DrawableElement.cpp
+         Entity.cpp
+         Game.cpp
+         main.cpp
+         vec2d.cpp
+     1>c:\users\polpolion\documents\visual studio 2013\projects\app3\app3\cgame.cpp(123): error C2065: 'Width' : undeclared identifier
+     1>c:\users\polpolion\documents\visual studio 2013\projects\app3\app3\cgame.cpp(124): error C2065: 'Height' : undeclared identifier
+     1>Done Building Project "C:\Users\polpolion\documents\visual studio 2013\Projects\App3\App3\App3.vcxproj" (Build target(s)) -- FAILED.
+
+Build FAILED.
+
+Time Elapsed 00:00:04.65
