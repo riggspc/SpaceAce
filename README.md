@@ -1,4 +1,4 @@
-SpaceRace
+Space Ace
 =========
 
-EECS 481 project - Space Race
+EECS 481 project - Space Ace
