@@ -7,9 +7,10 @@ class Controller
 {
 public:
 	Controller();
+	virtual ~Controller();
 
 	// runs game until game is finished
-	void run();
+	void run_step();
 
 private:
 	Game * game_state;

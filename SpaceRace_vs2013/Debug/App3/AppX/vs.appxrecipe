@@ -6,7 +6,7 @@
     <SolutionConfiguration>Debug|Win32</SolutionConfiguration>
     <PackageArchitecture>x86</PackageArchitecture>
     <PackageIdentityName>36d2f65d-39e9-44f5-948b-623247f38a1d</PackageIdentityName>
-    <RegisteredManifestChecksum>19098E843EC5B534DE837CC8C610AB5E066FB28268C043E6C2236E0B593CEDCB</RegisteredManifestChecksum>
+    <RegisteredManifestChecksum>44B5E861A02580F515846F0ED40929AB87C1799A7003080E8BC1180CE827CA4D</RegisteredManifestChecksum>
     <RegisteredPackageMoniker>36d2f65d-39e9-44f5-948b-623247f38a1d_1.0.0.0_x86__yk65knv4rgm0y</RegisteredPackageMoniker>
     <RegisteredUserModeAppID>36d2f65d-39e9-44f5-948b-623247f38a1d_yk65knv4rgm0y!App</RegisteredUserModeAppID>
     <RegisteredPackageID>36d2f65d-39e9-44f5-948b-623247f38a1d</RegisteredPackageID>
@@ -14,52 +14,52 @@
     <RegisteredVersion>1.0.0.0</RegisteredVersion>
   </PropertyGroup>
   <ItemGroup>
-    <AppXManifest Include="C:\Users\polpolion\documents\visual studio 2013\Projects\App3\Debug\App3\AppxManifest.xml">
+    <AppXManifest Include="C:\Users\polpolion\Documents\GitHub\SpaceRace\SpaceRace_vs2013\Debug\App3\AppxManifest.xml">
       <PackagePath>AppxManifest.xml</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2014-02-13T15:18:48.722</Modified>
+      <Modified>2014-02-20T00:32:14.716</Modified>
     </AppXManifest>
   </ItemGroup>
   <ItemGroup>
-    <AppxPackagedFile Include="C:\Users\polpolion\documents\visual studio 2013\Projects\App3\Debug\App3\App3.exe">
-      <PackagePath>App3.exe</PackagePath>
-      <Modified>2014-02-13T20:44:11.724</Modified>
+    <AppxPackagedFile Include="C:\Users\polpolion\Documents\GitHub\SpaceRace\SpaceRace_vs2013\Debug\App3\SpaceRace.exe">
+      <PackagePath>SpaceRace.exe</PackagePath>
+      <Modified>2014-02-20T00:44:24.533</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\polpolion\documents\visual studio 2013\Projects\App3\Debug\App3\App3.winmd">
+    <AppxPackagedFile Include="C:\Users\polpolion\Documents\GitHub\SpaceRace\SpaceRace_vs2013\Debug\App3\App3.winmd">
       <PackagePath>App3.winmd</PackagePath>
       <Modified>2014-02-11T19:13:14.955</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\polpolion\documents\visual studio 2013\Projects\App3\Debug\App3\PixelShader.cso">
+    <AppxPackagedFile Include="C:\Users\polpolion\Documents\GitHub\SpaceRace\SpaceRace_vs2013\Debug\App3\PixelShader.cso">
       <PackagePath>PixelShader.cso</PackagePath>
-      <Modified>2014-02-13T19:24:36.472</Modified>
+      <Modified>2014-02-19T21:48:14.991</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\polpolion\documents\visual studio 2013\Projects\App3\Debug\App3\VertexShader.cso">
+    <AppxPackagedFile Include="C:\Users\polpolion\Documents\GitHub\SpaceRace\SpaceRace_vs2013\Debug\App3\VertexShader.cso">
       <PackagePath>VertexShader.cso</PackagePath>
-      <Modified>2014-02-13T19:24:36.508</Modified>
+      <Modified>2014-02-19T21:48:15.038</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\polpolion\documents\visual studio 2013\Projects\App3\App3\Assets\Logo.png">
+    <AppxPackagedFile Include="C:\Users\polpolion\Documents\GitHub\SpaceRace\SpaceRace_vs2013\App3\Assets\Logo.png">
       <PackagePath>Assets\Logo.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
       <Modified>2013-07-23T14:01:02.000</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\polpolion\documents\visual studio 2013\Projects\App3\App3\Assets\SmallLogo.png">
+    <AppxPackagedFile Include="C:\Users\polpolion\Documents\GitHub\SpaceRace\SpaceRace_vs2013\App3\Assets\SmallLogo.png">
       <PackagePath>Assets\SmallLogo.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
       <Modified>2013-07-23T14:01:02.000</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\polpolion\documents\visual studio 2013\Projects\App3\App3\Assets\StoreLogo.png">
+    <AppxPackagedFile Include="C:\Users\polpolion\Documents\GitHub\SpaceRace\SpaceRace_vs2013\App3\Assets\StoreLogo.png">
       <PackagePath>Assets\StoreLogo.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
       <Modified>2013-07-23T14:01:02.000</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\polpolion\documents\visual studio 2013\Projects\App3\App3\Assets\SplashScreen.png">
+    <AppxPackagedFile Include="C:\Users\polpolion\Documents\GitHub\SpaceRace\SpaceRace_vs2013\App3\Assets\SplashScreen.png">
       <PackagePath>Assets\SplashScreen.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
       <Modified>2013-07-23T14:01:02.000</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\polpolion\documents\visual studio 2013\Projects\App3\Debug\App3\resources.pri">
+    <AppxPackagedFile Include="C:\Users\polpolion\Documents\GitHub\SpaceRace\SpaceRace_vs2013\Debug\App3\resources.pri">
       <PackagePath>resources.pri</PackagePath>
-      <Modified>2014-02-13T15:18:48.559</Modified>
+      <Modified>2014-02-20T00:32:14.513</Modified>
     </AppxPackagedFile>
   </ItemGroup>
   <ItemGroup>

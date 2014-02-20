@@ -1,26 +1,24 @@
-﻿Build started 2/16/2014 3:09:34 PM.
-     1>Project "C:\Users\polpolion\documents\visual studio 2013\Projects\App3\App3\App3.vcxproj" on node 2 (Build target(s)).
-     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(381,5): warning MSB8028: The intermediate directory (Debug\) contains files shared from another project (App3.vcxproj).  This can lead to incorrect clean and rebuild behavior.
-     1>FxCompile:
-         C:\Program Files (x86)\Windows Kits\8.1\bin\x86\fxc.exe /nologo /E"main" /T ps_4_0_level_9_1 /Fo "C:\Users\polpolion\documents\visual studio 2013\Projects\App3\Debug\App3\PixelShader.cso" /Od /Zi PixelShader.hlsl 
-         compilation object save succeeded; see C:\Users\polpolion\documents\visual studio 2013\Projects\App3\Debug\App3\PixelShader.cso
-         C:\Program Files (x86)\Windows Kits\8.1\bin\x86\fxc.exe /nologo /E"main" /T vs_4_0_level_9_1 /Fo "C:\Users\polpolion\documents\visual studio 2013\Projects\App3\Debug\App3\VertexShader.cso" /Od /Zi VertexShader.hlsl 
-         compilation object save succeeded; see C:\Users\polpolion\documents\visual studio 2013\Projects\App3\Debug\App3\VertexShader.cso
-       ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"C:\Users\polpolion\documents\visual studio 2013\Projects\App3\App3\\" /IDebug\ /I"C:\Users\polpolion\documents\visual studio 2013\Projects\App3\App3\\" /I"Generated Files\\" /IDebug\ /ZI /ZW /ZW:nostdlib /nologo /W3 /WX- /sdl /MP /Od /Oy- /D _DEBUG /D _UNICODE /D UNICODE /D _DEBUG /D WINAPI_FAMILY=WINAPI_FAMILY_APP /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yc"pch.h" /Fp"Debug\pch.pch" /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /wd4453 /wd28204 /FU"C:\Program Files (x86)\Microsoft SDKs\Windows\v8.1\ExtensionSDKs\Microsoft.VCLibs\12.0\References\CommonConfiguration\neutral\platform.winmd" /FU"C:\Program Files (x86)\Windows Kits\8.1\References\CommonConfiguration\Neutral\Windows.winmd" /FU"C:\Program Files (x86)\Windows Kits\8.1\References\CommonConfiguration\Neutral\Windows.winmd" /analyze- /errorReport:prompt /bigobj pch.cpp
-         pch.cpp
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"C:\Users\polpolion\documents\visual studio 2013\Projects\App3\App3\\" /IDebug\ /I"C:\Users\polpolion\documents\visual studio 2013\Projects\App3\App3\\" /I"Generated Files\\" /IDebug\ /ZI /ZW /ZW:nostdlib /nologo /W3 /WX- /sdl /MP /Od /Oy- /D _DEBUG /D _UNICODE /D UNICODE /D _DEBUG /D WINAPI_FAMILY=WINAPI_FAMILY_APP /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"pch.h" /Fp"Debug\pch.pch" /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /wd4453 /wd28204 /FU"C:\Program Files (x86)\Microsoft SDKs\Windows\v8.1\ExtensionSDKs\Microsoft.VCLibs\12.0\References\CommonConfiguration\neutral\platform.winmd" /FU"C:\Program Files (x86)\Windows Kits\8.1\References\CommonConfiguration\Neutral\Windows.winmd" /FU"C:\Program Files (x86)\Windows Kits\8.1\References\CommonConfiguration\Neutral\Windows.winmd" /analyze- /errorReport:prompt /bigobj App.cpp CGame.cpp DrawableElement.cpp Entity.cpp Game.cpp main.cpp vec2d.cpp
-         App.cpp
-         CGame.cpp
-         DrawableElement.cpp
-         Entity.cpp
-         Game.cpp
-         main.cpp
-         vec2d.cpp
-     1>c:\users\polpolion\documents\visual studio 2013\projects\app3\app3\cgame.cpp(123): error C2065: 'Width' : undeclared identifier
-     1>c:\users\polpolion\documents\visual studio 2013\projects\app3\app3\cgame.cpp(124): error C2065: 'Height' : undeclared identifier
-     1>Done Building Project "C:\Users\polpolion\documents\visual studio 2013\Projects\App3\App3\App3.vcxproj" (Build target(s)) -- FAILED.
+﻿Build started 2/19/2014 7:44:23 PM.
+     1>Project "C:\Users\polpolion\Documents\GitHub\SpaceRace\SpaceRace_vs2013\App3\App3.vcxproj" on node 2 (Build target(s)).
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(381,5): warning MSB8028: The intermediate directory (Debug\) contains files shared from another project (App3.vcxproj, SpaceAce.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /IC:\Users\polpolion\Documents\GitHub\SpaceRace\SpaceRace_vs2013\App3\ /IDebug\ /IC:\Users\polpolion\Documents\GitHub\SpaceRace\SpaceRace_vs2013\App3\ /I"Generated Files\\" /IDebug\ /ZI /ZW /ZW:nostdlib /nologo /W3 /WX- /sdl /MP /Od /Oy- /D _DEBUG /D _UNICODE /D UNICODE /D _DEBUG /D WINAPI_FAMILY=WINAPI_FAMILY_APP /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"pch.h" /Fp"Debug\pch.pch" /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /wd4453 /wd28204 /FU"C:\Program Files (x86)\Microsoft SDKs\Windows\v8.1\ExtensionSDKs\Microsoft.VCLibs\12.0\References\CommonConfiguration\neutral\platform.winmd" /FU"C:\Program Files (x86)\Windows Kits\8.1\References\CommonConfiguration\Neutral\Windows.winmd" /FU"C:\Program Files (x86)\Windows Kits\8.1\References\CommonConfiguration\Neutral\Windows.winmd" /analyze- /errorReport:prompt /bigobj GameplayView.cpp
+         GameplayView.cpp
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\polpolion\Documents\GitHub\SpaceRace\SpaceRace_vs2013\Debug\App3\SpaceRace.exe" /INCREMENTAL /NOLOGO /LIBPATH:"C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\\lib\store" /LIBPATH:"C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\\lib" d2d1.lib d3d11.lib dxgi.lib ole32.lib windowscodecs.lib dwrite.lib kernel32.lib /MANIFEST:NO /DEBUG /PDB:"C:\Users\polpolion\Documents\GitHub\SpaceRace\SpaceRace_vs2013\Debug\App3\SpaceRace.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /APPCONTAINER /WINMD /WINMDFILE:"C:\Users\polpolion\Documents\GitHub\SpaceRace\SpaceRace_vs2013\Debug\App3\App3.winmd" /DYNAMICBASE /NXCOMPAT /MACHINE:X86 Debug\App.obj
+         Debug\CGame.obj
+         Debug\Controller.obj
+         Debug\DrawableElement.obj
+         Debug\Entity.obj
+         Debug\Game.obj
+         Debug\GameplayView.obj
+         Debug\InputManager.obj
+         Debug\pch.obj
+         Debug\main.obj
+         Debug\vec.obj
+         App3.vcxproj -> C:\Users\polpolion\Documents\GitHub\SpaceRace\SpaceRace_vs2013\Debug\App3\SpaceRace.exe
+     1>Done Building Project "C:\Users\polpolion\Documents\GitHub\SpaceRace\SpaceRace_vs2013\App3\App3.vcxproj" (Build target(s)).
 
-Build FAILED.
+Build succeeded.
 
-Time Elapsed 00:00:04.65
+Time Elapsed 00:00:01.01

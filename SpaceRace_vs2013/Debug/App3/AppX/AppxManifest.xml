@@ -21,7 +21,7 @@
     <Resource Language="EN-US" />
   </Resources>
   <Applications>
-    <Application Id="App" Executable="App3.exe" EntryPoint="App3.App">
+    <Application Id="App" Executable="SpaceRace.exe" EntryPoint="App3.App">
       <VisualElements DisplayName="App3" Logo="Assets\Logo.png" SmallLogo="Assets\SmallLogo.png" Description="App3" ForegroundText="light" BackgroundColor="#464646">
         <DefaultTile ShowName="allLogos" />
         <SplashScreen Image="Assets\SplashScreen.png" />

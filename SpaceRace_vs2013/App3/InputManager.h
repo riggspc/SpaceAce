@@ -14,10 +14,10 @@ public:
 
 	// polls all input and packages it into our
 	// buffer
-	virtual void poll();
+	virtual void poll(); // TODO
 
 	// takes ownership of all input signals in the buffer
-	std::vector<InputSignal*> fetchAllInput();
+	std::vector<InputSignal*> fetchAllInput(); // TODO
 
 private:
 	std::vector<InputSignal*> inputs;

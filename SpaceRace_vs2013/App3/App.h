@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "pch.h"
-#include "CGame.h"
+class Controller;
 
 // Use some common namespaces to simplify the code
 using namespace Windows::ApplicationModel;
@@ -32,7 +32,7 @@ public:
 
 private:
 	bool window_closed;
-	CGame Game;
+	Controller *  control;
 };
 
 

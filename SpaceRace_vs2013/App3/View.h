@@ -6,8 +6,7 @@ class DrawableElement;
 class View{
 public:
 
-	View();
-	virtual ~View();
+	virtual ~View(){}
 
 	virtual void draw() const = 0;
 	virtual void setElement(const DrawableElement * new_elt) = 0;

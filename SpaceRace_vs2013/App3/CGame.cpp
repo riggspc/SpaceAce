@@ -6,7 +6,7 @@
 	
 
 
-Array<byte>^ LoadShaderFile(std::string File)
+static Array<byte>^ LoadShaderFile(std::string File)
 {
 	Array<byte>^ FileData = nullptr;
 
@@ -105,10 +105,10 @@ void CGame::InitGraphics()
 		{ 0.5f, -0.5f, 0.0f },
 		{ -0.5f, -0.5f, 0.0f },
 		{ 0.5f, 0.5f, 0.0f },
-		
+
 	};
 
-	
+
 
 	D3D11_BUFFER_DESC bufd = { 0 };
 	bufd.ByteWidth = sizeof(VERTEX)* ARRAYSIZE(OurVertices);
@@ -117,20 +117,6 @@ void CGame::InitGraphics()
 	D3D11_SUBRESOURCE_DATA srd = { OurVertices, 0, 0 };
 
 	HRESULT retv = device->CreateBuffer(&bufd, &srd, &vertex_buffer);
-
-	D3D11_TEXTURE2D_DESC depthStencilDesc;
-
-	depthStencilDesc.Width = Width;
-	depthStencilDesc.Height = Height;
-	depthStencilDesc.MipLevels = 1;
-	depthStencilDesc.ArraySize = 1;
-	depthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-	depthStencilDesc.SampleDesc.Count = 1;
-	depthStencilDesc.SampleDesc.Quality = 0;
-	depthStencilDesc.Usage = D3D11_USAGE_DEFAULT;
-	depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-	depthStencilDesc.CPUAccessFlags = 0;
-	depthStencilDesc.MiscFlags = 0;
 }
 
 void CGame::InitPipeline(){

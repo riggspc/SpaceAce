@@ -32,9 +32,10 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="DrawableElement.cpp" />
-    <ClCompile Include="vec2d.cpp" />
     <ClCompile Include="Controller.cpp" />
     <ClCompile Include="InputManager.cpp" />
+    <ClCompile Include="GameplayView.cpp" />
+    <ClCompile Include="vec.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h" />
@@ -44,9 +45,10 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="DrawableElement.h" />
-    <ClInclude Include="vec2d.h" />
     <ClInclude Include="Controller.h" />
     <ClInclude Include="InputManager.h" />
+    <ClInclude Include="GameplayView.h" />
+    <ClInclude Include="vec.h" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest" />

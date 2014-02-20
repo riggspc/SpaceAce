@@ -33,8 +33,6 @@ private:
 
 	ComPtr<ID3D11InputLayout> input_layout;
 
-	ComPtr<ID3D11Texture2D> depth_buffer;
-	ComPtr<ID3D11DepthStencilView> depth_stencil;
 
 };
 

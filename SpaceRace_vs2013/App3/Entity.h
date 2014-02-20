@@ -15,13 +15,15 @@ public:
 	virtual ~Entity();
 
 	// makes the DrawableElement to be passed to the view.
-	// DrawableElement * getRenderInformation() const;
-
-protected:
+	virtual DrawableElement * getRenderInformation() const;
 
 	// id, to identify particular objects
 	id_t getId() const;
 	bool matchesId(const Entity * other) const;
+
+protected:
+
+
 
 private:
 	id_t _id;
