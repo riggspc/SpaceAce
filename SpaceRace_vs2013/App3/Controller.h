@@ -2,6 +2,7 @@
 
 class Game;
 class View;
+class GraphicsManager;
 
 class Controller
 {
@@ -14,6 +15,8 @@ public:
 
 private:
 	Game * game_state;
+	GraphicsManager * graphics_manager;
 	View * display;
+
 };
 

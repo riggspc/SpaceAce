@@ -17,13 +17,13 @@
     <AppXManifest Include="C:\Users\polpolion\Documents\GitHub\SpaceRace\SpaceRace_vs2013\Debug\App3\AppxManifest.xml">
       <PackagePath>AppxManifest.xml</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2014-02-20T00:32:14.716</Modified>
+      <Modified>2014-02-20T01:08:10.218</Modified>
     </AppXManifest>
   </ItemGroup>
   <ItemGroup>
     <AppxPackagedFile Include="C:\Users\polpolion\Documents\GitHub\SpaceRace\SpaceRace_vs2013\Debug\App3\SpaceRace.exe">
       <PackagePath>SpaceRace.exe</PackagePath>
-      <Modified>2014-02-20T00:44:24.533</Modified>
+      <Modified>2014-02-20T14:40:23.491</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\polpolion\Documents\GitHub\SpaceRace\SpaceRace_vs2013\Debug\App3\App3.winmd">
       <PackagePath>App3.winmd</PackagePath>
@@ -59,7 +59,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\polpolion\Documents\GitHub\SpaceRace\SpaceRace_vs2013\Debug\App3\resources.pri">
       <PackagePath>resources.pri</PackagePath>
-      <Modified>2014-02-20T00:32:14.513</Modified>
+      <Modified>2014-02-20T01:08:10.140</Modified>
     </AppxPackagedFile>
   </ItemGroup>
   <ItemGroup>

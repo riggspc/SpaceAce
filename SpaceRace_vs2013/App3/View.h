@@ -2,6 +2,7 @@
 #define VIEW_H
 
 class DrawableElement;
+#include "Entity.h"
 
 class View{
 public:
@@ -9,8 +10,8 @@ public:
 	virtual ~View(){}
 
 	virtual void draw() const = 0;
-	virtual void setElement(const DrawableElement * new_elt) = 0;
-	virtual void removeElement(const DrawableElement * new_elt) = 0;
+	virtual void setElement(DrawableElement * new_elt) = 0;
+	virtual void removeElement(id_t associated_id) = 0;
 
 private:
 

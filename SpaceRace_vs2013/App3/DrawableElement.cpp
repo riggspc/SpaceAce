@@ -3,10 +3,16 @@
 
 
 DrawableElement::DrawableElement(id_t id)
-: associated_entity_id(id)
+: vertexes(0),
+  associated_entity_id(id)
 {
 }
 
+DrawableElement::DrawableElement(id_t id, const std::vector<vec3d> & data)
+: vertexes(data),
+  associated_entity_id(id)
+{
+}
 
 DrawableElement::~DrawableElement()
 {
@@ -18,6 +24,10 @@ bool DrawableElement::hasCommonEntity(const DrawableElement * other) const{
 
 id_t DrawableElement::getEntityId() const{
 	return associated_entity_id;
+}
+
+std::vector<vec3d> DrawableElement::getData() const{
+	return vertexes;
 }
 
 bool DrawableElement::operator<(const DrawableElement & rhs) const{

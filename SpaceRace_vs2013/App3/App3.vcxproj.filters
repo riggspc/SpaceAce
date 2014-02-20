@@ -36,6 +36,7 @@
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="GameplayView.cpp" />
     <ClCompile Include="vec.cpp" />
+    <ClCompile Include="GraphicsManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h" />
@@ -49,6 +50,7 @@
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="GameplayView.h" />
     <ClInclude Include="vec.h" />
+    <ClInclude Include="GraphicsManager.h" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest" />
