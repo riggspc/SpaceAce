@@ -1,0 +1,54 @@
+﻿<Window x:Class="SpaceAceWPF.StartWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Space Ace" Height="768" Width="1024"
+        WindowStartupLocation="CenterScreen" WindowState="Maximized"
+        KeyDown="start_keyDown">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="3*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="1.25*"/>
+            <RowDefinition Height=".25*"/>
+            <RowDefinition Height="1.25*"/>
+            <RowDefinition Height=".25*"/>
+            <RowDefinition Height="1.25*"/>
+            <RowDefinition Height=".25*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="2*" />
+        </Grid.RowDefinitions>
+        
+        <Viewbox Grid.Row="0" Grid.Column="1">
+            <TextBlock  Foreground="White" FontWeight="ExtraBold" FontFamily="Fantasy" HorizontalAlignment="Center" Text="SPACE ACE" VerticalAlignment="Top"/>
+        </Viewbox>
+        <Viewbox Grid.Row="0" Grid.Column="0">
+            <Image HorizontalAlignment="Right" Height="60"  VerticalAlignment="Center" Width="65" Source="/Assets/player1_large.png"/>
+        </Viewbox>
+        <Viewbox Grid.Row="0" Grid.Column="2">
+            <Image  HorizontalAlignment="Left" Height="60"  VerticalAlignment="Center" Width="74" Source="/Assets/player2_large.png"/>
+        </Viewbox>
+        
+        <Viewbox Grid.Row="2" Grid.Column="1">
+            <TextBlock x:Name="play1" Foreground="White" FontWeight="ExtraBold" FontFamily="Fantasy" FontSize="12.5" HorizontalAlignment="Center" Text="PLAY 1 PLAYER GAME" VerticalAlignment="Center"/>
+        </Viewbox>
+        <Viewbox Grid.Row="4" Grid.Column="1">
+            <TextBlock x:Name="play2" Foreground="White" FontWeight="ExtraBold" FontFamily="Fantasy" FontSize="12.5" HorizontalAlignment="Center" Text="PLAY 2 PLAYER GAME" VerticalAlignment="Center"/>
+        </Viewbox>
+        <Viewbox Grid.Row="6" Grid.Column="1">
+            <TextBlock x:Name="viewHigh"  Foreground="White" FontWeight="ExtraBold" FontFamily="Fantasy" FontSize="12.5" HorizontalAlignment="Center" Text="VIEW HIGH SCORES" VerticalAlignment="Center"/>
+        </Viewbox>
+        <Viewbox Grid.Row="8" Grid.Column="1">
+            <TextBlock x:Name="exitGame" Foreground="White" FontWeight="ExtraBold" FontFamily="Fantasy" FontSize="12.5" HorizontalAlignment="Center" Text="EXIT" VerticalAlignment="Center"/>
+        </Viewbox>
+        
+        <Grid.Background>
+            <ImageBrush ImageSource="/Assets/gameplay_background.png"/>
+        </Grid.Background>
+
+    </Grid>
+</Window>
