@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Timers;
+using WpfApplication1;
 
 namespace SpaceAceWPF
 {
@@ -32,7 +33,8 @@ namespace SpaceAceWPF
 
         // Constants
         public const int SHIP_SPEED = 5;
-        public const int ASTEROID_SPEED = 8;
+        public const int MAX_ASTEROID_SPEED = 10;
+        public const int MIN_ASTEROID_SPEED = 6;
         // Margins may need to change depending on screen size and resolution
         public const int LEFT_MARGIN = 0;
         public const int RIGHT_MARGIN = 924;
@@ -41,12 +43,19 @@ namespace SpaceAceWPF
 
         public long score = 0;
         // public List<Image> asteroids = new List<Image>();
-        public List<Tuple<Image, int>> asteroids = new List<Tuple<Image, int>>();
+        public List<Tuple<Image, int> > asteroids = new List<Tuple<Image, int>>();
 
         public bool keyDown = false;
+
+        private ToddJoystick joy;
         public MainWindow()
         {
             InitializeComponent();
+
+            if (ToddJoystick.NumJoysticks() != 0)
+            {
+                joy = new ToddJoystick();
+            }
 
             var aTimer = new Timer(10);
             aTimer.Elapsed += ATimerOnElapsed;
@@ -91,6 +100,33 @@ namespace SpaceAceWPF
                     currentLoc.Left += ship_speed.x;
                     currentLoc.Top += ship_speed.y;
                     this.Player1.Margin = currentLoc;
+
+                    // Player 2 logic
+                    Point coordinate = new Point();
+                    joy.State(ref coordinate);
+
+                    Thickness P2_location = this.Player2.Margin;
+
+                    if (coordinate.X < -5 && (P2_location.Left >= (LEFT_MARGIN + SHIP_SPEED)))
+                    {
+                        P2_location.Left -= SHIP_SPEED;
+                    }
+                    if (coordinate.X > 5 && (P2_location.Left <= (RIGHT_MARGIN - SHIP_SPEED)))
+                    {
+                        P2_location.Left += SHIP_SPEED;
+                    }
+
+                    if (coordinate.Y < -5 && (P2_location.Top >= (TOP_MARGIN + SHIP_SPEED)))
+                    {
+                        P2_location.Top -= SHIP_SPEED;
+                    }
+                    if (coordinate.Y > 5 && (P2_location.Top <= (BOTTOM_MARGIN - SHIP_SPEED)))
+                    {
+                        P2_location.Top += SHIP_SPEED;
+                    }
+
+                    this.Player2.Margin = P2_location;
+
                     this.Label1.Content = "Timer";
                     score++;
                     this.Score.Text = score.ToString();
@@ -152,7 +188,7 @@ namespace SpaceAceWPF
                         newAsteroid.Source = tb;
 
                         this.MainGrid.Children.Add(newAsteroid);
-                        asteroids.Add(new Tuple<Image, int>(newAsteroid, rand.Next(6,10)));
+                        asteroids.Add(new Tuple<Image, int>(newAsteroid, rand.Next(MIN_ASTEROID_SPEED, MAX_ASTEROID_SPEED)));
                         
                     }
 
