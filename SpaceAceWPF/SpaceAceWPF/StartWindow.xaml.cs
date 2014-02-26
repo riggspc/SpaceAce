@@ -72,6 +72,8 @@ namespace SpaceAceWPF
             {
                 case Key.Up:
                 case Key.W:
+                case Key.Left:
+                case Key.A:
                     if(curOpt == opt.play1)
                         this.updateFont(opt.exitGame);
                     else
@@ -79,6 +81,8 @@ namespace SpaceAceWPF
                     break;
                 case Key.Down:
                 case Key.S:
+                case Key.Right:
+                case Key.D:
                     if(curOpt == opt.exitGame)
                         updateFont(opt.play1);
                     else
@@ -108,6 +112,10 @@ namespace SpaceAceWPF
                     this.Close();
                     break;
                 case opt.viewHigh:
+                    ScoreboardWindow scoreboard = new ScoreboardWindow();
+                    App.Current.MainWindow = scoreboard;
+                    scoreboard.Show();
+                    this.Close();
                     break;
                 case opt.exitGame:
                     Application.Current.Shutdown();

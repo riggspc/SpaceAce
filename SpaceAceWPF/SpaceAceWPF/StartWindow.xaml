@@ -5,6 +5,7 @@
         WindowStartupLocation="CenterScreen" WindowState="Maximized"
         KeyDown="start_keyDown">
     <Grid>
+        <!--Setup-->
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="2*"/>
@@ -23,6 +24,12 @@
             <RowDefinition Height="2*" />
         </Grid.RowDefinitions>
         
+        <!--Background-->
+        <Grid.Background>
+            <ImageBrush ImageSource="/Assets/gameplay_background.png"/>
+        </Grid.Background>
+        
+        <!--Header-->
         <Viewbox Grid.Row="0" Grid.Column="1">
             <TextBlock  Foreground="White" FontWeight="ExtraBold" FontFamily="Fantasy" HorizontalAlignment="Center" Text="SPACE ACE" VerticalAlignment="Top"/>
         </Viewbox>
@@ -32,7 +39,8 @@
         <Viewbox Grid.Row="0" Grid.Column="2">
             <Image  HorizontalAlignment="Left" Height="60"  VerticalAlignment="Center" Width="74" Source="/Assets/player2_large.png"/>
         </Viewbox>
-        
+
+        <!--Menu-->
         <Viewbox Grid.Row="2" Grid.Column="1">
             <TextBlock x:Name="play1" Foreground="White" FontWeight="ExtraBold" FontFamily="Fantasy" FontSize="12.5" HorizontalAlignment="Center" Text="PLAY 1 PLAYER GAME" VerticalAlignment="Center"/>
         </Viewbox>
@@ -45,10 +53,5 @@
         <Viewbox Grid.Row="8" Grid.Column="1">
             <TextBlock x:Name="exitGame" Foreground="White" FontWeight="ExtraBold" FontFamily="Fantasy" FontSize="12.5" HorizontalAlignment="Center" Text="EXIT" VerticalAlignment="Center"/>
         </Viewbox>
-        
-        <Grid.Background>
-            <ImageBrush ImageSource="/Assets/gameplay_background.png"/>
-        </Grid.Background>
-
     </Grid>
 </Window>
