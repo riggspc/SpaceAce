@@ -29,7 +29,15 @@ namespace SpaceAceWPF
         }
 
         public ship_speed_t ship_speed;
-        public const int SPEED = 2;
+
+        // Constants
+        public const int SPEED = 6;
+        public const int LEFT_MARGIN = 0;
+        public const int RIGHT_MARGIN = 1024;
+        public const int TOP_MARGIN = 0;
+        public const int BOTTOM_MARGIN = 603;
+
+        public long score = 0;
 
         public bool keyDown = false;
         public MainWindow()
@@ -57,10 +65,31 @@ namespace SpaceAceWPF
                 App.Current.Dispatcher.Invoke((Action)delegate
                 {
                     Thickness currentLoc = this.Player1.Margin;
+                    // this is ugly, fix it later
+                    // logic here is 'if the next tic would take the ship off
+                    // of the screen, prevent it'
+                    if ((currentLoc.Left <= (LEFT_MARGIN + SPEED)) && (ship_speed.x < 0))
+                    {
+                        ship_speed.x = 0;
+                    }
+                    if ((currentLoc.Left >= (RIGHT_MARGIN - SPEED)) && (ship_speed.x > 0))
+                    {
+                        ship_speed.x = 0;
+                    }
+                    if ((currentLoc.Top <= (TOP_MARGIN + SPEED)) && (ship_speed.y < 0))
+                    {
+                        ship_speed.y = 0;
+                    }
+                    if ((currentLoc.Top >= (BOTTOM_MARGIN - SPEED)) && (ship_speed.y > 0))
+                    {
+                        ship_speed.y = 0;
+                    }
                     currentLoc.Left += ship_speed.x;
                     currentLoc.Top += ship_speed.y;
                     this.Player1.Margin = currentLoc;
                     this.Label1.Content = "Timer";
+                    score++;
+                    this.Score.Text = score.ToString();
                 });
             }
         }
