@@ -31,9 +31,11 @@ namespace SpaceAceWPF
         public ship_speed_t ship_speed;
 
         // Constants
-        public const int SPEED = 6;
+        public const int SHIP_SPEED = 6;
+        public const int ASTEROID_SPEED = 10;
+        // Margins may need to change depending on screen size and resolution
         public const int LEFT_MARGIN = 0;
-        public const int RIGHT_MARGIN = 1175;
+        public const int RIGHT_MARGIN = 924;
         public const int TOP_MARGIN = 75;
         public const int BOTTOM_MARGIN = 650;
 
@@ -69,19 +71,19 @@ namespace SpaceAceWPF
                     // this is ugly, fix it later
                     // logic here is 'if the next tic would take the ship off
                     // of the screen, prevent it'
-                    if ((currentLoc.Left <= (LEFT_MARGIN + SPEED)) && (ship_speed.x < 0))
+                    if ((currentLoc.Left <= (LEFT_MARGIN + SHIP_SPEED)) && (ship_speed.x < 0))
                     {
                         ship_speed.x = 0;
                     }
-                    if ((currentLoc.Left >= (RIGHT_MARGIN - SPEED)) && (ship_speed.x > 0))
+                    if ((currentLoc.Left >= (RIGHT_MARGIN - SHIP_SPEED)) && (ship_speed.x > 0))
                     {
                         ship_speed.x = 0;
                     }
-                    if ((currentLoc.Top <= (TOP_MARGIN + SPEED)) && (ship_speed.y < 0))
+                    if ((currentLoc.Top <= (TOP_MARGIN + SHIP_SPEED)) && (ship_speed.y < 0))
                     {
                         ship_speed.y = 0;
                     }
-                    if ((currentLoc.Top >= (BOTTOM_MARGIN - SPEED)) && (ship_speed.y > 0))
+                    if ((currentLoc.Top >= (BOTTOM_MARGIN - SHIP_SPEED)) && (ship_speed.y > 0))
                     {
                         ship_speed.y = 0;
                     }
@@ -92,14 +94,40 @@ namespace SpaceAceWPF
                     score++;
                     this.Score.Text = score.ToString();
 
-                    if (score % 500 == 0)
+                    if (score % 100 == 0)
                     {
                         Image newAsteroid = new Image();
                         newAsteroid.Source = this.LargeAsteroidSource.Source;
                         Thickness loc = newAsteroid.Margin;
                         loc.Left = RIGHT_MARGIN + 200;
-                        loc.Top = BOTTOM_MARGIN / 2;
+                        newAsteroid.VerticalAlignment = System.Windows.VerticalAlignment.Top;
+                        newAsteroid.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
+
+                        // Randomly place the asteroid somewhere along the edge,
+                        // sizes it, sets the image, and the rotation
+                        // basically makes it unique
+                        Random rand = new Random();
+                        loc.Top = Math.Max(BOTTOM_MARGIN - rand.Next(0, BOTTOM_MARGIN), TOP_MARGIN);
                         newAsteroid.Margin = loc;
+                        newAsteroid.Width = rand.Next(100, 250);
+                        int asteroidType = rand.Next(0, 2);
+                        switch (asteroidType)
+                        {
+                            case 0:
+                                newAsteroid.Source = this.LargeAsteroidSource.Source;
+                                break;
+                            case 1:
+                                newAsteroid.Source = this.MediumAsteroidSource.Source;
+                                break;
+                            case 2:
+                                newAsteroid.Source = this.SmallAsteroidSource.Source;
+                                break;
+                            default:
+                                newAsteroid.Source = this.LargeAsteroidSource.Source;
+                                break;
+
+                        }
+
                         this.MainGrid.Children.Add(newAsteroid);
                         asteroids.Add(newAsteroid);
                         
@@ -108,8 +136,20 @@ namespace SpaceAceWPF
                     foreach (Image asteroid in asteroids)
                     {
                         Thickness loc = asteroid.Margin;
-                        loc.Left -= 20;
+                        loc.Left -= ASTEROID_SPEED;
                         asteroid.Margin = loc;
+                    }
+
+                    // If it's off the screen delete it
+                    for (int i = 0; i < asteroids.Count; i++)
+                    {
+
+                        if (asteroids[i].Margin.Left + asteroids[i].Width < 0)
+                        {
+                            // this is hacky...might work though
+                            asteroids.RemoveAt(i);
+                            i--;
+                        }
                     }
                 });
             }
@@ -161,19 +201,19 @@ namespace SpaceAceWPF
             {
                 case Key.W:
                     //currentLoc.Top -= 5;
-                    ship_speed.y = SPEED * -1;
+                    ship_speed.y = SHIP_SPEED * -1;
                     break;
                 case Key.A:
                     //currentLoc.Left -= 5;
-                    ship_speed.x = SPEED * -1;
+                    ship_speed.x = SHIP_SPEED * -1;
                     break;
                 case Key.D:
                     //currentLoc.Left += 5;
-                    ship_speed.x = SPEED;
+                    ship_speed.x = SHIP_SPEED;
                     break;
                 case Key.S:
                     //currentLoc.Top += 5;
-                    ship_speed.y = SPEED;
+                    ship_speed.y = SHIP_SPEED;
                     break;
 
             }
