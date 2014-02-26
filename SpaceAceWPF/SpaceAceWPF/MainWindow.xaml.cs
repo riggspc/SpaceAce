@@ -103,29 +103,32 @@ namespace SpaceAceWPF
 
                     // Player 2 logic
                     Point coordinate = new Point();
-                    joy.State(ref coordinate);
-
-                    Thickness P2_location = this.Player2.Margin;
-
-                    if (coordinate.X < -5 && (P2_location.Left >= (LEFT_MARGIN + SHIP_SPEED)))
+                    if (joy != null)
                     {
-                        P2_location.Left -= SHIP_SPEED;
-                    }
-                    if (coordinate.X > 5 && (P2_location.Left <= (RIGHT_MARGIN - SHIP_SPEED)))
-                    {
-                        P2_location.Left += SHIP_SPEED;
-                    }
+                        joy.State(ref coordinate);
 
-                    if (coordinate.Y < -5 && (P2_location.Top >= (TOP_MARGIN + SHIP_SPEED)))
-                    {
-                        P2_location.Top -= SHIP_SPEED;
-                    }
-                    if (coordinate.Y > 5 && (P2_location.Top <= (BOTTOM_MARGIN - SHIP_SPEED)))
-                    {
-                        P2_location.Top += SHIP_SPEED;
-                    }
+                        Thickness P2_location = this.Player2.Margin;
 
-                    this.Player2.Margin = P2_location;
+                        if (coordinate.X < -5 && (P2_location.Left >= (LEFT_MARGIN + SHIP_SPEED)))
+                        {
+                            P2_location.Left -= SHIP_SPEED;
+                        }
+                        if (coordinate.X > 5 && (P2_location.Left <= (RIGHT_MARGIN - SHIP_SPEED)))
+                        {
+                            P2_location.Left += SHIP_SPEED;
+                        }
+
+                        if (coordinate.Y < -5 && (P2_location.Top >= (TOP_MARGIN + SHIP_SPEED)))
+                        {
+                            P2_location.Top -= SHIP_SPEED;
+                        }
+                        if (coordinate.Y > 5 && (P2_location.Top <= (BOTTOM_MARGIN - SHIP_SPEED)))
+                        {
+                            P2_location.Top += SHIP_SPEED;
+                        }
+
+                        this.Player2.Margin = P2_location;
+                    }
 
                     this.Label1.Content = "Timer";
                     score++;
