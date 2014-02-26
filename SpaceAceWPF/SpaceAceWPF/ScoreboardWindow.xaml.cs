@@ -198,7 +198,7 @@ namespace SpaceAceWPF
                     this.clearScores.Visibility = Visibility.Collapsed;
                     updateFont(opt.confirmNo);
                     break;
-                case opt.confirmYes:
+                case opt.confirmYes: //Still needs some work
                     scoreboardContext.updateBoard();
                     this.confirmNo.Visibility = Visibility.Collapsed;
                     this.confirmYes.Visibility = Visibility.Collapsed;
