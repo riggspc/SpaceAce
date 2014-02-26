@@ -33,11 +33,12 @@ namespace SpaceAceWPF
         // Constants
         public const int SPEED = 6;
         public const int LEFT_MARGIN = 0;
-        public const int RIGHT_MARGIN = 1024;
-        public const int TOP_MARGIN = 0;
-        public const int BOTTOM_MARGIN = 603;
+        public const int RIGHT_MARGIN = 1175;
+        public const int TOP_MARGIN = 75;
+        public const int BOTTOM_MARGIN = 650;
 
         public long score = 0;
+        public List<Image> asteroids = new List<Image>();
 
         public bool keyDown = false;
         public MainWindow()
@@ -90,6 +91,26 @@ namespace SpaceAceWPF
                     this.Label1.Content = "Timer";
                     score++;
                     this.Score.Text = score.ToString();
+
+                    if (score % 500 == 0)
+                    {
+                        Image newAsteroid = new Image();
+                        newAsteroid.Source = this.LargeAsteroidSource.Source;
+                        Thickness loc = newAsteroid.Margin;
+                        loc.Left = RIGHT_MARGIN + 200;
+                        loc.Top = BOTTOM_MARGIN / 2;
+                        newAsteroid.Margin = loc;
+                        this.MainGrid.Children.Add(newAsteroid);
+                        asteroids.Add(newAsteroid);
+                        
+                    }
+
+                    foreach (Image asteroid in asteroids)
+                    {
+                        Thickness loc = asteroid.Margin;
+                        loc.Left -= 20;
+                        asteroid.Margin = loc;
+                    }
                 });
             }
         }
