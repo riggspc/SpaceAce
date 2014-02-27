@@ -25,22 +25,22 @@ namespace SpaceAceWPF
         private Point p1_ship_speed, p2_ship_speed;
 
         // Constants
-        public const int SHIP_SPEED = 5;
-        public const int MAX_ASTEROID_SPEED = 10;
-        public const int MIN_ASTEROID_SPEED = 6;
+        private const int SHIP_SPEED = 5;
+        private const int MAX_ASTEROID_SPEED = 10;
+        private const int MIN_ASTEROID_SPEED = 6;
 
         // Margins may need to change depending on screen size and resolution
-        public const int LEFT_MARGIN = 0;
-        public const int RIGHT_MARGIN = 924;
-        public const int TOP_MARGIN = 75;
-        public const int BOTTOM_MARGIN = 650;
+        private const int LEFT_MARGIN = 0;
+        private const int RIGHT_MARGIN = 924;
+        private const int TOP_MARGIN = 75;
+        private const int BOTTOM_MARGIN = 650;
 
-        public long score = 0;
+        private long score = 0;
         // public List<Image> asteroids = new List<Image>();
-        public List<Tuple<Image, int> > asteroids = new List<Tuple<Image, int>>();
+        private List<Tuple<Image, int> > asteroids = new List<Tuple<Image, int>>();
 
-        public bool TwoPlayer = false;
-
+        private bool TwoPlayer = false;
+        private bool game_paused = false;
         public MainWindow(bool num_players)
         {
             InitializeComponent();
@@ -170,6 +170,9 @@ namespace SpaceAceWPF
                     if (TwoPlayer && !App.checkForJoy())
                         adjustSpeedUp(true, e.Key);
                     break;
+                case Key.Escape:
+                    game_paused = !game_paused;
+                    break;
             }
         }
 
@@ -202,6 +205,9 @@ namespace SpaceAceWPF
             {
                 App.Current.Dispatcher.Invoke((Action)delegate
                 {
+                    if (game_paused)
+                        return;
+
                     //Move the players
                     moveShip(true);
                     if(TwoPlayer)
