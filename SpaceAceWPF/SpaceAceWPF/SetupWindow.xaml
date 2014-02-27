@@ -62,10 +62,10 @@
 
         <!--Settings-->
         <Viewbox Grid.Row="2" Grid.Column="6" Grid.ColumnSpan="1">
-            <TextBlock x:Name="Diff_Opt" Foreground="White" FontWeight="ExtraBold" FontFamily="Fantasy" HorizontalAlignment="Center" Text="    EASY    " VerticalAlignment="Top"/>
+            <TextBlock x:Name="Diff_Opt" Foreground="White" FontWeight="ExtraBold" FontFamily="Fantasy" HorizontalAlignment="Center" Text="     EASY     " VerticalAlignment="Top"/>
         </Viewbox>
         <Viewbox Grid.Row="4" Grid.Column="6" Grid.ColumnSpan="1">
-            <TextBlock x:Name="P1_Opt" Foreground="White" FontWeight="ExtraBold" FontFamily="Fantasy" HorizontalAlignment="Center" Text="    WASD    " VerticalAlignment="Top"/>
+            <TextBlock x:Name="P1_Opt" Foreground="White" FontWeight="ExtraBold" FontFamily="Fantasy" HorizontalAlignment="Center" Text="     WASD     " VerticalAlignment="Top"/>
         </Viewbox>
         <Viewbox Grid.Row="6" Grid.Column="6" Grid.ColumnSpan="1">
             <TextBlock x:Name="P2_Opt" Foreground="White" FontWeight="ExtraBold" FontFamily="Fantasy" HorizontalAlignment="Center" Text="ARROW KEYS" VerticalAlignment="Top" Visibility="Collapsed"/>

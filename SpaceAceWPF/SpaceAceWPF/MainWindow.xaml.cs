@@ -41,7 +41,7 @@ namespace SpaceAceWPF
 
         private bool TwoPlayer = false;
         private bool game_paused = false;
-        public MainWindow(bool num_players)
+        public MainWindow(bool num_players, Difficulty diff)
         {
             InitializeComponent();
             App.checkForJoy();

@@ -81,4 +81,6 @@ namespace SpaceAceWPF
             }
         }
     }
+
+    public enum Difficulty { easy, med, hard };
 }
