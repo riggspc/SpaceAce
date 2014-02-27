@@ -51,14 +51,16 @@ namespace SpaceAceWPF
                         if (newJoyLoc.Y > 5)
                             inputEvent.keyDown(false, System.Windows.Input.Key.S);
 
-                        if(newJoyLoc.X == 0 && prevJoyLoc.X < 0)
+                        if(newJoyLoc.X >= -5 && prevJoyLoc.X < -5)
                             inputEvent.keyUp(false, System.Windows.Input.Key.A);
-                        if (newJoyLoc.X == 0 && prevJoyLoc.X > 0)
+                        if (newJoyLoc.X <= 5 && prevJoyLoc.X > 5)
                             inputEvent.keyUp(false, System.Windows.Input.Key.D);
-                        if (newJoyLoc.Y == 0 && prevJoyLoc.Y < 0)
+                        if (newJoyLoc.Y >= -5 && prevJoyLoc.Y < -5)
                             inputEvent.keyUp(false, System.Windows.Input.Key.W);
-                        if (newJoyLoc.Y == 0 && prevJoyLoc.Y > 0)
+                        if (newJoyLoc.Y <= 5 && prevJoyLoc.Y > 5)
                             inputEvent.keyUp(false, System.Windows.Input.Key.S);
+
+                        prevJoyLoc = newJoyLoc;
                     }
                 });
             }

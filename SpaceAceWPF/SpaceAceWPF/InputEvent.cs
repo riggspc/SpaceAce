@@ -20,7 +20,7 @@ namespace SpaceAceWPF
 
         public void keyUp(bool keyboard, Key key)
         {
-            if (HandleKeyUp != null)
+            if(HandleKeyUp != null)
                 HandleKeyUp(keyboard, key);
         }
     }

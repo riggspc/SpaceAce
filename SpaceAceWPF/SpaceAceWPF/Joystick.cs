@@ -38,14 +38,14 @@ namespace SpaceAceWPF
             if (_joystick.Poll().IsFailure)
                 return;
 
-            var derp = _joystick.GetCurrentState();
-            if (derp.X < -5)
+            var joyLoc = _joystick.GetCurrentState();
+            if (joyLoc.X < -5)
                 inputEvent.keyDown(false, System.Windows.Input.Key.A);
-            if (derp.X > 5)
+            if (joyLoc.X > 5)
                 inputEvent.keyDown(false, System.Windows.Input.Key.D);
-            if (derp.Y < -5)
+            if (joyLoc.Y < -5)
                 inputEvent.keyDown(false, System.Windows.Input.Key.W);
-            if (derp.Y > 5)
+            if (joyLoc.Y > 5)
                 inputEvent.keyDown(false, System.Windows.Input.Key.S);
         }
 
