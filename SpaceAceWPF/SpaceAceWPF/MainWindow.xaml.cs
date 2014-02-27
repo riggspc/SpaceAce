@@ -247,7 +247,7 @@ namespace SpaceAceWPF
                 newAsteroid.Width = rand.Next(100, 250);
 
                 // Determines which sprite the new asteroid will have
-                int asteroidType = rand.Next(0, 2);
+                int asteroidType = rand.Next(0, 3);
                 Uri uri;
                 switch (asteroidType)
                 {
