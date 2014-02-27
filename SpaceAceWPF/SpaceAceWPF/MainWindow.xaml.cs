@@ -22,18 +22,13 @@ namespace SpaceAceWPF
    
     public partial class MainWindow : Window
     {
-        public struct ship_speed_t
-        {
-            public int x;
-            public int y;
-        }
-
-        public ship_speed_t ship_speed;
+        private Point p1_ship_speed, p2_ship_speed;
 
         // Constants
         public const int SHIP_SPEED = 5;
         public const int MAX_ASTEROID_SPEED = 10;
         public const int MIN_ASTEROID_SPEED = 6;
+
         // Margins may need to change depending on screen size and resolution
         public const int LEFT_MARGIN = 0;
         public const int RIGHT_MARGIN = 924;
@@ -46,14 +41,13 @@ namespace SpaceAceWPF
 
         public bool TwoPlayer = false;
 
-        private ToddJoystick joy;
         public MainWindow(Boolean num_players)
         {
             InitializeComponent();
-
+            App.checkForJoy();
             App.timer.Elapsed += ATimerOnElapsed;
-            if (ToddJoystick.NumJoysticks() != 0)
-                joy = new ToddJoystick();
+            App.inputEvent.HandleKeyDown += adjustSpeedUp;
+            App.inputEvent.HandleKeyUp += adjustSpeedDown;
 
             TwoPlayer = num_players;
             if (TwoPlayer)
@@ -62,13 +56,103 @@ namespace SpaceAceWPF
                 this.Player2_Label.Visibility = Visibility.Visible;
                 this.Score2.Visibility = Visibility.Visible;
             }
-            
-            
         }
 
-        private void Label_Loaded(object sender, RoutedEventArgs e)
+        public void moveShip(bool keyboard)
         {
-            this.Label1.Focus();
+            Thickness playerLoc;
+            Point ship_speed;
+            if (keyboard)
+            {
+                playerLoc = this.Player1.Margin;
+                ship_speed = p1_ship_speed;
+
+            }
+            else
+            {
+                playerLoc = this.Player2.Margin;
+                ship_speed = p2_ship_speed;
+            }
+
+            if ((playerLoc.Left + ship_speed.X > LEFT_MARGIN) && (playerLoc.Left + ship_speed.X < RIGHT_MARGIN))
+                playerLoc.Left += ship_speed.X;
+            if ((playerLoc.Top + ship_speed.Y > TOP_MARGIN) && (playerLoc.Top + ship_speed.Y < BOTTOM_MARGIN))
+                playerLoc.Top += ship_speed.Y;
+
+            if (keyboard)
+                this.Player1.Margin = playerLoc;
+            else
+                this.Player2.Margin = playerLoc;
+        }
+
+        private void adjustSpeedUp(bool keyboard, Key key)
+        {
+            Point ship_speed;
+            if (keyboard)
+                ship_speed = p1_ship_speed;
+            else
+                ship_speed = p2_ship_speed;
+
+            switch(key)
+            {
+                case Key.A:
+                    ship_speed.X = Math.Max(-SHIP_SPEED, ship_speed.X - SHIP_SPEED); 
+                    break;
+                case Key.D:
+                    ship_speed.X = Math.Min(SHIP_SPEED, ship_speed.X + SHIP_SPEED); 
+                    break;
+                case Key.W:
+                    ship_speed.Y = Math.Max(-SHIP_SPEED, ship_speed.Y - SHIP_SPEED); 
+                    break;
+                case Key.S:
+                    ship_speed.Y = Math.Min(SHIP_SPEED, ship_speed.Y + SHIP_SPEED); 
+                    break;
+            }
+
+            if (keyboard)
+                p1_ship_speed = ship_speed;
+            else
+                p2_ship_speed = ship_speed;
+        }
+
+        private void adjustSpeedDown(bool keyboard, Key key)
+        {
+            Point ship_speed;
+            if (keyboard)
+                ship_speed = p1_ship_speed;
+            else
+                ship_speed = p2_ship_speed;
+
+            switch (key)
+            {
+                case Key.A:
+                    ship_speed.X = Math.Min(SHIP_SPEED, ship_speed.X + SHIP_SPEED);
+                    break;
+                case Key.D:
+                    ship_speed.X = Math.Max(-SHIP_SPEED, ship_speed.X - SHIP_SPEED);
+                    break;
+                case Key.W:
+                    ship_speed.Y = Math.Min(SHIP_SPEED, ship_speed.Y + SHIP_SPEED);
+                    break;
+                case Key.S:
+                    ship_speed.Y = Math.Max(-SHIP_SPEED, ship_speed.Y - SHIP_SPEED);
+                    break;
+            }
+
+            if (keyboard)
+                p1_ship_speed = ship_speed;
+            else
+                p2_ship_speed = ship_speed;
+        }
+
+        public void main_keyDown(object sender, KeyEventArgs e)
+        {
+            adjustSpeedUp(true, e.Key);
+        }
+
+        public void main_keyUp(object sender, KeyEventArgs e)
+        {
+            adjustSpeedDown(true, e.Key);
         }
 
         public void ATimerOnElapsed(object sender, ElapsedEventArgs elapsedEventArgs)
@@ -79,59 +163,12 @@ namespace SpaceAceWPF
             {
                 App.Current.Dispatcher.Invoke((Action)delegate
                 {
-                    Thickness currentLoc = this.Player1.Margin;
-                    // this is ugly, fix it later
-                    // logic here is 'if the next tic would take the ship off
-                    // of the screen, prevent it'
-                    if ((currentLoc.Left <= (LEFT_MARGIN + SHIP_SPEED)) && (ship_speed.x < 0))
-                    {
-                        ship_speed.x = 0;
-                    }
-                    if ((currentLoc.Left >= (RIGHT_MARGIN - SHIP_SPEED)) && (ship_speed.x > 0))
-                    {
-                        ship_speed.x = 0;
-                    }
-                    if ((currentLoc.Top <= (TOP_MARGIN + SHIP_SPEED)) && (ship_speed.y < 0))
-                    {
-                        ship_speed.y = 0;
-                    }
-                    if ((currentLoc.Top >= (BOTTOM_MARGIN - SHIP_SPEED)) && (ship_speed.y > 0))
-                    {
-                        ship_speed.y = 0;
-                    }
-                    currentLoc.Left += ship_speed.x;
-                    currentLoc.Top += ship_speed.y;
-                    this.Player1.Margin = currentLoc;
-
-                    // Player 2 logic
-                    Point coordinate = new Point();
-                    if (joy != null)
-                    {
-                        joy.State(ref coordinate);
-
-                        Thickness P2_location = this.Player2.Margin;
-
-                        if (coordinate.X < -5 && (P2_location.Left >= (LEFT_MARGIN + SHIP_SPEED)))
-                        {
-                            P2_location.Left -= SHIP_SPEED;
-                        }
-                        if (coordinate.X > 5 && (P2_location.Left <= (RIGHT_MARGIN - SHIP_SPEED)))
-                        {
-                            P2_location.Left += SHIP_SPEED;
-                        }
-
-                        if (coordinate.Y < -5 && (P2_location.Top >= (TOP_MARGIN + SHIP_SPEED)))
-                        {
-                            P2_location.Top -= SHIP_SPEED;
-                        }
-                        if (coordinate.Y > 5 && (P2_location.Top <= (BOTTOM_MARGIN - SHIP_SPEED)))
-                        {
-                            P2_location.Top += SHIP_SPEED;
-                        }
-
-                        this.Player2.Margin = P2_location;
-                    }
-
+                    //Move the players
+                    moveShip(true);
+                    if(TwoPlayer)
+                        moveShip(false);
+                    
+                    //Update Scores
                     this.Label1.Content = "Timer";
                     score++;
                     this.Score1.Text = score.ToString();
@@ -218,74 +255,6 @@ namespace SpaceAceWPF
                     }
                 });
             }
-        }
-
-        private void Label_KeyUp(object sender, KeyEventArgs e)
-        {
-            this.Label1.Content = "Up";
-            switch (e.Key)
-            {
-                case Key.W:
-                    //currentLoc.Top -= 5;
-                    ship_speed.y = 0;
-                    break;
-                case Key.A:
-                    //currentLoc.Left -= 5;
-                    ship_speed.x = 0;
-                    break;
-                case Key.D:
-                    //currentLoc.Left += 5;
-                    ship_speed.x = 0;
-                    break;
-                case Key.S:
-                    //currentLoc.Top += 5;
-                    ship_speed.y = 0;
-                    break;
-
-
-            }
-            //this.Player1.Margin = currentLoc;
-        }
-
-        private void Label_KeyDown(object sender, KeyEventArgs e)
-        {
-            this.Label1.Content = "down";
-            // this.Label1.Content = "BOOOOOOOM";
-            Thickness currentLoc = this.Player1.Margin;
-            /*
-            if (e.Key == Key.W)
-            {
-                currentLoc.Top--;
-                this.Player1.Margin = currentLoc;
-            }
-            */
-
-            switch (e.Key)
-            {
-                case Key.W:
-                    //currentLoc.Top -= 5;
-                    ship_speed.y = SHIP_SPEED * -1;
-                    break;
-                case Key.A:
-                    //currentLoc.Left -= 5;
-                    ship_speed.x = SHIP_SPEED * -1;
-                    break;
-                case Key.D:
-                    //currentLoc.Left += 5;
-                    ship_speed.x = SHIP_SPEED;
-                    break;
-                case Key.S:
-                    //currentLoc.Top += 5;
-                    ship_speed.y = SHIP_SPEED;
-                    break;
-
-            }
-            //this.Player1.Margin = currentLoc;
-        }
-
-        private void get_Focus(object sender, RoutedEventArgs e)
-        {
-            this.Label1.Focus();
         }
     }
 }

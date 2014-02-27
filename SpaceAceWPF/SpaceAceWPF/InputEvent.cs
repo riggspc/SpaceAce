@@ -10,13 +10,20 @@ namespace SpaceAceWPF
     public class InputEvent
     {
         public delegate void StatusUpdateHandler(bool keyboard, Key key);
-        public event StatusUpdateHandler Input;
+        public event StatusUpdateHandler HandleKeyDown, HandleKeyUp;
 
         public void keyDown(bool keyboard, Key key)
         {
-            if (Input == null) 
+            if (HandleKeyDown == null) 
                 return;
-            Input(keyboard, key);
+            HandleKeyDown(keyboard, key);
+        }
+
+        public void keyUp(bool keyboard, Key key)
+        {
+            if (HandleKeyUp == null)
+                return;
+            HandleKeyUp(keyboard, key);
         }
     }
 }

@@ -18,14 +18,19 @@ namespace SpaceAceWPF
             return direct.GetDevices(DeviceClass.GameController, DeviceEnumerationFlags.AttachedOnly).Count;
         }
 
-        public void State(ref Point point)
+        public void State(ref Point joyLoc)
         {
-            if(_joystick.Poll().IsFailure)
-                return;
-
-            var derp = _joystick.GetCurrentState();
-            point.X = derp.X;
-            point.Y = derp.Y;
+            if (_joystick.Poll().IsFailure)
+            {
+                joyLoc.X = 0;
+                joyLoc.Y = 0;
+            }
+            else
+            {
+                var curJoyLoc = _joystick.GetCurrentState();
+                joyLoc.X = curJoyLoc.X;
+                joyLoc.Y = curJoyLoc.Y;
+            }
         }
 
         public void State(ref InputEvent inputEvent)

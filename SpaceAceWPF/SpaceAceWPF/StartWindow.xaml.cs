@@ -28,7 +28,7 @@ namespace SpaceAceWPF
             InitializeComponent();
             App.checkForJoy();
             App.timer.Elapsed += simulateMenuDelay;
-            App.inputEvent.Input += start_inputEvent;
+            App.inputEvent.HandleKeyDown += start_inputEvent;
             this.Focus();
             updateFont(opt.play1);
         }

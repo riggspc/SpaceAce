@@ -107,7 +107,7 @@ namespace SpaceAceWPF
             InitializeComponent();
             App.checkForJoy();
             App.timer.Elapsed += simulateMenuDelay;
-            App.inputEvent.Input += scoreboard_inputEvent;
+            App.inputEvent.HandleKeyDown += scoreboard_inputEvent;
             updateFont(opt.returnStart);
             DataContext = this.scoreboardContext;
         }
