@@ -100,13 +100,13 @@ namespace SpaceAceWPF
             switch(curOpt)
             {
                 case opt.play1:
-                    MainWindow main = new MainWindow();
+                    MainWindow main = new MainWindow(false);
                     App.Current.MainWindow = main;
                     main.Show();
                     this.Close();
                     break;
                 case opt.play2:
-                    MainWindow main2 = new MainWindow();
+                    MainWindow main2 = new MainWindow(true);
                     App.Current.MainWindow = main2;
                     main2.Show();
                     this.Close();

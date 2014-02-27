@@ -46,12 +46,21 @@ namespace SpaceAceWPF
         public List<Tuple<Image, int> > asteroids = new List<Tuple<Image, int>>();
 
         public bool keyDown = false;
+        public bool TwoPlayer = false;
 
         private ToddJoystick joy;
-        public MainWindow()
+        public MainWindow(Boolean num_players)
         {
+            TwoPlayer = num_players;
             InitializeComponent();
 
+            if (TwoPlayer)
+            {
+                this.Player2.Visibility = Visibility.Visible;
+                this.Player2_Label.Visibility = Visibility.Visible;
+                this.Score2.Visibility = Visibility.Visible;
+            }
+            
             if (ToddJoystick.NumJoysticks() != 0)
             {
                 joy = new ToddJoystick();
