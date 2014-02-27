@@ -80,6 +80,9 @@
     <Compile Include="ScoreboardWindow.xaml.cs">
       <DependentUpon>ScoreboardWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SetupWindow.xaml.cs">
+      <DependentUpon>SetupWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="StartWindow.xaml.cs">
       <DependentUpon>StartWindow.xaml</DependentUpon>
     </Compile>
@@ -96,6 +99,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="ScoreboardWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SetupWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

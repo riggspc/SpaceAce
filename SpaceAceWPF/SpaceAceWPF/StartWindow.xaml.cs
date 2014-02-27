@@ -29,7 +29,7 @@ namespace SpaceAceWPF
             App.checkForJoy();
             App.timer.Elapsed += simulateMenuDelay;
             App.inputEvent.HandleKeyDown += start_inputEvent;
-            this.Focus();
+
             updateFont(opt.play1);
         }
 
@@ -72,7 +72,7 @@ namespace SpaceAceWPF
 
         private void start_keyDown(object sender, KeyEventArgs e)
         {
-            start_inputEvent(true, e.Key);
+            start_inputEvent(false, e.Key);
         }
 
         private int menuDelay = 0;
@@ -82,7 +82,7 @@ namespace SpaceAceWPF
             {
                 App.Current.Dispatcher.Invoke((Action)delegate
                 {
-                    if (menuDelay > 0 && ((menuDelay < 10 && lastPlayerToInput) || (menuDelay < 30 && !lastPlayerToInput)))
+                    if (menuDelay > 0 && ((menuDelay < 10 && !lastPlayerToInput) || (menuDelay < 30 && lastPlayerToInput)))
                         menuDelay++;
                     else
                         menuDelay = 0;
@@ -101,7 +101,7 @@ namespace SpaceAceWPF
                 case Key.Up:
                 case Key.W:
                     if (curOpt == opt.play1)
-                        this.updateFont(opt.exitGame);
+                        updateFont(opt.exitGame);
                     else
                         updateFont(curOpt - 1);
                     menuDelay++;
@@ -128,15 +128,15 @@ namespace SpaceAceWPF
             switch(curOpt)
             {
                 case opt.play1:
-                    MainWindow main = new MainWindow(false);
-                    App.Current.MainWindow = main;
-                    main.Show();
+                    SetupWindow setup1 = new SetupWindow(false);
+                    App.Current.MainWindow = setup1;
+                    setup1.Show();
                     this.Close();
                     break;
                 case opt.play2:
-                    MainWindow main2 = new MainWindow(true);
-                    App.Current.MainWindow = main2;
-                    main2.Show();
+                    SetupWindow setup2 = new SetupWindow(true);
+                    App.Current.MainWindow = setup2;
+                    setup2.Show();
                     this.Close();
                     break;
                 case opt.viewHigh:
@@ -150,7 +150,5 @@ namespace SpaceAceWPF
                     break;
             }
         }
-
-
     }
 }

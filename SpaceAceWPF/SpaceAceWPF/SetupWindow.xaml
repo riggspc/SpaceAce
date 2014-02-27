@@ -1,0 +1,102 @@
+﻿<Window x:Class="SpaceAceWPF.SetupWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Space Ace" Height="768" Width="1024"
+        WindowStartupLocation="CenterScreen"
+        KeyDown="setup_keyDown">
+    <Grid>
+        <!--Setup-->
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width=".5*"/>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width=".5*"/>
+            <ColumnDefinition Width=".5*"/>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width=".5*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="3*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height=".25*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height=".25*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height=".75*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height=".25*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height=".25*" />
+        </Grid.RowDefinitions>
+
+        <!--Background-->
+        <Grid.Background>
+            <ImageBrush ImageSource="/Assets/gameplay_background.png"/>
+        </Grid.Background>
+
+        <!--Header-->
+        <Viewbox Grid.Row="0" Grid.Column="3" Grid.ColumnSpan="4">
+            <TextBlock Foreground="White" FontWeight="ExtraBold" FontFamily="Fantasy" HorizontalAlignment="Center" Text="GAME SETUP" VerticalAlignment="Top"/>
+        </Viewbox>
+        <Viewbox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3">
+            <Image HorizontalAlignment="Right" Height="60"  VerticalAlignment="Center" Width="65" Source="/Assets/player1_large.png"/>
+        </Viewbox>
+        <Viewbox Grid.Row="0" Grid.Column="7" Grid.ColumnSpan="3">
+            <Image  HorizontalAlignment="Left" Height="60"  VerticalAlignment="Center" Width="74" Source="/Assets/player2_large.png"/>
+        </Viewbox>
+
+        <!--Setting Titles-->
+        <Viewbox Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2">
+            <TextBlock Foreground="White" FontWeight="ExtraBold" FontFamily="Fantasy" HorizontalAlignment="Center" Text="DIFFICULTY :" VerticalAlignment="Top"/>
+        </Viewbox>
+        <Viewbox Grid.Row="4" Grid.Column="2" Grid.ColumnSpan="2">
+            <TextBlock Foreground="White" FontWeight="ExtraBold" FontFamily="Fantasy" HorizontalAlignment="Center" Text="PLAYER 1 :" VerticalAlignment="Top"/>
+        </Viewbox>
+        <Viewbox Grid.Row="6" Grid.Column="2" Grid.ColumnSpan="2">
+            <TextBlock x:Name="P2_Title" Foreground="White" FontWeight="ExtraBold" FontFamily="Fantasy" HorizontalAlignment="Center" Text="PLAYER 2 :" VerticalAlignment="Top"  Visibility="Collapsed"/>
+        </Viewbox>
+
+        <!--Settings-->
+        <Viewbox Grid.Row="2" Grid.Column="6" Grid.ColumnSpan="1">
+            <TextBlock x:Name="Diff_Opt" Foreground="White" FontWeight="ExtraBold" FontFamily="Fantasy" HorizontalAlignment="Center" Text="    EASY    " VerticalAlignment="Top"/>
+        </Viewbox>
+        <Viewbox Grid.Row="4" Grid.Column="6" Grid.ColumnSpan="1">
+            <TextBlock x:Name="P1_Opt" Foreground="White" FontWeight="ExtraBold" FontFamily="Fantasy" HorizontalAlignment="Center" Text="    WASD    " VerticalAlignment="Top"/>
+        </Viewbox>
+        <Viewbox Grid.Row="6" Grid.Column="6" Grid.ColumnSpan="1">
+            <TextBlock x:Name="P2_Opt" Foreground="White" FontWeight="ExtraBold" FontFamily="Fantasy" HorizontalAlignment="Center" Text="ARROW KEYS" VerticalAlignment="Top" Visibility="Collapsed"/>
+        </Viewbox>
+        
+        <!--Arrows-->
+        <Viewbox Grid.Row="2" Grid.Column="5" Grid.ColumnSpan="1">
+            <TextBlock x:Name="DiffArrL" Foreground="Yellow" FontWeight="ExtraBold" FontFamily="Fantasy" HorizontalAlignment="Center" Text=" &lt; " VerticalAlignment="Top" Visibility="Collapsed"/>
+        </Viewbox>
+        <Viewbox Grid.Row="2" Grid.Column="7" Grid.ColumnSpan="1">
+            <TextBlock x:Name="DiffArrR" Foreground="Yellow" FontWeight="ExtraBold" FontFamily="Fantasy" HorizontalAlignment="Center" Text=" &gt; " VerticalAlignment="Top" Visibility="Collapsed"/>
+        </Viewbox>
+        <Viewbox Grid.Row="4" Grid.Column="5" Grid.ColumnSpan="1">
+            <TextBlock x:Name="P1ArrL" Foreground="Yellow" FontWeight="ExtraBold" FontFamily="Fantasy" HorizontalAlignment="Center" Text=" &lt; " VerticalAlignment="Top" Visibility="Collapsed"/>
+        </Viewbox>
+        <Viewbox Grid.Row="4" Grid.Column="7" Grid.ColumnSpan="1">
+            <TextBlock x:Name="P1ArrR" Foreground="Yellow" FontWeight="ExtraBold" FontFamily="Fantasy" HorizontalAlignment="Center" Text=" &gt; " VerticalAlignment="Top" Visibility="Collapsed"/>
+        </Viewbox>
+        <Viewbox Grid.Row="6" Grid.Column="5" Grid.ColumnSpan="1">
+            <TextBlock x:Name="P2ArrL" Foreground="Yellow" FontWeight="ExtraBold" FontFamily="Fantasy" HorizontalAlignment="Center" Text=" &lt; " VerticalAlignment="Top" Visibility="Collapsed"/>
+        </Viewbox>
+        <Viewbox Grid.Row="6" Grid.Column="7" Grid.ColumnSpan="1">
+            <TextBlock x:Name="P2ArrR" Foreground="Yellow" FontWeight="ExtraBold" FontFamily="Fantasy" HorizontalAlignment="Center" Text=" &gt; " VerticalAlignment="Top" Visibility="Collapsed"/>
+        </Viewbox>
+
+        <!--Start and Return-->
+        <Viewbox Grid.Row="8" Grid.Column="3" Grid.ColumnSpan="4">
+            <TextBlock x:Name="StartGame" Foreground="Yellow" FontWeight="ExtraBold" FontFamily="Fantasy" HorizontalAlignment="Center" Text="START GAME" VerticalAlignment="Top"/>
+        </Viewbox>
+        <Viewbox Grid.Row="10" Grid.Column="3" Grid.ColumnSpan="4">
+            <TextBlock x:Name="ReturnToStart" Foreground="White" FontWeight="ExtraBold" FontFamily="Fantasy" HorizontalAlignment="Center" Text="RETURN TO MAIN MENU" VerticalAlignment="Top"/>
+        </Viewbox>
+    </Grid>
+</Window>
