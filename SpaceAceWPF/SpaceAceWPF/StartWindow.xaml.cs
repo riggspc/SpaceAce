@@ -82,7 +82,7 @@ namespace SpaceAceWPF
             {
                 App.Current.Dispatcher.Invoke((Action)delegate
                 {
-                    if (menuDelay > 0 && ((menuDelay < 10 && keyboardLastInput) || (menuDelay < 30 && !keyboardLastInput)))
+                    if (menuDelay > 0 && ((menuDelay < 10 && lastPlayerToInput) || (menuDelay < 30 && !lastPlayerToInput)))
                         menuDelay++;
                     else
                         menuDelay = 0;
@@ -90,8 +90,8 @@ namespace SpaceAceWPF
             }
         }
 
-        private bool keyboardLastInput = true;
-        private void start_inputEvent(bool keyboard, Key key)
+        private bool lastPlayerToInput = true;
+        private void start_inputEvent(bool player1, Key key)
         {
             if (menuDelay != 0)
                 return;
@@ -105,7 +105,7 @@ namespace SpaceAceWPF
                     else
                         updateFont(curOpt - 1);
                     menuDelay++;
-                    keyboardLastInput = keyboard;
+                    lastPlayerToInput = player1;
                     break;
                 case Key.Down:
                 case Key.S:
@@ -114,7 +114,7 @@ namespace SpaceAceWPF
                     else
                         updateFont(curOpt + 1);
                     menuDelay++;
-                    keyboardLastInput = keyboard;
+                    lastPlayerToInput = player1;
                     break;
                 case Key.Space:
                 case Key.Enter:

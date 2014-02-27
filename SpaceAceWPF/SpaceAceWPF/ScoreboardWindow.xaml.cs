@@ -161,7 +161,7 @@ namespace SpaceAceWPF
             {
                 App.Current.Dispatcher.Invoke((Action)delegate
                 {
-                    if (menuDelay > 0 && ((menuDelay < 15 && keyboardLastInput) || (menuDelay < 50 && !keyboardLastInput)))
+                    if (menuDelay > 0 && ((menuDelay < 15 && lastPlayerToInput) || (menuDelay < 50 && !lastPlayerToInput)))
                         menuDelay++;
                     else
                         menuDelay = 0;
@@ -169,8 +169,8 @@ namespace SpaceAceWPF
             }
         }
 
-        private bool keyboardLastInput = true;
-        private void scoreboard_inputEvent(bool keyboard, Key key)
+        private bool lastPlayerToInput = true;
+        private void scoreboard_inputEvent(bool player1, Key key)
         {
             if (menuDelay != 0)
                 return;
@@ -197,7 +197,7 @@ namespace SpaceAceWPF
                             break;
                     }
                     menuDelay++;
-                    keyboardLastInput = keyboard;
+                    lastPlayerToInput = player1;
                     break;
                 case Key.Space:
                 case Key.Enter:

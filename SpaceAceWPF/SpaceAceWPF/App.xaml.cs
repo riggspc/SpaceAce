@@ -43,22 +43,22 @@ namespace SpaceAceWPF
                         joy.State(ref newJoyLoc);
 
                         if (newJoyLoc.X < -5)
-                            inputEvent.keyDown(false, System.Windows.Input.Key.A);
+                            inputEvent.keyDown(true, System.Windows.Input.Key.A);
                         if (newJoyLoc.X > 5)
-                            inputEvent.keyDown(false, System.Windows.Input.Key.D);
+                            inputEvent.keyDown(true, System.Windows.Input.Key.D);
                         if (newJoyLoc.Y < -5)
-                            inputEvent.keyDown(false, System.Windows.Input.Key.W);
+                            inputEvent.keyDown(true, System.Windows.Input.Key.W);
                         if (newJoyLoc.Y > 5)
-                            inputEvent.keyDown(false, System.Windows.Input.Key.S);
+                            inputEvent.keyDown(true, System.Windows.Input.Key.S);
 
                         if(newJoyLoc.X >= -5 && prevJoyLoc.X < -5)
-                            inputEvent.keyUp(false, System.Windows.Input.Key.A);
+                            inputEvent.keyUp(true, System.Windows.Input.Key.A);
                         if (newJoyLoc.X <= 5 && prevJoyLoc.X > 5)
-                            inputEvent.keyUp(false, System.Windows.Input.Key.D);
+                            inputEvent.keyUp(true, System.Windows.Input.Key.D);
                         if (newJoyLoc.Y >= -5 && prevJoyLoc.Y < -5)
-                            inputEvent.keyUp(false, System.Windows.Input.Key.W);
+                            inputEvent.keyUp(true, System.Windows.Input.Key.W);
                         if (newJoyLoc.Y <= 5 && prevJoyLoc.Y > 5)
-                            inputEvent.keyUp(false, System.Windows.Input.Key.S);
+                            inputEvent.keyUp(true, System.Windows.Input.Key.S);
 
                         prevJoyLoc = newJoyLoc;
                     }
@@ -66,15 +66,19 @@ namespace SpaceAceWPF
             }
         }
 
-        public static void checkForJoy()
+        public static bool checkForJoy()
         {
             if (ToddJoystick.NumJoysticks() > 0)
             {
-                if(joy == null)
+                if (joy == null)
                     joy = new ToddJoystick();
+                return true;
             }
             else
+            {
                 joy = null;
+                return false;
+            }
         }
     }
 }

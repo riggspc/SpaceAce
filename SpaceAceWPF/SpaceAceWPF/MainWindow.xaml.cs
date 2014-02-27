@@ -41,7 +41,7 @@ namespace SpaceAceWPF
 
         public bool TwoPlayer = false;
 
-        public MainWindow(Boolean num_players)
+        public MainWindow(bool num_players)
         {
             InitializeComponent();
             App.checkForJoy();
@@ -58,11 +58,11 @@ namespace SpaceAceWPF
             }
         }
 
-        public void moveShip(bool keyboard)
+        public void moveShip(bool player1)
         {
             Thickness playerLoc;
             Point ship_speed;
-            if (keyboard)
+            if (player1)
             {
                 playerLoc = this.Player1.Margin;
                 ship_speed = p1_ship_speed;
@@ -79,16 +79,16 @@ namespace SpaceAceWPF
             if ((playerLoc.Top + ship_speed.Y > TOP_MARGIN) && (playerLoc.Top + ship_speed.Y < BOTTOM_MARGIN))
                 playerLoc.Top += ship_speed.Y;
 
-            if (keyboard)
+            if (player1)
                 this.Player1.Margin = playerLoc;
             else
                 this.Player2.Margin = playerLoc;
         }
 
-        private void adjustSpeedUp(bool keyboard, Key key)
+        private void adjustSpeedUp(bool player1, Key key)
         {
             Point ship_speed;
-            if (keyboard)
+            if (player1)
                 ship_speed = p1_ship_speed;
             else
                 ship_speed = p2_ship_speed;
@@ -96,29 +96,33 @@ namespace SpaceAceWPF
             switch(key)
             {
                 case Key.A:
+                case Key.Left:
                     ship_speed.X = Math.Max(-SHIP_SPEED, ship_speed.X - SHIP_SPEED); 
                     break;
                 case Key.D:
+                case Key.Right:
                     ship_speed.X = Math.Min(SHIP_SPEED, ship_speed.X + SHIP_SPEED); 
                     break;
                 case Key.W:
+                case Key.Up:
                     ship_speed.Y = Math.Max(-SHIP_SPEED, ship_speed.Y - SHIP_SPEED); 
                     break;
                 case Key.S:
+                case Key.Down:
                     ship_speed.Y = Math.Min(SHIP_SPEED, ship_speed.Y + SHIP_SPEED); 
                     break;
             }
 
-            if (keyboard)
+            if (player1)
                 p1_ship_speed = ship_speed;
             else
                 p2_ship_speed = ship_speed;
         }
 
-        private void adjustSpeedDown(bool keyboard, Key key)
+        private void adjustSpeedDown(bool player1, Key key)
         {
             Point ship_speed;
-            if (keyboard)
+            if (player1)
                 ship_speed = p1_ship_speed;
             else
                 ship_speed = p2_ship_speed;
@@ -126,20 +130,24 @@ namespace SpaceAceWPF
             switch (key)
             {
                 case Key.A:
+                case Key.Left:
                     ship_speed.X = Math.Min(SHIP_SPEED, ship_speed.X + SHIP_SPEED);
                     break;
                 case Key.D:
+                case Key.Right:
                     ship_speed.X = Math.Max(-SHIP_SPEED, ship_speed.X - SHIP_SPEED);
                     break;
                 case Key.W:
+                case Key.Up:
                     ship_speed.Y = Math.Min(SHIP_SPEED, ship_speed.Y + SHIP_SPEED);
                     break;
                 case Key.S:
+                case Key.Down:
                     ship_speed.Y = Math.Max(-SHIP_SPEED, ship_speed.Y - SHIP_SPEED);
                     break;
             }
 
-            if (keyboard)
+            if (player1)
                 p1_ship_speed = ship_speed;
             else
                 p2_ship_speed = ship_speed;
@@ -147,12 +155,43 @@ namespace SpaceAceWPF
 
         public void main_keyDown(object sender, KeyEventArgs e)
         {
-            adjustSpeedUp(true, e.Key);
+            switch (e.Key)
+            {
+                case Key.Left:
+                case Key.Right:
+                case Key.Up:
+                case Key.Down:
+                    adjustSpeedUp(false, e.Key);
+                    break;
+                case Key.A:
+                case Key.D:
+                case Key.W:
+                case Key.S:
+                    if (TwoPlayer && !App.checkForJoy())
+                        adjustSpeedUp(true, e.Key);
+                    break;
+            }
         }
 
         public void main_keyUp(object sender, KeyEventArgs e)
         {
-            adjustSpeedDown(true, e.Key);
+            switch(e.Key)
+            {
+                
+                case Key.Left:
+                case Key.Right:
+                case Key.Up:
+                case Key.Down:
+                    adjustSpeedDown(false, e.Key);
+                    break;
+                case Key.A:
+                case Key.D:
+                case Key.W:
+                case Key.S:
+                    if(TwoPlayer && !App.checkForJoy())
+                        adjustSpeedDown(true, e.Key);
+                    break;
+            }
         }
 
         public void main_timerElapsed(object sender, ElapsedEventArgs elapsedEventArgs)
