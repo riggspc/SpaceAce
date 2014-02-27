@@ -11,7 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using WpfApplication1;
+using System.Timers;
 
 namespace SpaceAceWPF
 {
@@ -22,14 +22,13 @@ namespace SpaceAceWPF
     {
         enum opt { play1, play2, viewHigh, exitGame};
         opt curOpt = opt.play1;
-        private ToddJoystick joy;
 
         public StartWindow()
         {
-            if (ToddJoystick.NumJoysticks() > 0)
-                joy = new ToddJoystick();
-
             InitializeComponent();
+            App.checkForJoy();
+            App.timer.Elapsed += simulateMenuDelay;
+            App.inputEvent.Input += start_inputEvent;
             this.Focus();
             updateFont(opt.play1);
         }
@@ -73,25 +72,50 @@ namespace SpaceAceWPF
 
         private void start_keyDown(object sender, KeyEventArgs e)
         {
-            switch(e.Key)
+            App.inputEvent.keyDown(true, e.Key);
+        }
+
+        private int menuDelay = 0;
+        
+        public void simulateMenuDelay(object sender, ElapsedEventArgs elapsedEventArgs)
+        {
+            if (App.Current != null)
+            {
+                App.Current.Dispatcher.Invoke((Action)delegate
+                {
+                    if (menuDelay > 0 && ((menuDelay < 10 && keyboardLastInput) || (menuDelay < 30 && !keyboardLastInput)))
+                        menuDelay++;
+                    else
+                        menuDelay = 0;
+                });
+            }
+        }
+
+        private bool keyboardLastInput = true;
+        private void start_inputEvent(bool keyboard, Key key)
+        {
+            if (menuDelay != 0)
+                return;
+
+            switch (key)
             {
                 case Key.Up:
                 case Key.W:
-                case Key.Left:
-                case Key.A:
-                    if(curOpt == opt.play1)
+                    if (curOpt == opt.play1)
                         this.updateFont(opt.exitGame);
                     else
                         updateFont(curOpt - 1);
+                    menuDelay++;
+                    keyboardLastInput = keyboard;
                     break;
                 case Key.Down:
                 case Key.S:
-                case Key.Right:
-                case Key.D:
-                    if(curOpt == opt.exitGame)
+                    if (curOpt == opt.exitGame)
                         updateFont(opt.play1);
                     else
-                        updateFont(curOpt+1);
+                        updateFont(curOpt + 1);
+                    menuDelay++;
+                    keyboardLastInput = keyboard;
                     break;
                 case Key.Space:
                 case Key.Enter:

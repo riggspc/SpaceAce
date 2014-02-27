@@ -13,7 +13,6 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Timers;
-using WpfApplication1;
 
 namespace SpaceAceWPF
 {
@@ -50,10 +49,13 @@ namespace SpaceAceWPF
         private ToddJoystick joy;
         public MainWindow(Boolean num_players)
         {
-            App.aTimer.Elapsed += ATimerOnElapsed;
-            TwoPlayer = num_players;
             InitializeComponent();
 
+            App.timer.Elapsed += ATimerOnElapsed;
+            if (ToddJoystick.NumJoysticks() != 0)
+                joy = new ToddJoystick();
+
+            TwoPlayer = num_players;
             if (TwoPlayer)
             {
                 this.Player2.Visibility = Visibility.Visible;
@@ -61,16 +63,12 @@ namespace SpaceAceWPF
                 this.Score2.Visibility = Visibility.Visible;
             }
             
-            if (ToddJoystick.NumJoysticks() != 0)
-            {
-                joy = new ToddJoystick();
-            }
+            
         }
 
         private void Label_Loaded(object sender, RoutedEventArgs e)
         {
             this.Label1.Focus();
-            this.Label1.Content = "halsdkfjlaskdjf";
         }
 
         public void ATimerOnElapsed(object sender, ElapsedEventArgs elapsedEventArgs)
@@ -136,7 +134,8 @@ namespace SpaceAceWPF
 
                     this.Label1.Content = "Timer";
                     score++;
-                    this.Score.Text = score.ToString();
+                    this.Score1.Text = score.ToString();
+                    this.Score2.Text = score.ToString();
 
                     Random rand = new Random();
                     // Modify the RHS below to change asteroid creation
@@ -247,8 +246,6 @@ namespace SpaceAceWPF
             }
             //this.Player1.Margin = currentLoc;
         }
-
-
 
         private void Label_KeyDown(object sender, KeyEventArgs e)
         {

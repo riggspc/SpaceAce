@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Windows;
 using SlimDX.DirectInput;
+using System.Windows.Input;
 
-namespace WpfApplication1
+namespace SpaceAceWPF
 {
     class ToddJoystick : IDisposable
     {
@@ -23,9 +24,24 @@ namespace WpfApplication1
                 return;
 
             var derp = _joystick.GetCurrentState();
-
             point.X = derp.X;
             point.Y = derp.Y;
+        }
+
+        public void State(ref InputEvent inputEvent)
+        {
+            if (_joystick.Poll().IsFailure)
+                return;
+
+            var derp = _joystick.GetCurrentState();
+            if (derp.X < -5)
+                inputEvent.keyDown(false, System.Windows.Input.Key.A);
+            if (derp.X > 5)
+                inputEvent.keyDown(false, System.Windows.Input.Key.D);
+            if (derp.Y < -5)
+                inputEvent.keyDown(false, System.Windows.Input.Key.W);
+            if (derp.Y > 5)
+                inputEvent.keyDown(false, System.Windows.Input.Key.S);
         }
 
         public ToddJoystick()
