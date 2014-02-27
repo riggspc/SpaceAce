@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using WpfApplication1;
 
 namespace SpaceAceWPF
 {
@@ -21,9 +22,13 @@ namespace SpaceAceWPF
     {
         enum opt { play1, play2, viewHigh, exitGame};
         opt curOpt = opt.play1;
+        private ToddJoystick joy;
 
         public StartWindow()
         {
+            if (ToddJoystick.NumJoysticks() > 0)
+                joy = new ToddJoystick();
+
             InitializeComponent();
             this.Focus();
             updateFont(opt.play1);

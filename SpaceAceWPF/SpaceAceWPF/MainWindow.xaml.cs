@@ -45,22 +45,16 @@ namespace SpaceAceWPF
         // public List<Image> asteroids = new List<Image>();
         public List<Tuple<Image, int> > asteroids = new List<Tuple<Image, int>>();
 
-        public bool keyDown = false;
-
         private ToddJoystick joy;
         public MainWindow()
         {
+            App.aTimer.Elapsed += ATimerOnElapsed;
             InitializeComponent();
 
             if (ToddJoystick.NumJoysticks() != 0)
             {
                 joy = new ToddJoystick();
             }
-
-            var aTimer = new Timer(10);
-            aTimer.Elapsed += ATimerOnElapsed;
-            aTimer.Interval = 10;
-            aTimer.Enabled = true;
         }
 
         private void Label_Loaded(object sender, RoutedEventArgs e)
@@ -69,7 +63,7 @@ namespace SpaceAceWPF
             this.Label1.Content = "halsdkfjlaskdjf";
         }
 
-        private void ATimerOnElapsed(object sender, ElapsedEventArgs elapsedEventArgs)
+        public void ATimerOnElapsed(object sender, ElapsedEventArgs elapsedEventArgs)
         {
             // This check fixes a nullpointer exception when the window is closed while the
             // game is running
