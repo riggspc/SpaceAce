@@ -287,18 +287,5 @@ namespace SpaceAceWPF
         {
             this.Label1.Focus();
         }
-
-        private void Label1_PreviewKeyDown(object sender, KeyEventArgs e)
-        {
-            this.Label1.Content = "wheeeee";
-        }
-
-        private void Label1_PreviewMouseDown(object sender, MouseButtonEventArgs e)
-        {
-            this.Label1.Content = "clicked bitch";
-        }
-
-
-        
     }
 }

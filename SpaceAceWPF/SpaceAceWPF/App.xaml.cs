@@ -40,8 +40,11 @@ namespace SpaceAceWPF
 
         public static void checkForJoy()
         {
-            if (ToddJoystick.NumJoysticks() > 0 && joy == null)
-                joy = new ToddJoystick();
+            if (ToddJoystick.NumJoysticks() > 0)
+            {
+                if(joy == null)
+                    joy = new ToddJoystick();
+            }
             else
                 joy = null;
         }

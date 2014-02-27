@@ -72,11 +72,10 @@ namespace SpaceAceWPF
 
         private void start_keyDown(object sender, KeyEventArgs e)
         {
-            App.inputEvent.keyDown(true, e.Key);
+            start_inputEvent(true, e.Key);
         }
 
         private int menuDelay = 0;
-        
         public void simulateMenuDelay(object sender, ElapsedEventArgs elapsedEventArgs)
         {
             if (App.Current != null)

@@ -14,6 +14,7 @@ using System.Windows.Shapes;
 using System.ComponentModel;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Timers;
 
 namespace SpaceAceWPF
 {
@@ -104,6 +105,9 @@ namespace SpaceAceWPF
         public ScoreboardWindow()
         {
             InitializeComponent();
+            App.checkForJoy();
+            App.timer.Elapsed += simulateMenuDelay;
+            App.inputEvent.Input += scoreboard_inputEvent;
             updateFont(opt.returnStart);
             DataContext = this.scoreboardContext;
         }
@@ -147,17 +151,37 @@ namespace SpaceAceWPF
 
         private void score_keyDown(object sender, KeyEventArgs e)
         {
-            switch (e.Key)
+            scoreboard_inputEvent(true, e.Key);
+        }
+
+        private int menuDelay = 0;
+        public void simulateMenuDelay(object sender, ElapsedEventArgs elapsedEventArgs)
+        {
+            if (App.Current != null)
             {
-                case Key.Up:
-                case Key.W:
+                App.Current.Dispatcher.Invoke((Action)delegate
+                {
+                    if (menuDelay > 0 && ((menuDelay < 15 && keyboardLastInput) || (menuDelay < 50 && !keyboardLastInput)))
+                        menuDelay++;
+                    else
+                        menuDelay = 0;
+                });
+            }
+        }
+
+        private bool keyboardLastInput = true;
+        private void scoreboard_inputEvent(bool keyboard, Key key)
+        {
+            if (menuDelay != 0)
+                return;
+
+            switch (key)
+            {
                 case Key.Left:
                 case Key.A:
-                case Key.Down:
-                case Key.S:
                 case Key.Right:
                 case Key.D:
-                    switch(curOpt)
+                    switch (curOpt)
                     {
                         case opt.returnStart:
                             updateFont(opt.clearScores);
@@ -172,6 +196,8 @@ namespace SpaceAceWPF
                             updateFont(opt.confirmNo);
                             break;
                     }
+                    menuDelay++;
+                    keyboardLastInput = keyboard;
                     break;
                 case Key.Space:
                 case Key.Enter:
