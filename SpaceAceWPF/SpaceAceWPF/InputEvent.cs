@@ -14,16 +14,14 @@ namespace SpaceAceWPF
 
         public void keyDown(bool keyboard, Key key)
         {
-            if (HandleKeyDown == null) 
-                return;
-            HandleKeyDown(keyboard, key);
+            if (HandleKeyDown != null) 
+                HandleKeyDown(keyboard, key);
         }
 
         public void keyUp(bool keyboard, Key key)
         {
-            if (HandleKeyUp == null)
-                return;
-            HandleKeyUp(keyboard, key);
+            if (HandleKeyUp != null)
+                HandleKeyUp(keyboard, key);
         }
     }
 }

@@ -45,7 +45,7 @@ namespace SpaceAceWPF
         {
             InitializeComponent();
             App.checkForJoy();
-            App.timer.Elapsed += ATimerOnElapsed;
+            App.timer.Elapsed += main_timerElapsed;
             App.inputEvent.HandleKeyDown += adjustSpeedUp;
             App.inputEvent.HandleKeyUp += adjustSpeedDown;
 
@@ -155,7 +155,7 @@ namespace SpaceAceWPF
             adjustSpeedDown(true, e.Key);
         }
 
-        public void ATimerOnElapsed(object sender, ElapsedEventArgs elapsedEventArgs)
+        public void main_timerElapsed(object sender, ElapsedEventArgs elapsedEventArgs)
         {
             // This check fixes a nullpointer exception when the window is closed while the
             // game is running
@@ -174,86 +174,92 @@ namespace SpaceAceWPF
                     this.Score1.Text = score.ToString();
                     this.Score2.Text = score.ToString();
 
-                    Random rand = new Random();
-                    // Modify the RHS below to change asteroid creation
-                    // frequency
-                    if (rand.Next(0, 1000) > 975)
-                    {
-                        Image newAsteroid = new Image();
-                        // newAsteroid.Source = this.LargeAsteroidSource.Source;
-                        Thickness loc = newAsteroid.Margin;
-                        loc.Left = RIGHT_MARGIN + 200;
-                        newAsteroid.VerticalAlignment = System.Windows.VerticalAlignment.Top;
-                        newAsteroid.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
-
-                        // Randomly place the asteroid somewhere along the edge,
-                        // sizes it, sets the image, and the rotation
-                        // basically makes it unique
-                        loc.Top = Math.Max(BOTTOM_MARGIN - rand.Next(0, BOTTOM_MARGIN), TOP_MARGIN);
-                        newAsteroid.Margin = loc;
-                        newAsteroid.Width = rand.Next(100, 250);
-
-                        // Determines which sprite the new asteroid will have
-                        int asteroidType = rand.Next(0, 2);
-                        Uri uri;
-                        switch (asteroidType)
-                        {
-                            case 0:
-                                // newAsteroid.Source = this.LargeAsteroidSource.Source;
-                                uri = new Uri(@"../../Assets/asteroid_large.png", UriKind.Relative);                              
-                                break;
-                            case 1:
-                                // newAsteroid.Source = this.MediumAsteroidSource.Source;
-                                uri = new Uri(@"../../Assets/asteroid_small.png", UriKind.Relative);
-                                break;
-                            case 2:
-                                // newAsteroid.Source = this.SmallAsteroidSource.Source;
-                                uri = new Uri(@"../../Assets/asteroid_medium.png", UriKind.Relative);
-                                break;
-                            default:
-                                // newAsteroid.Source = this.LargeAsteroidSource.Source;
-                                uri = new Uri(@"../../Assets/asteroid_large.png", UriKind.Relative);
-                                break;
-
-                        }
-
-                        // Set the asteroid's rotation
-                        TransformedBitmap tb = new TransformedBitmap();
-                        BitmapImage bi = new BitmapImage();
-                        bi.BeginInit();
-                        bi.UriSource = uri;
-                        bi.EndInit();
-                        tb.BeginInit();
-                        tb.Source = bi;
-                        RotateTransform transform = new RotateTransform(rand.Next(1, 4) * 90);
-                        tb.Transform = transform;
-                        tb.EndInit();
-                        newAsteroid.Source = tb;
-
-                        this.MainGrid.Children.Add(newAsteroid);
-                        asteroids.Add(new Tuple<Image, int>(newAsteroid, rand.Next(MIN_ASTEROID_SPEED, MAX_ASTEROID_SPEED)));
-                        
-                    }
-
-                    foreach (Tuple<Image, int> pair in asteroids)
-                    {
-                        Thickness loc = pair.Item1.Margin;
-                        loc.Left -= pair.Item2;
-                        pair.Item1.Margin = loc;
-                    }
-
-                    // If it's off the screen delete it
-                    for (int i = 0; i < asteroids.Count; i++)
-                    {
-
-                        if (asteroids[i].Item1.Margin.Left + asteroids[i].Item1.Width < 0)
-                        {
-                            // this is hacky...might work though
-                            asteroids.RemoveAt(i);
-                            i--;
-                        }
-                    }
+                    //Generate Asteroids
+                    generateAsteroids();
                 });
+            }
+        }
+
+        private void generateAsteroids()
+        {
+            Random rand = new Random();
+            // Modify the RHS below to change asteroid creation
+            // frequency
+            if (rand.Next(0, 1000) > 975)
+            {
+                Image newAsteroid = new Image();
+                // newAsteroid.Source = this.LargeAsteroidSource.Source;
+                Thickness loc = newAsteroid.Margin;
+                loc.Left = RIGHT_MARGIN + 200;
+                newAsteroid.VerticalAlignment = System.Windows.VerticalAlignment.Top;
+                newAsteroid.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
+
+                // Randomly place the asteroid somewhere along the edge,
+                // sizes it, sets the image, and the rotation
+                // basically makes it unique
+                loc.Top = Math.Max(BOTTOM_MARGIN - rand.Next(0, BOTTOM_MARGIN), TOP_MARGIN);
+                newAsteroid.Margin = loc;
+                newAsteroid.Width = rand.Next(100, 250);
+
+                // Determines which sprite the new asteroid will have
+                int asteroidType = rand.Next(0, 2);
+                Uri uri;
+                switch (asteroidType)
+                {
+                    case 0:
+                        // newAsteroid.Source = this.LargeAsteroidSource.Source;
+                        uri = new Uri(@"../../Assets/asteroid_large.png", UriKind.Relative);
+                        break;
+                    case 1:
+                        // newAsteroid.Source = this.MediumAsteroidSource.Source;
+                        uri = new Uri(@"../../Assets/asteroid_small.png", UriKind.Relative);
+                        break;
+                    case 2:
+                        // newAsteroid.Source = this.SmallAsteroidSource.Source;
+                        uri = new Uri(@"../../Assets/asteroid_medium.png", UriKind.Relative);
+                        break;
+                    default:
+                        // newAsteroid.Source = this.LargeAsteroidSource.Source;
+                        uri = new Uri(@"../../Assets/asteroid_large.png", UriKind.Relative);
+                        break;
+
+                }
+
+                // Set the asteroid's rotation
+                TransformedBitmap tb = new TransformedBitmap();
+                BitmapImage bi = new BitmapImage();
+                bi.BeginInit();
+                bi.UriSource = uri;
+                bi.EndInit();
+                tb.BeginInit();
+                tb.Source = bi;
+                RotateTransform transform = new RotateTransform(rand.Next(1, 4) * 90);
+                tb.Transform = transform;
+                tb.EndInit();
+                newAsteroid.Source = tb;
+
+                this.MainGrid.Children.Add(newAsteroid);
+                asteroids.Add(new Tuple<Image, int>(newAsteroid, rand.Next(MIN_ASTEROID_SPEED, MAX_ASTEROID_SPEED)));
+
+            }
+
+            foreach (Tuple<Image, int> pair in asteroids)
+            {
+                Thickness loc = pair.Item1.Margin;
+                loc.Left -= pair.Item2;
+                pair.Item1.Margin = loc;
+            }
+
+            // If it's off the screen delete it
+            for (int i = 0; i < asteroids.Count; i++)
+            {
+
+                if (asteroids[i].Item1.Margin.Left + asteroids[i].Item1.Width < 0)
+                {
+                    // this is hacky...might work though
+                    asteroids.RemoveAt(i);
+                    i--;
+                }
             }
         }
     }
