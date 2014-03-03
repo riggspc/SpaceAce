@@ -107,7 +107,7 @@ namespace SpaceAceWPF
             InitializeComponent();
             App.checkForJoy();
             App.timer.Elapsed += simulateMenuDelay;
-            App.inputEvent.HandleKeyDown += scoreboard_inputEvent;
+            App.inputEvent.HandleJoyDown += score_joyDown;
             updateFont(opt.returnStart);
             DataContext = this.scoreboardContext;
         }
@@ -154,6 +154,11 @@ namespace SpaceAceWPF
             scoreboard_inputEvent(true, e.Key);
         }
 
+        private void score_joyDown(Key key)
+        {
+            scoreboard_inputEvent(false, key);
+        }
+
         private int menuDelay = 0;
         public void simulateMenuDelay(object sender, ElapsedEventArgs elapsedEventArgs)
         {
@@ -161,7 +166,7 @@ namespace SpaceAceWPF
             {
                 App.Current.Dispatcher.Invoke((Action)delegate
                 {
-                    if (menuDelay > 0 && ((menuDelay < 15 && lastPlayerToInput) || (menuDelay < 50 && !lastPlayerToInput)))
+                    if (menuDelay > 0 && ((menuDelay < 30 && lastPlayerToInput) || (menuDelay < 10 && !lastPlayerToInput)))
                         menuDelay++;
                     else
                         menuDelay = 0;
@@ -170,7 +175,7 @@ namespace SpaceAceWPF
         }
 
         private bool lastPlayerToInput = true;
-        private void scoreboard_inputEvent(bool player1, Key key)
+        private void scoreboard_inputEvent(bool keyboard, Key key)
         {
             if (menuDelay != 0)
                 return;
@@ -197,7 +202,7 @@ namespace SpaceAceWPF
                             break;
                     }
                     menuDelay++;
-                    lastPlayerToInput = player1;
+                    lastPlayerToInput = keyboard;
                     break;
                 case Key.Space:
                 case Key.Enter:

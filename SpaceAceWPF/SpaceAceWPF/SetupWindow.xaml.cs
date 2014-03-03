@@ -26,9 +26,8 @@ namespace SpaceAceWPF
         Difficulty diff = Difficulty.easy;
         private string[] diffString = { "     EASY     ", "    MEDIUM    ", "     HARD     " };
 
-        enum inputOpt { joy, wasd, arrows };
-        inputOpt p1_in = inputOpt.wasd;
-        inputOpt p2_in = inputOpt.arrows;
+        InputOpt p1_in = InputOpt.wasd;
+        InputOpt p2_in = InputOpt.arrows;
         private string[] inputOptString = { "   JOYSTICK   ", "     WASD     ", "ARROW KEYS" };
 
         private bool validConfig = true;
@@ -37,10 +36,10 @@ namespace SpaceAceWPF
         {
             InitializeComponent();
             App.timer.Elapsed += simulateMenuDelay;
-            App.inputEvent.HandleKeyDown += setup_inputEvent;
+            App.inputEvent.HandleJoyDown += setup_joyDown;
             if (App.checkForJoy())
             {
-                p1_in = inputOpt.joy;
+                p1_in = InputOpt.joy;
                 this.P1_Opt.Text = inputOptString[(int) p1_in];
             }
 
@@ -114,22 +113,22 @@ namespace SpaceAceWPF
                     break;
                 case opt.p1:
                     this.P1_Opt.Foreground = Brushes.Yellow;
-                    if(p1_in > inputOpt.joy)
+                    if(p1_in > InputOpt.joy)
                         this.P1ArrL.Visibility = Visibility.Visible;
                     else
                         this.P1ArrL.Visibility = Visibility.Collapsed;
-                    if(p1_in < inputOpt.arrows)
+                    if(p1_in < InputOpt.arrows)
                         this.P1ArrR.Visibility = Visibility.Visible;
                     else
                         this.P1ArrR.Visibility = Visibility.Collapsed;
                     break;
                 case opt.p2:
                     this.P2_Opt.Foreground = Brushes.Yellow;
-                    if (p2_in > inputOpt.joy)
+                    if (p2_in > InputOpt.joy)
                         this.P2ArrL.Visibility = Visibility.Visible;
                     else
                         this.P2ArrL.Visibility = Visibility.Collapsed;
-                    if (p2_in < inputOpt.arrows)
+                    if (p2_in < InputOpt.arrows)
                         this.P2ArrR.Visibility = Visibility.Visible;
                     else
                         this.P2ArrR.Visibility = Visibility.Collapsed;
@@ -145,7 +144,12 @@ namespace SpaceAceWPF
 
         private void setup_keyDown(object sender, KeyEventArgs e)
         {
-            setup_inputEvent(false, e.Key);
+            setup_inputEvent(true, e.Key);
+        }
+
+        private void setup_joyDown(Key key)
+        {
+            setup_inputEvent(false, key);
         }
 
         private int menuDelay = 0;
@@ -155,7 +159,7 @@ namespace SpaceAceWPF
             {
                 App.Current.Dispatcher.Invoke((Action)delegate
                 {
-                    if (menuDelay > 0 && ((menuDelay < 10 && !lastPlayerToInput) || (menuDelay < 30 && lastPlayerToInput)))
+                    if (menuDelay > 0 && ((menuDelay < 30 && !lastPlayerToInput) || (menuDelay < 10 && lastPlayerToInput)))
                         menuDelay++;
                     else
                         menuDelay = 0;
@@ -164,7 +168,7 @@ namespace SpaceAceWPF
         }
 
         private bool lastPlayerToInput = true;
-        private void setup_inputEvent(bool player1, Key key)
+        private void setup_inputEvent(bool keyboard, Key key)
         {
             if (menuDelay != 0)
                 return;
@@ -187,7 +191,7 @@ namespace SpaceAceWPF
                     else
                         updateFont(curOpt - 1);
                     menuDelay++;
-                    lastPlayerToInput = player1;
+                    lastPlayerToInput = keyboard;
                     break;
                 case Key.Down:
                 case Key.S:
@@ -200,7 +204,7 @@ namespace SpaceAceWPF
                     else
                         updateFont(curOpt + 1);
                     menuDelay++;
-                    lastPlayerToInput = player1;
+                    lastPlayerToInput = keyboard;
                     break;
                 case Key.Left:
                 case Key.A:
@@ -213,13 +217,13 @@ namespace SpaceAceWPF
                             updateFont(curOpt);
                             break;
                         case opt.p1:
-                            if (p1_in > inputOpt.joy)
+                            if (p1_in > InputOpt.joy)
                                 p1_in--;
                             checkConfig();
                             updateFont(curOpt);
                             break;
                         case opt.p2:
-                            if (p2_in > inputOpt.joy)
+                            if (p2_in > InputOpt.joy)
                                 p2_in--;
                             checkConfig();
                             updateFont(curOpt);
@@ -237,13 +241,13 @@ namespace SpaceAceWPF
                             updateFont(curOpt);
                             break;
                         case opt.p1:
-                            if (p1_in < inputOpt.arrows)
+                            if (p1_in < InputOpt.arrows)
                                 p1_in++;
                             checkConfig();
                             updateFont(curOpt);
                             break;
                         case opt.p2:
-                            if (p2_in < inputOpt.arrows)
+                            if (p2_in < InputOpt.arrows)
                                 p2_in++;
                             checkConfig();
                             updateFont(curOpt);
@@ -265,7 +269,7 @@ namespace SpaceAceWPF
                 this.StartGame.Text = "PLAYERS CAN'T HAVE THE SAME INPUT DEVICES";
                 this.StartGame.Foreground = Brushes.Gray;
             }
-            else if((p1_in == inputOpt.joy || (TwoPlayer && (p2_in == inputOpt.joy))) && !App.checkForJoy())
+            else if((p1_in == InputOpt.joy || (TwoPlayer && (p2_in == InputOpt.joy))) && !App.checkForJoy())
             {
                 validConfig = false;
                 this.StartGame.Text = "NO JOYSTICK DETECTED";
@@ -286,7 +290,7 @@ namespace SpaceAceWPF
                 case opt.startGame:
                     if (validConfig)
                     {
-                        MainWindow main = new MainWindow(TwoPlayer, diff);
+                        MainWindow main = new MainWindow(TwoPlayer, diff, p1_in, p2_in);
                         App.Current.MainWindow = main;
                         main.Show();
                         this.Close();

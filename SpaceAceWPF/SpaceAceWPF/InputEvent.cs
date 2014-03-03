@@ -9,19 +9,19 @@ namespace SpaceAceWPF
 {
     public class InputEvent
     {
-        public delegate void StatusUpdateHandler(bool player1, Key key);
-        public event StatusUpdateHandler HandleKeyDown, HandleKeyUp;
+        public delegate void StatusUpdateHandler(Key key);
+        public event StatusUpdateHandler HandleJoyUp, HandleJoyDown;
 
-        public void keyDown(bool player1, Key key)
+        public void joyDown(Key key)
         {
-            if (HandleKeyDown != null) 
-                HandleKeyDown(player1, key);
+            if (HandleJoyUp != null) 
+                HandleJoyUp(key);
         }
 
-        public void keyUp(bool player1, Key key)
+        public void joyUp(Key key)
         {
-            if(HandleKeyUp != null)
-                HandleKeyUp(player1, key);
+            if(HandleJoyUp != null)
+                HandleJoyUp(key);
         }
     }
 }

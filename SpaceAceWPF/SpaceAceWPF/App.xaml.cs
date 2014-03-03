@@ -43,22 +43,22 @@ namespace SpaceAceWPF
                         joy.State(ref newJoyLoc);
 
                         if (newJoyLoc.X < -5)
-                            inputEvent.keyDown(true, System.Windows.Input.Key.A);
+                            inputEvent.joyUp(System.Windows.Input.Key.A);
                         if (newJoyLoc.X > 5)
-                            inputEvent.keyDown(true, System.Windows.Input.Key.D);
+                            inputEvent.joyUp(System.Windows.Input.Key.D);
                         if (newJoyLoc.Y < -5)
-                            inputEvent.keyDown(true, System.Windows.Input.Key.W);
+                            inputEvent.joyUp(System.Windows.Input.Key.W);
                         if (newJoyLoc.Y > 5)
-                            inputEvent.keyDown(true, System.Windows.Input.Key.S);
+                            inputEvent.joyUp(System.Windows.Input.Key.S);
 
                         if(newJoyLoc.X >= -5 && prevJoyLoc.X < -5)
-                            inputEvent.keyUp(true, System.Windows.Input.Key.A);
+                            inputEvent.joyUp(System.Windows.Input.Key.A);
                         if (newJoyLoc.X <= 5 && prevJoyLoc.X > 5)
-                            inputEvent.keyUp(true, System.Windows.Input.Key.D);
+                            inputEvent.joyUp(System.Windows.Input.Key.D);
                         if (newJoyLoc.Y >= -5 && prevJoyLoc.Y < -5)
-                            inputEvent.keyUp(true, System.Windows.Input.Key.W);
+                            inputEvent.joyUp(System.Windows.Input.Key.W);
                         if (newJoyLoc.Y <= 5 && prevJoyLoc.Y > 5)
-                            inputEvent.keyUp(true, System.Windows.Input.Key.S);
+                            inputEvent.joyUp(System.Windows.Input.Key.S);
 
                         prevJoyLoc = newJoyLoc;
                     }
@@ -83,4 +83,5 @@ namespace SpaceAceWPF
     }
 
     public enum Difficulty { easy, med, hard };
+    public enum InputOpt { joy, wasd, arrows };
 }

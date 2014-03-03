@@ -41,13 +41,23 @@ namespace SpaceAceWPF
 
         private bool TwoPlayer = false;
         private bool game_paused = false;
-        public MainWindow(bool num_players, Difficulty diff)
+        private InputOpt P1, P2;
+        private Difficulty diff;
+        public MainWindow(bool num_players, Difficulty _diff, InputOpt p1_in, InputOpt p2_in)
         {
             InitializeComponent();
-            App.checkForJoy();
             App.timer.Elapsed += main_timerElapsed;
-            App.inputEvent.HandleKeyDown += adjustSpeedUp;
-            App.inputEvent.HandleKeyUp += adjustSpeedDown;
+
+            diff = _diff;
+            P1 = p1_in;
+            P2 = p2_in;
+
+            if (p1_in == InputOpt.joy || p2_in == InputOpt.joy)
+            {
+                App.checkForJoy();
+                App.inputEvent.HandleJoyUp += main_joyUp;
+                App.inputEvent.HandleJoyDown += main_joyDown;
+            }
 
             TwoPlayer = num_players;
             if (TwoPlayer)
@@ -161,14 +171,19 @@ namespace SpaceAceWPF
                 case Key.Right:
                 case Key.Up:
                 case Key.Down:
-                    adjustSpeedUp(false, e.Key);
+                    if (P1 == InputOpt.arrows)
+                        adjustSpeedUp(true, e.Key);
+                    else if (TwoPlayer && P2 == InputOpt.arrows)
+                        adjustSpeedUp(false, e.Key);
                     break;
                 case Key.A:
                 case Key.D:
                 case Key.W:
                 case Key.S:
-                    if (TwoPlayer && !App.checkForJoy())
+                    if (P1 == InputOpt.wasd)
                         adjustSpeedUp(true, e.Key);
+                    else if (TwoPlayer && P2 == InputOpt.wasd)
+                        adjustSpeedUp(false, e.Key);
                     break;
                 case Key.Escape:
                     game_paused = !game_paused;
@@ -180,21 +195,41 @@ namespace SpaceAceWPF
         {
             switch(e.Key)
             {
-                
                 case Key.Left:
                 case Key.Right:
                 case Key.Up:
                 case Key.Down:
-                    adjustSpeedDown(false, e.Key);
+                    if(P1 == InputOpt.arrows)
+                        adjustSpeedDown(true, e.Key);
+                    else if(TwoPlayer && P2 == InputOpt.arrows)
+                        adjustSpeedDown(false, e.Key);
                     break;
                 case Key.A:
                 case Key.D:
                 case Key.W:
                 case Key.S:
-                    if(TwoPlayer && !App.checkForJoy())
+                    if (P1 == InputOpt.wasd)
                         adjustSpeedDown(true, e.Key);
+                    else if (TwoPlayer && P2 == InputOpt.wasd)
+                        adjustSpeedDown(false, e.Key);
                     break;
             }
+        }
+
+        public void main_joyDown(Key key)
+        {
+            if (P1 == InputOpt.joy)
+                adjustSpeedUp(true, key);
+            else if(TwoPlayer && P2 == InputOpt.joy)
+                adjustSpeedUp(false, key);
+        }
+
+        public void main_joyUp(Key key)
+        {
+            if (P1 == InputOpt.joy)
+                adjustSpeedDown(true, key);
+            else if (TwoPlayer && P2 == InputOpt.joy)
+                adjustSpeedDown(false, key);
         }
 
         public void main_timerElapsed(object sender, ElapsedEventArgs elapsedEventArgs)

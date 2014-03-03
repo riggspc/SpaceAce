@@ -33,22 +33,6 @@ namespace SpaceAceWPF
             }
         }
 
-        public void State(ref InputEvent inputEvent)
-        {
-            if (_joystick.Poll().IsFailure)
-                return;
-
-            var joyLoc = _joystick.GetCurrentState();
-            if (joyLoc.X < -5)
-                inputEvent.keyDown(false, System.Windows.Input.Key.A);
-            if (joyLoc.X > 5)
-                inputEvent.keyDown(false, System.Windows.Input.Key.D);
-            if (joyLoc.Y < -5)
-                inputEvent.keyDown(false, System.Windows.Input.Key.W);
-            if (joyLoc.Y > 5)
-                inputEvent.keyDown(false, System.Windows.Input.Key.S);
-        }
-
         public ToddJoystick()
         {
             DirectInput dinput = new DirectInput();
