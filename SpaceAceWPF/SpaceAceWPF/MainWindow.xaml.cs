@@ -39,6 +39,9 @@ namespace SpaceAceWPF
         // public List<Image> asteroids = new List<Image>();
         private List<Tuple<Image, int> > asteroids = new List<Tuple<Image, int>>();
 
+        private enum opt { resume, returnToStart, exitGame };
+        private opt curOpt = opt.resume;
+
         private bool TwoPlayer = false;
         private bool game_paused = false;
         private InputOpt P1, P2;
@@ -47,6 +50,7 @@ namespace SpaceAceWPF
         {
             InitializeComponent();
             App.timer.Elapsed += main_timerElapsed;
+            App.timer.Elapsed += simulateMenuDelay;
 
             diff = _diff;
             P1 = p1_in;
@@ -66,6 +70,8 @@ namespace SpaceAceWPF
                 this.Player2_Label.Visibility = Visibility.Visible;
                 this.Score2.Visibility = Visibility.Visible;
             }
+
+            updateFont(opt.resume);
         }
 
         public void moveShip(bool player1)
@@ -165,6 +171,9 @@ namespace SpaceAceWPF
 
         public void main_keyDown(object sender, KeyEventArgs e)
         {
+            if (game_paused)
+                pause_inputEvent(true, e.Key);
+
             switch (e.Key)
             {
                 case Key.Left:
@@ -186,13 +195,26 @@ namespace SpaceAceWPF
                         adjustSpeedUp(false, e.Key);
                     break;
                 case Key.Escape:
-                    game_paused = !game_paused;
+                    if (menuDelay != 0)
+                        break;
+
+                    this.pause_header.Visibility = Visibility.Visible;
+                    this.pause_leftShip.Visibility = Visibility.Visible;
+                    this.pause_rightShip.Visibility = Visibility.Visible;
+                    this.pause_resume.Visibility = Visibility.Visible;
+                    this.pause_returnToStart.Visibility = Visibility.Visible;
+                    this.pause_exitGame.Visibility = Visibility.Visible;
+                    this.pause_background.Opacity = 1;
+                    game_paused = true;
                     break;
             }
         }
-
+       
         public void main_keyUp(object sender, KeyEventArgs e)
         {
+            if (game_paused)
+                return;
+
             switch(e.Key)
             {
                 case Key.Left:
@@ -218,15 +240,19 @@ namespace SpaceAceWPF
 
         public void main_joyDown(Key key)
         {
-            if (P1 == InputOpt.joy)
+            if (game_paused)
+                pause_inputEvent(false, key);
+            else if (P1 == InputOpt.joy)
                 adjustSpeedUp(true, key);
-            else if(TwoPlayer && P2 == InputOpt.joy)
+            else if (TwoPlayer && P2 == InputOpt.joy)
                 adjustSpeedUp(false, key);
         }
 
         public void main_joyUp(Key key)
         {
-            if (P1 == InputOpt.joy)
+            if (game_paused)
+                return;
+            else if (P1 == InputOpt.joy)
                 adjustSpeedDown(true, key);
             else if (TwoPlayer && P2 == InputOpt.joy)
                 adjustSpeedDown(false, key);
@@ -249,7 +275,6 @@ namespace SpaceAceWPF
                         moveShip(false);
                     
                     //Update Scores
-                    this.Label1.Content = "Timer";
                     score++;
                     this.Score1.Text = score.ToString();
                     this.Score2.Text = score.ToString();
@@ -340,6 +365,120 @@ namespace SpaceAceWPF
                     asteroids.RemoveAt(i);
                     i--;
                 }
+            }
+        }
+
+        private int menuDelay = 0;
+        public void simulateMenuDelay(object sender, ElapsedEventArgs elapsedEventArgs)
+        {
+            if (App.Current != null)
+            {
+                App.Current.Dispatcher.Invoke((Action)delegate
+                {
+                    if (menuDelay > 0 && ((menuDelay < 30 && !lastPlayerToInput) || (menuDelay < 10 && lastPlayerToInput)))
+                        menuDelay++;
+                    else
+                        menuDelay = 0;
+                });
+            }
+        }
+
+        private bool lastPlayerToInput = true;
+        private void pause_inputEvent(bool keyboard, Key key)
+        {
+            if (menuDelay != 0)
+                return;
+
+            switch (key)
+            {
+                case Key.Up:
+                case Key.W:
+                    if (curOpt == opt.resume)
+                        updateFont(opt.exitGame);
+                    else
+                        updateFont(curOpt - 1);
+                    menuDelay++;
+                    lastPlayerToInput = keyboard;
+                    break;
+                case Key.Down:
+                case Key.S:
+                    if (curOpt == opt.exitGame)
+                        updateFont(opt.resume);
+                    else
+                        updateFont(curOpt + 1);
+                    menuDelay++;
+                    lastPlayerToInput = keyboard;
+                    break;
+                case Key.Space:
+                case Key.Enter:
+                    selectOpt();
+                    break;
+                case Key.Escape:
+                    updateFont(opt.resume);
+                    menuDelay++;
+                    selectOpt();
+                    break;
+            }
+        }
+
+        private void updateFont(opt nextOpt)
+        {
+            switch (curOpt)
+            {
+                case opt.resume:
+                    this.pause_resume.Foreground = Brushes.White;
+                    break;
+                case opt.returnToStart:
+                    this.pause_returnToStart.Foreground = Brushes.White;
+                    break;
+                case opt.exitGame:
+                    this.pause_exitGame.Foreground = Brushes.White;
+                    break;
+            }
+
+            switch (nextOpt)
+            {
+                case opt.resume:
+                    this.pause_resume.Foreground = Brushes.Yellow;
+                    break;
+                case opt.returnToStart:
+                    this.pause_returnToStart.Foreground = Brushes.Yellow;
+                    break;
+                case opt.exitGame:
+                    this.pause_exitGame.Foreground = Brushes.Yellow;
+                    break;
+            }
+
+            curOpt = nextOpt;
+        }
+
+        private void selectOpt()
+        {
+            switch(curOpt)
+            {
+                case opt.resume:
+                    this.pause_header.Visibility = Visibility.Collapsed;
+                    this.pause_leftShip.Visibility = Visibility.Collapsed;
+                    this.pause_rightShip.Visibility = Visibility.Collapsed;
+                    this.pause_resume.Visibility = Visibility.Collapsed;
+                    this.pause_returnToStart.Visibility = Visibility.Collapsed;
+                    this.pause_exitGame.Visibility = Visibility.Collapsed;
+                    this.pause_background.Opacity = 0;
+                    p1_ship_speed.X = 0;
+                    p1_ship_speed.Y = 0;
+                    p2_ship_speed.X = 0;
+                    p2_ship_speed.Y = 0;
+                    game_paused = false;
+                    break;
+                case opt.returnToStart:
+                    StartWindow start = new StartWindow();
+                    App.Current.MainWindow = start;
+                    start.Show();
+                    this.Close();
+                    break;
+                case opt.exitGame:
+                    Application.Current.Shutdown();
+                    break;
             }
         }
     }
