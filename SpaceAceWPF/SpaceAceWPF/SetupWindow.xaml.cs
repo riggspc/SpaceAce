@@ -26,8 +26,8 @@ namespace SpaceAceWPF
         Difficulty diff = Difficulty.easy;
         private string[] diffString = { "     EASY     ", "    MEDIUM    ", "     HARD     " };
 
-        InputOpt p1_in = InputOpt.wasd;
-        InputOpt p2_in = InputOpt.arrows;
+        InputType p1_in = InputType.wasd;
+        InputType p2_in = InputType.arrows;
         private string[] inputOptString = { "   JOYSTICK   ", "     WASD     ", "ARROW KEYS" };
 
         private bool validConfig = true;
@@ -35,11 +35,10 @@ namespace SpaceAceWPF
         public SetupWindow(bool num_players)
         {
             InitializeComponent();
-            App.timer.Elapsed += simulateMenuDelay;
             App.inputEvent.HandleJoyDown += setup_joyDown;
             if (App.checkForJoy())
             {
-                p1_in = InputOpt.joy;
+                p1_in = InputType.joy;
                 this.P1_Opt.Text = inputOptString[(int) p1_in];
             }
 
@@ -113,22 +112,22 @@ namespace SpaceAceWPF
                     break;
                 case opt.p1:
                     this.P1_Opt.Foreground = Brushes.Yellow;
-                    if(p1_in > InputOpt.joy)
+                    if(p1_in > InputType.joy)
                         this.P1ArrL.Visibility = Visibility.Visible;
                     else
                         this.P1ArrL.Visibility = Visibility.Collapsed;
-                    if(p1_in < InputOpt.arrows)
+                    if(p1_in < InputType.arrows)
                         this.P1ArrR.Visibility = Visibility.Visible;
                     else
                         this.P1ArrR.Visibility = Visibility.Collapsed;
                     break;
                 case opt.p2:
                     this.P2_Opt.Foreground = Brushes.Yellow;
-                    if (p2_in > InputOpt.joy)
+                    if (p2_in > InputType.joy)
                         this.P2ArrL.Visibility = Visibility.Visible;
                     else
                         this.P2ArrL.Visibility = Visibility.Collapsed;
-                    if (p2_in < InputOpt.arrows)
+                    if (p2_in < InputType.arrows)
                         this.P2ArrR.Visibility = Visibility.Visible;
                     else
                         this.P2ArrR.Visibility = Visibility.Collapsed;
@@ -144,33 +143,17 @@ namespace SpaceAceWPF
 
         private void setup_keyDown(object sender, KeyEventArgs e)
         {
-            setup_inputEvent(true, e.Key);
+            setup_inputEvent(InputType.wasd, e.Key);
         }
 
         private void setup_joyDown(Key key)
         {
-            setup_inputEvent(false, key);
+            setup_inputEvent(InputType.joy, key);
         }
 
-        private int menuDelay = 0;
-        public void simulateMenuDelay(object sender, ElapsedEventArgs elapsedEventArgs)
+        private void setup_inputEvent(InputType inType, Key key)
         {
-            if (App.Current != null)
-            {
-                App.Current.Dispatcher.Invoke((Action)delegate
-                {
-                    if (menuDelay > 0 && ((menuDelay < 30 && !lastPlayerToInput) || (menuDelay < 10 && lastPlayerToInput)))
-                        menuDelay++;
-                    else
-                        menuDelay = 0;
-                });
-            }
-        }
-
-        private bool lastPlayerToInput = true;
-        private void setup_inputEvent(bool keyboard, Key key)
-        {
-            if (menuDelay != 0)
+            if (App.menuDelay != 0)
                 return;
 
             switch (key)
@@ -190,8 +173,8 @@ namespace SpaceAceWPF
                     }
                     else
                         updateFont(curOpt - 1);
-                    menuDelay++;
-                    lastPlayerToInput = keyboard;
+                    App.menuDelay++;
+                    App.lastInputType = inType;
                     break;
                 case Key.Down:
                 case Key.S:
@@ -203,8 +186,8 @@ namespace SpaceAceWPF
                         updateFont(opt.startGame);
                     else
                         updateFont(curOpt + 1);
-                    menuDelay++;
-                    lastPlayerToInput = keyboard;
+                    App.menuDelay++;
+                    App.lastInputType = inType;
                     break;
                 case Key.Left:
                 case Key.A:
@@ -217,13 +200,13 @@ namespace SpaceAceWPF
                             updateFont(curOpt);
                             break;
                         case opt.p1:
-                            if (p1_in > InputOpt.joy)
+                            if (p1_in > InputType.joy)
                                 p1_in--;
                             checkConfig();
                             updateFont(curOpt);
                             break;
                         case opt.p2:
-                            if (p2_in > InputOpt.joy)
+                            if (p2_in > InputType.joy)
                                 p2_in--;
                             checkConfig();
                             updateFont(curOpt);
@@ -241,13 +224,13 @@ namespace SpaceAceWPF
                             updateFont(curOpt);
                             break;
                         case opt.p1:
-                            if (p1_in < InputOpt.arrows)
+                            if (p1_in < InputType.arrows)
                                 p1_in++;
                             checkConfig();
                             updateFont(curOpt);
                             break;
                         case opt.p2:
-                            if (p2_in < InputOpt.arrows)
+                            if (p2_in < InputType.arrows)
                                 p2_in++;
                             checkConfig();
                             updateFont(curOpt);
@@ -269,7 +252,7 @@ namespace SpaceAceWPF
                 this.StartGame.Text = "PLAYERS CAN'T HAVE THE SAME INPUT DEVICES";
                 this.StartGame.Foreground = Brushes.Gray;
             }
-            else if((p1_in == InputOpt.joy || (TwoPlayer && (p2_in == InputOpt.joy))) && !App.checkForJoy())
+            else if((p1_in == InputType.joy || (TwoPlayer && (p2_in == InputType.joy))) && !App.checkForJoy())
             {
                 validConfig = false;
                 this.StartGame.Text = "NO JOYSTICK DETECTED";

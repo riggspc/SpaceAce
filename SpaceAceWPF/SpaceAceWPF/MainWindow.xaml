@@ -1,9 +1,10 @@
 ﻿<Window x:Class="SpaceAceWPF.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MainWindow" Height="768" Width="1024"
+        Title="Space Ace" Height="768" Width="1024"
         WindowStartupLocation="CenterScreen"
-        KeyDown="main_keyDown" KeyUp="main_keyUp">
+        KeyDown="main_keyDown" KeyUp="main_keyUp" SizeChanged="screenResize" 
+        WindowState="Maximized">
     <Grid x:Name="MainGrid">
         <!--Background-->
         <Grid.Background>
@@ -37,7 +38,7 @@
             </Grid.RowDefinitions>
 
             <!--Name and Score Templates-->
-            <Viewbox Grid.Row="0" Grid.Column="0">
+            <Viewbox x:Name="Player1_Label_View" Grid.Row="0" Grid.Column="0">
                 <TextBlock x:Name="Player1_Label" Foreground="Red" HorizontalAlignment="Left" TextAlignment="Left" VerticalAlignment="Top" FontWeight="ExtraBold" FontFamily="Fantasy" Text="PLAYER 1" />
             </Viewbox>
             <Viewbox Grid.Row="0" Grid.Column="6">

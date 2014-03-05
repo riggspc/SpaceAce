@@ -27,7 +27,6 @@ namespace SpaceAceWPF
         {
             InitializeComponent();
             App.checkForJoy();
-            App.timer.Elapsed += simulateMenuDelay;
             App.inputEvent.HandleJoyDown += start_joyDown;
 
             updateFont(opt.play1);
@@ -72,33 +71,17 @@ namespace SpaceAceWPF
 
         private void start_keyDown(object sender, KeyEventArgs e)
         {
-            start_inputEvent(true, e.Key);
+            start_inputEvent(InputType.wasd, e.Key);
         }
 
         private void start_joyDown(Key key)
         {
-            start_inputEvent(false, key);
+            start_inputEvent(InputType.joy, key);
         }
 
-        private int menuDelay = 0;
-        public void simulateMenuDelay(object sender, ElapsedEventArgs elapsedEventArgs)
+        private void start_inputEvent(InputType inType, Key key)
         {
-            if (App.Current != null)
-            {
-                App.Current.Dispatcher.Invoke((Action)delegate
-                {
-                    if (menuDelay > 0 && ((menuDelay < 30 && !lastPlayerToInput) || (menuDelay < 10 && lastPlayerToInput)))
-                        menuDelay++;
-                    else
-                        menuDelay = 0;
-                });
-            }
-        }
-
-        private bool lastPlayerToInput = true;
-        private void start_inputEvent(bool keyboard, Key key)
-        {
-            if (menuDelay != 0)
+            if (App.menuDelay != 0)
                 return;
 
             switch (key)
@@ -109,8 +92,8 @@ namespace SpaceAceWPF
                         updateFont(opt.exitGame);
                     else
                         updateFont(curOpt - 1);
-                    menuDelay++;
-                    lastPlayerToInput = keyboard;
+                    App.menuDelay++;
+                    App.lastInputType = inType;
                     break;
                 case Key.Down:
                 case Key.S:
@@ -118,8 +101,8 @@ namespace SpaceAceWPF
                         updateFont(opt.play1);
                     else
                         updateFont(curOpt + 1);
-                    menuDelay++;
-                    lastPlayerToInput = keyboard;
+                    App.menuDelay++;
+                    App.lastInputType = inType;
                     break;
                 case Key.Space:
                 case Key.Enter:

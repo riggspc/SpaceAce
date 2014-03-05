@@ -30,10 +30,10 @@ namespace SpaceAceWPF
         private const int MIN_ASTEROID_SPEED = 6;
 
         // Margins may need to change depending on screen size and resolution
-        private const int LEFT_MARGIN = 0;
-        private const int RIGHT_MARGIN = 924;
-        private const int TOP_MARGIN = 75;
-        private const int BOTTOM_MARGIN = 650;
+        private double Left_Margin = 0;
+        private double Right_Margin = 924;
+        private double Top_Margin = 75;
+        private double Bottom_Margin = 650;
 
         private long score = 0;
         // public List<Image> asteroids = new List<Image>();
@@ -44,19 +44,18 @@ namespace SpaceAceWPF
 
         private bool TwoPlayer = false;
         private bool game_paused = false;
-        private InputOpt P1, P2;
+        private InputType P1, P2;
         private Difficulty diff;
-        public MainWindow(bool num_players, Difficulty _diff, InputOpt p1_in, InputOpt p2_in)
+        public MainWindow(bool num_players, Difficulty _diff, InputType p1_in, InputType p2_in)
         {
             InitializeComponent();
             App.timer.Elapsed += main_timerElapsed;
-            App.timer.Elapsed += simulateMenuDelay;
 
             diff = _diff;
             P1 = p1_in;
             P2 = p2_in;
 
-            if (p1_in == InputOpt.joy || p2_in == InputOpt.joy)
+            if (p1_in == InputType.joy || p2_in == InputType.joy)
             {
                 App.checkForJoy();
                 App.inputEvent.HandleJoyUp += main_joyUp;
@@ -74,6 +73,34 @@ namespace SpaceAceWPF
             updateFont(opt.resume);
         }
 
+        private void screenResize(object sender, System.EventArgs e)
+        {
+            Right_Margin = this.ActualWidth - this.Player1.ActualWidth;
+            Bottom_Margin = this.ActualHeight - this.Player1.ActualHeight;
+            Top_Margin = this.Player1_Label_View.ActualHeight;
+
+            Thickness playerLoc = this.Player1.Margin;
+            if (playerLoc.Top < Top_Margin)
+                playerLoc.Top = Top_Margin;
+            if (playerLoc.Top > Bottom_Margin)
+                playerLoc.Top = Bottom_Margin;
+            if (playerLoc.Left > Right_Margin)
+                playerLoc.Left = Right_Margin;
+            this.Player1.Margin = playerLoc;
+
+            if(TwoPlayer)
+            {
+                playerLoc = this.Player2.Margin;
+                if (playerLoc.Top < Top_Margin)
+                    playerLoc.Top = Top_Margin;
+                if (playerLoc.Top > Bottom_Margin)
+                    playerLoc.Top = Bottom_Margin;
+                if (playerLoc.Left > Right_Margin)
+                    playerLoc.Left = Right_Margin;
+                this.Player2.Margin = playerLoc;
+            }
+        }
+
         public void moveShip(bool player1)
         {
             Thickness playerLoc;
@@ -82,7 +109,6 @@ namespace SpaceAceWPF
             {
                 playerLoc = this.Player1.Margin;
                 ship_speed = p1_ship_speed;
-
             }
             else
             {
@@ -90,9 +116,9 @@ namespace SpaceAceWPF
                 ship_speed = p2_ship_speed;
             }
 
-            if ((playerLoc.Left + ship_speed.X > LEFT_MARGIN) && (playerLoc.Left + ship_speed.X < RIGHT_MARGIN))
+            if ((playerLoc.Left + ship_speed.X > Left_Margin) && (playerLoc.Left + ship_speed.X < Right_Margin))
                 playerLoc.Left += ship_speed.X;
-            if ((playerLoc.Top + ship_speed.Y > TOP_MARGIN) && (playerLoc.Top + ship_speed.Y < BOTTOM_MARGIN))
+            if ((playerLoc.Top + ship_speed.Y > Top_Margin) && (playerLoc.Top + ship_speed.Y < Bottom_Margin))
                 playerLoc.Top += ship_speed.Y;
 
             if (player1)
@@ -172,7 +198,7 @@ namespace SpaceAceWPF
         public void main_keyDown(object sender, KeyEventArgs e)
         {
             if (game_paused)
-                pause_inputEvent(true, e.Key);
+                pause_inputEvent(InputType.wasd, e.Key);
 
             switch (e.Key)
             {
@@ -180,22 +206,22 @@ namespace SpaceAceWPF
                 case Key.Right:
                 case Key.Up:
                 case Key.Down:
-                    if (P1 == InputOpt.arrows)
+                    if (P1 == InputType.arrows)
                         adjustSpeedUp(true, e.Key);
-                    else if (TwoPlayer && P2 == InputOpt.arrows)
+                    else if (TwoPlayer && P2 == InputType.arrows)
                         adjustSpeedUp(false, e.Key);
                     break;
                 case Key.A:
                 case Key.D:
                 case Key.W:
                 case Key.S:
-                    if (P1 == InputOpt.wasd)
+                    if (P1 == InputType.wasd)
                         adjustSpeedUp(true, e.Key);
-                    else if (TwoPlayer && P2 == InputOpt.wasd)
+                    else if (TwoPlayer && P2 == InputType.wasd)
                         adjustSpeedUp(false, e.Key);
                     break;
                 case Key.Escape:
-                    if (menuDelay != 0)
+                    if (App.menuDelay != 0)
                         break;
 
                     this.pause_header.Visibility = Visibility.Visible;
@@ -221,18 +247,18 @@ namespace SpaceAceWPF
                 case Key.Right:
                 case Key.Up:
                 case Key.Down:
-                    if(P1 == InputOpt.arrows)
+                    if(P1 == InputType.arrows)
                         adjustSpeedDown(true, e.Key);
-                    else if(TwoPlayer && P2 == InputOpt.arrows)
+                    else if(TwoPlayer && P2 == InputType.arrows)
                         adjustSpeedDown(false, e.Key);
                     break;
                 case Key.A:
                 case Key.D:
                 case Key.W:
                 case Key.S:
-                    if (P1 == InputOpt.wasd)
+                    if (P1 == InputType.wasd)
                         adjustSpeedDown(true, e.Key);
-                    else if (TwoPlayer && P2 == InputOpt.wasd)
+                    else if (TwoPlayer && P2 == InputType.wasd)
                         adjustSpeedDown(false, e.Key);
                     break;
             }
@@ -241,10 +267,10 @@ namespace SpaceAceWPF
         public void main_joyDown(Key key)
         {
             if (game_paused)
-                pause_inputEvent(false, key);
-            else if (P1 == InputOpt.joy)
+                pause_inputEvent(InputType.joy, key);
+            else if (P1 == InputType.joy)
                 adjustSpeedUp(true, key);
-            else if (TwoPlayer && P2 == InputOpt.joy)
+            else if (TwoPlayer && P2 == InputType.joy)
                 adjustSpeedUp(false, key);
         }
 
@@ -252,9 +278,9 @@ namespace SpaceAceWPF
         {
             if (game_paused)
                 return;
-            else if (P1 == InputOpt.joy)
+            else if (P1 == InputType.joy)
                 adjustSpeedDown(true, key);
-            else if (TwoPlayer && P2 == InputOpt.joy)
+            else if (TwoPlayer && P2 == InputType.joy)
                 adjustSpeedDown(false, key);
         }
 
@@ -295,14 +321,14 @@ namespace SpaceAceWPF
                 Image newAsteroid = new Image();
                 // newAsteroid.Source = this.LargeAsteroidSource.Source;
                 Thickness loc = newAsteroid.Margin;
-                loc.Left = RIGHT_MARGIN + 200;
+                loc.Left = Right_Margin + 200;
                 newAsteroid.VerticalAlignment = System.Windows.VerticalAlignment.Top;
                 newAsteroid.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
 
                 // Randomly place the asteroid somewhere along the edge,
                 // sizes it, sets the image, and the rotation
                 // basically makes it unique
-                loc.Top = Math.Max(BOTTOM_MARGIN - rand.Next(0, BOTTOM_MARGIN), TOP_MARGIN);
+                loc.Top = Math.Max(Bottom_Margin - rand.Next(0, (int) Bottom_Margin), Top_Margin);
                 newAsteroid.Margin = loc;
                 newAsteroid.Width = rand.Next(100, 250);
 
@@ -368,25 +394,9 @@ namespace SpaceAceWPF
             }
         }
 
-        private int menuDelay = 0;
-        public void simulateMenuDelay(object sender, ElapsedEventArgs elapsedEventArgs)
+        private void pause_inputEvent(InputType inType, Key key)
         {
-            if (App.Current != null)
-            {
-                App.Current.Dispatcher.Invoke((Action)delegate
-                {
-                    if (menuDelay > 0 && ((menuDelay < 30 && !lastPlayerToInput) || (menuDelay < 10 && lastPlayerToInput)))
-                        menuDelay++;
-                    else
-                        menuDelay = 0;
-                });
-            }
-        }
-
-        private bool lastPlayerToInput = true;
-        private void pause_inputEvent(bool keyboard, Key key)
-        {
-            if (menuDelay != 0)
+            if (App.menuDelay != 0)
                 return;
 
             switch (key)
@@ -397,8 +407,8 @@ namespace SpaceAceWPF
                         updateFont(opt.exitGame);
                     else
                         updateFont(curOpt - 1);
-                    menuDelay++;
-                    lastPlayerToInput = keyboard;
+                    App.menuDelay++;
+                    App.lastInputType = inType;
                     break;
                 case Key.Down:
                 case Key.S:
@@ -406,8 +416,8 @@ namespace SpaceAceWPF
                         updateFont(opt.resume);
                     else
                         updateFont(curOpt + 1);
-                    menuDelay++;
-                    lastPlayerToInput = keyboard;
+                    App.menuDelay++;
+                    App.lastInputType = inType;
                     break;
                 case Key.Space:
                 case Key.Enter:
@@ -415,7 +425,7 @@ namespace SpaceAceWPF
                     break;
                 case Key.Escape:
                     updateFont(opt.resume);
-                    menuDelay++;
+                    App.menuDelay++;
                     selectOpt();
                     break;
             }

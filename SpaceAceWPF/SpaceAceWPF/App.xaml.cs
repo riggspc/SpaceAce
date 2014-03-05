@@ -31,13 +31,21 @@ namespace SpaceAceWPF
             prevJoyLoc.Y = 0;
         }
 
-        
+        public static int menuDelay = 0;
+        public static InputType lastInputType = InputType.wasd;
         public static void timerOnElapsed(object sender, ElapsedEventArgs elapsedEventArgs)
         {
             if (App.Current != null)
             {
                 App.Current.Dispatcher.Invoke((Action)delegate
                 {
+                    //Simulate menu delay
+                    if (menuDelay > 0 && ((menuDelay < 30 && lastInputType == InputType.joy) || (menuDelay < 8 && (lastInputType == InputType.wasd || lastInputType == InputType.arrows))))
+                        menuDelay++;
+                    else
+                        menuDelay = 0;
+
+                    //Joystick Input
                     if (joy != null)
                     {
                         joy.State(ref newJoyLoc);
@@ -83,5 +91,6 @@ namespace SpaceAceWPF
     }
 
     public enum Difficulty { easy, med, hard };
-    public enum InputOpt { joy, wasd, arrows };
+    public enum InputType { joy, wasd, arrows };
+
 }
