@@ -46,6 +46,8 @@ namespace SpaceAceWPF
         private bool game_paused = false;
         private InputType P1, P2;
         private Difficulty diff;
+        private long gameClock = 0;
+        private bool countdownOn = true;
         public MainWindow(bool num_players, Difficulty _diff, InputType p1_in, InputType p2_in)
         {
             InitializeComponent();
@@ -55,6 +57,7 @@ namespace SpaceAceWPF
             P1 = p1_in;
             P2 = p2_in;
 
+            //Check if a joystick is used
             if (p1_in == InputType.joy || p2_in == InputType.joy)
             {
                 App.checkForJoy();
@@ -62,6 +65,7 @@ namespace SpaceAceWPF
                 App.inputEvent.HandleJoyDown += main_joyDown;
             }
 
+            //Check if game is two player
             TwoPlayer = num_players;
             if (TwoPlayer)
             {
@@ -69,16 +73,48 @@ namespace SpaceAceWPF
                 this.Player2_Label.Visibility = Visibility.Visible;
                 this.Score2.Visibility = Visibility.Visible;
             }
+        }
 
-            updateFont(opt.resume);
+        private void countdown()
+        {
+            if (countdownOn)
+            {
+                switch (gameClock)
+                {
+                    case 1:
+                        this.pause_background.Opacity = 1;
+                        this.count.Visibility = Visibility.Visible;
+                        this.count.Text = "3";
+                        break;
+                    case 75:
+                        this.count.Text = "2";
+                        break;
+                    case 150:
+                        this.count.Text = "1";
+                        break;
+                    case 225:
+                        this.count.Text = "GO!";
+                        break;
+                    case 300:
+                        this.pause_background.Opacity = 0;
+                        this.count.Visibility = Visibility.Collapsed;
+                        countdownOn = false;
+                        gameClock = 0;
+                        break;
+                }
+            }
         }
 
         private void screenResize(object sender, System.EventArgs e)
         {
+            //Add spaceship scaling?
+
+            //Update Margins
             Right_Margin = this.ActualWidth - this.Player1.ActualWidth;
             Bottom_Margin = this.ActualHeight - this.Player1.ActualHeight;
             Top_Margin = this.Player1_Label_View.ActualHeight;
 
+            //Make sure Player1 is in bounds
             Thickness playerLoc = this.Player1.Margin;
             if (playerLoc.Top < Top_Margin)
                 playerLoc.Top = Top_Margin;
@@ -88,6 +124,7 @@ namespace SpaceAceWPF
                 playerLoc.Left = Right_Margin;
             this.Player1.Margin = playerLoc;
 
+            //Make sure Player2 is in bounds
             if(TwoPlayer)
             {
                 playerLoc = this.Player2.Margin;
@@ -294,6 +331,13 @@ namespace SpaceAceWPF
                 {
                     if (game_paused)
                         return;
+
+                    gameClock++;
+                    if (countdownOn)
+                    {
+                        countdown();
+                        return;
+                    }
 
                     //Move the players
                     moveShip(true);

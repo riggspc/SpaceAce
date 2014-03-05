@@ -64,13 +64,18 @@
             
             <!--Pause Menu Options-->
             <Viewbox Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="3">
-                <TextBlock x:Name="pause_resume" Foreground="White" HorizontalAlignment="Left" TextAlignment="Left" VerticalAlignment="Top" FontWeight="ExtraBold" FontFamily="Fantasy" Text="      RESUME GAME      " Visibility="Collapsed"/>
+                <TextBlock x:Name="pause_resume" Foreground="Yellow" HorizontalAlignment="Left" TextAlignment="Left" VerticalAlignment="Top" FontWeight="ExtraBold" FontFamily="Fantasy" Text="      RESUME GAME      " Visibility="Collapsed"/>
             </Viewbox>
             <Viewbox Grid.Row="4" Grid.Column="2" Grid.ColumnSpan="3">
                 <TextBlock x:Name="pause_returnToStart" Foreground="White" HorizontalAlignment="Left" TextAlignment="Left" VerticalAlignment="Top" FontWeight="ExtraBold" FontFamily="Fantasy" Text="RETURN TO MAIN MENU" Visibility="Collapsed"/>
             </Viewbox>
             <Viewbox Grid.Row="5" Grid.Column="2" Grid.ColumnSpan="3">
                 <TextBlock x:Name="pause_exitGame" Foreground="White" HorizontalAlignment="Left" TextAlignment="Left" VerticalAlignment="Top" FontWeight="ExtraBold" FontFamily="Fantasy" Text="        EXIT GAME        " Visibility="Collapsed"/>
+            </Viewbox>
+            
+            <!--Countdown-->
+            <Viewbox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="7" Grid.RowSpan="6" Stretch="Uniform">
+                <TextBlock x:Name="count" Foreground="White" HorizontalAlignment="Left" TextAlignment="Left" VerticalAlignment="Top" FontWeight="ExtraBold" FontFamily="Fantasy" Text="3" Visibility="Collapsed"/>
             </Viewbox>
         </Grid>
 
