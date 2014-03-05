@@ -53,7 +53,7 @@
             
             <!--Pause Menu Header-->
             <Viewbox Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="3">
-                <TextBlock x:Name="pause_header" Foreground="White" HorizontalAlignment="Left" TextAlignment="Left" VerticalAlignment="Top" FontWeight="ExtraBold" FontFamily="Fantasy" Text="PAUSE MENU" Visibility="Collapsed" />
+                <TextBlock x:Name="pause_header" Foreground="White" HorizontalAlignment="Left" TextAlignment="Left" VerticalAlignment="Top" FontWeight="ExtraBold" FontFamily="Fantasy" Text="GAME PAUSED" Visibility="Collapsed" />
             </Viewbox>
             <Viewbox Grid.Row="2" Grid.Column="1">
                 <Image x:Name="pause_leftShip" HorizontalAlignment="Right"  VerticalAlignment="Center" Source="/Assets/player1_large.png" Visibility="Collapsed"/>

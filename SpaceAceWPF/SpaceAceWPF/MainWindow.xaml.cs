@@ -261,6 +261,9 @@ namespace SpaceAceWPF
                     if (App.menuDelay != 0)
                         break;
 
+                    if (countdownOn)
+                        this.count.Visibility = Visibility.Collapsed;
+
                     this.pause_header.Visibility = Visibility.Visible;
                     this.pause_leftShip.Visibility = Visibility.Visible;
                     this.pause_rightShip.Visibility = Visibility.Visible;
@@ -517,7 +520,11 @@ namespace SpaceAceWPF
                     this.pause_resume.Visibility = Visibility.Collapsed;
                     this.pause_returnToStart.Visibility = Visibility.Collapsed;
                     this.pause_exitGame.Visibility = Visibility.Collapsed;
-                    this.pause_background.Opacity = 0;
+                    if (!countdownOn)
+                        this.pause_background.Opacity = 0;
+                    else
+                        this.count.Visibility = Visibility.Visible;
+                    
                     p1_ship_speed.X = 0;
                     p1_ship_speed.Y = 0;
                     p2_ship_speed.X = 0;
