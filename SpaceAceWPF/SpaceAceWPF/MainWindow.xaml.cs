@@ -22,7 +22,15 @@ namespace SpaceAceWPF
    
     public partial class MainWindow : Window
     {
-        private Point p1_ship_speed, p2_ship_speed;
+        private class Projectile
+        {
+            public Image image;
+            public TransformedBitmap bitmap;
+            public Point speed;
+        }
+
+        private Projectile p1_ship = new Projectile();
+        private Projectile p2_ship = new Projectile();
 
         // Constants
         private const int SHIP_SPEED = 5;
@@ -37,7 +45,7 @@ namespace SpaceAceWPF
 
         private long score = 0;
         // public List<Image> asteroids = new List<Image>();
-        private List<Tuple<Image, int> > asteroids = new List<Tuple<Image, int>>();
+        private List<Projectile> asteroids = new List<Projectile>();
 
         private enum opt { resume, returnToStart, exitGame };
         private opt curOpt = opt.resume;
@@ -72,6 +80,39 @@ namespace SpaceAceWPF
                 this.Player2.Visibility = Visibility.Visible;
                 this.Player2_Label.Visibility = Visibility.Visible;
                 this.Score2.Visibility = Visibility.Visible;
+            }
+
+            //Initialize players' ships
+            p1_ship.image = this.Player1;
+            p1_ship.speed.X = 0;
+            p1_ship.speed.Y = 0;
+            p1_ship.bitmap = new TransformedBitmap();
+            BitmapImage bmpImage = new BitmapImage();
+            bmpImage.BeginInit();
+            bmpImage.UriSource = new Uri(@"../../Assets/player1_small_with_fire.png", UriKind.Relative);
+            bmpImage.EndInit();
+            p1_ship.bitmap.BeginInit();
+            p1_ship.bitmap.Source = bmpImage;
+            ScaleTransform transform = new ScaleTransform(1, 1);
+            p1_ship.bitmap.Transform = transform;
+            p1_ship.bitmap.EndInit();
+            this.Player1.Source = p1_ship.bitmap;
+
+            if (TwoPlayer)
+            {
+                p2_ship.image = this.Player2;
+                p2_ship.speed.X = 0;
+                p2_ship.speed.Y = 0;
+                p2_ship.bitmap = new TransformedBitmap();
+                bmpImage = new BitmapImage();
+                bmpImage.BeginInit();
+                bmpImage.UriSource = new Uri(@"../../Assets/player2_small_with_fire.png", UriKind.Relative);
+                bmpImage.EndInit();
+                p2_ship.bitmap.BeginInit();
+                p2_ship.bitmap.Source = bmpImage;
+                p2_ship.bitmap.Transform = transform;
+                p2_ship.bitmap.EndInit();
+                this.Player2.Source = p2_ship.bitmap;
             }
         }
 
@@ -157,12 +198,12 @@ namespace SpaceAceWPF
             if (player1)
             {
                 playerLoc = this.Player1.Margin;
-                ship_speed = p1_ship_speed;
+                ship_speed = p1_ship.speed;
             }
             else
             {
                 playerLoc = this.Player2.Margin;
-                ship_speed = p2_ship_speed;
+                ship_speed = p2_ship.speed;
             }
 
             if ((playerLoc.Left + ship_speed.X > Left_Margin) && (playerLoc.Left + ship_speed.X < Right_Margin))
@@ -180,9 +221,9 @@ namespace SpaceAceWPF
         {
             Point ship_speed;
             if (player1)
-                ship_speed = p1_ship_speed;
+                ship_speed = p1_ship.speed;
             else
-                ship_speed = p2_ship_speed;
+                ship_speed = p2_ship.speed;
 
             switch(key)
             {
@@ -205,18 +246,18 @@ namespace SpaceAceWPF
             }
 
             if (player1)
-                p1_ship_speed = ship_speed;
+                p1_ship.speed = ship_speed;
             else
-                p2_ship_speed = ship_speed;
+                p2_ship.speed = ship_speed;
         }
 
         private void adjustSpeedDown(bool player1, Key key)
         {
             Point ship_speed;
             if (player1)
-                ship_speed = p1_ship_speed;
+                ship_speed = p1_ship.speed;
             else
-                ship_speed = p2_ship_speed;
+                ship_speed = p2_ship.speed;
 
             switch (key)
             {
@@ -239,9 +280,9 @@ namespace SpaceAceWPF
             }
 
             if (player1)
-                p1_ship_speed = ship_speed;
+                p1_ship.speed = ship_speed;
             else
-                p2_ship_speed = ship_speed;
+                p2_ship.speed = ship_speed;
         }
 
         public void main_keyDown(object sender, KeyEventArgs e)
@@ -366,10 +407,18 @@ namespace SpaceAceWPF
 
                     //Generate Asteroids
                     generateAsteroids();
+
+                    //Update asteroid positions
+                    moveAsteroids();
+
+                    //Check for collisions
+                    detectCollision();
                 });
             }
         }
 
+        private const int MIN_ASTEROID_WIDTH = 100;
+        private const int MAX_ASTEROID_WIDTH = 250;
         private void generateAsteroids()
         {
             Random rand = new Random();
@@ -377,19 +426,20 @@ namespace SpaceAceWPF
             // frequency
             if (rand.Next(0, 1000) > 975)
             {
-                Image newAsteroid = new Image();
+                Projectile newAsteroid = new Projectile();
+                newAsteroid.image = new Image();
                 // newAsteroid.Source = this.LargeAsteroidSource.Source;
-                Thickness loc = newAsteroid.Margin;
+                Thickness loc = newAsteroid.image.Margin;
                 loc.Left = Right_Margin + 200;
-                newAsteroid.VerticalAlignment = System.Windows.VerticalAlignment.Top;
-                newAsteroid.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
+                newAsteroid.image.VerticalAlignment = System.Windows.VerticalAlignment.Top;
+                newAsteroid.image.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
 
                 // Randomly place the asteroid somewhere along the edge,
                 // sizes it, sets the image, and the rotation
                 // basically makes it unique
                 loc.Top = Math.Max(Bottom_Margin - rand.Next(0, (int) Bottom_Margin), Top_Margin);
-                newAsteroid.Margin = loc;
-                newAsteroid.Width = rand.Next(100, 250);
+                newAsteroid.image.Margin = loc;
+                newAsteroid.image.Width = rand.Next(MIN_ASTEROID_WIDTH, MAX_ASTEROID_WIDTH);
 
                 // Determines which sprite the new asteroid will have
                 int asteroidType = rand.Next(0, 3);
@@ -416,41 +466,111 @@ namespace SpaceAceWPF
                 }
 
                 // Set the asteroid's rotation
-                TransformedBitmap tb = new TransformedBitmap();
+                newAsteroid.bitmap = new TransformedBitmap();
                 BitmapImage bi = new BitmapImage();
                 bi.BeginInit();
                 bi.UriSource = uri;
                 bi.EndInit();
-                tb.BeginInit();
-                tb.Source = bi;
-                RotateTransform transform = new RotateTransform(rand.Next(1, 4) * 90);
-                tb.Transform = transform;
-                tb.EndInit();
-                newAsteroid.Source = tb;
+                newAsteroid.bitmap.BeginInit();
+                newAsteroid.bitmap.Source = bi;
+                RotateTransform transform = new RotateTransform(rand.Next(0, 3) * 90);
+                newAsteroid.bitmap.Transform = transform;
+                newAsteroid.bitmap.EndInit();
+                newAsteroid.image.Source = newAsteroid.bitmap;
 
-                this.MainGrid.Children.Add(newAsteroid);
-                asteroids.Add(new Tuple<Image, int>(newAsteroid, rand.Next(MIN_ASTEROID_SPEED, MAX_ASTEROID_SPEED)));
-
+                this.MainGrid.Children.Add(newAsteroid.image);
+                newAsteroid.speed.X = rand.Next(MIN_ASTEROID_SPEED, MAX_ASTEROID_SPEED);
+                newAsteroid.speed.Y = 0;
+                asteroids.Add(newAsteroid);
             }
+        }
 
-            foreach (Tuple<Image, int> pair in asteroids)
-            {
-                Thickness loc = pair.Item1.Margin;
-                loc.Left -= pair.Item2;
-                pair.Item1.Margin = loc;
-            }
-
-            // If it's off the screen delete it
+        private void moveAsteroids()
+        {
+            //Update asteroid positions
             for (int i = 0; i < asteroids.Count; i++)
             {
+                Thickness loc = asteroids[i].image.Margin;
+                loc.Left -= asteroids[i].speed.X;
 
-                if (asteroids[i].Item1.Margin.Left + asteroids[i].Item1.Width < 0)
+                // If it's off the screen delete it, otherwise update position
+                if (loc.Left + asteroids[i].image.Width < 0)
                 {
-                    // this is hacky...might work though
+                    this.MainGrid.Children.Remove(asteroids[i].image);
+                    asteroids.RemoveAt(i);
+                    i--;
+                }
+                else
+                    asteroids[i].image.Margin = loc;
+            }
+        }
+
+        private void detectCollision()
+        {
+            for (int i = 0; i < asteroids.Count; ++i)
+            {
+                if (checkCollision(p1_ship, asteroids[i]) || 
+                    (TwoPlayer && checkCollision(p2_ship, asteroids[i])))
+                {
+                    this.MainGrid.Children.Remove(asteroids[i].image);
                     asteroids.RemoveAt(i);
                     i--;
                 }
             }
+        }
+
+        private bool checkCollision(Projectile proj1, Projectile proj2)
+        {
+            double top1, bot1, left1, right1, 
+                   top2, bot2, left2, right2, 
+                   colTop, colBot, colLeft, colRight, colHeight, colWidth;
+
+            //proj1 Dimensions
+            top1 = proj1.image.Margin.Top;
+            bot1 = proj1.image.Margin.Top + proj1.image.ActualHeight;
+            left1 = proj1.image.Margin.Left;
+            right1 = proj1.image.Margin.Left + proj1.image.ActualWidth;
+
+            //proj2 Dimensions
+            top2 = proj2.image.Margin.Top;
+            bot2 = proj2.image.Margin.Top + proj2.image.ActualHeight;
+            left2 = proj2.image.Margin.Left;
+            right2 = proj2.image.Margin.Left + proj2.image.ActualWidth;
+
+            //Check for collision on y-axis
+            if((top1 > top2 && top1 <= bot2) || (top1 == top2))
+                colTop = top1;
+            else if(top1 < top2 && bot1 >= top2)
+                colTop = top2;
+            else
+                return false;
+
+            if(bot1 < bot2)
+                colBot = bot1;
+            else
+                colBot = bot2;
+
+            colHeight = colBot - colTop;
+
+            //Check for collison on x-axis
+            if ((left1 > left2 && left1 <= right2) || (left1 == left2))
+                colLeft = left1;
+            else if (left1 < left2 && right1 >= left2)
+                colLeft = left2;
+            else
+                return false;
+
+            if (right1 < right2)
+                colRight = right1;
+            else
+                colRight = right2;
+
+            colWidth = colRight - colLeft;
+
+            //Perform more accurate collision detection using projectile bitmaps
+            //Need to find a way to accurately map actualHeight (collision box) to pixelHeight (bitmap)
+
+            return true;
         }
 
         private void pause_inputEvent(InputType inType, Key key)
@@ -536,10 +656,10 @@ namespace SpaceAceWPF
                     if (countdownOn)
                         this.count.Visibility = Visibility.Visible;
                     
-                    p1_ship_speed.X = 0;
-                    p1_ship_speed.Y = 0;
-                    p2_ship_speed.X = 0;
-                    p2_ship_speed.Y = 0;
+                    p1_ship.speed.X = 0;
+                    p1_ship.speed.Y = 0;
+                    p2_ship.speed.X = 0;
+                    p2_ship.speed.Y = 0;
                     game_paused = false;
                     break;
                 case opt.returnToStart:
