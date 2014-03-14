@@ -82,7 +82,20 @@ namespace SpaceAceWPF
                 switch (gameClock)
                 {
                     case 1:
-                        this.pause_background.Opacity = 1;
+                        Thickness player1Loc = this.Player1.Margin;
+                        player1Loc.Left = Left_Margin;
+                        if (TwoPlayer)
+                        {
+                            player1Loc.Top = (Bottom_Margin - Top_Margin + this.Player1_Label_View.ActualHeight)/3;
+                            Thickness player2Loc = this.Player2.Margin;
+                            player2Loc.Top = 2*player1Loc.Top;
+                            player2Loc.Left = Left_Margin;
+                            this.Player2.Margin = player2Loc;
+                        }
+                        else
+                            player1Loc.Top = (Bottom_Margin - Top_Margin + this.Player1_Label_View.ActualHeight) / 2;
+                        this.Player1.Margin = player1Loc;
+
                         this.count.Visibility = Visibility.Visible;
                         this.count.Text = "3";
                         break;
@@ -96,7 +109,6 @@ namespace SpaceAceWPF
                         this.count.Text = "GO!";
                         break;
                     case 300:
-                        this.pause_background.Opacity = 0;
                         this.count.Visibility = Visibility.Collapsed;
                         countdownOn = false;
                         gameClock = 0;
@@ -520,9 +532,8 @@ namespace SpaceAceWPF
                     this.pause_resume.Visibility = Visibility.Collapsed;
                     this.pause_returnToStart.Visibility = Visibility.Collapsed;
                     this.pause_exitGame.Visibility = Visibility.Collapsed;
-                    if (!countdownOn)
-                        this.pause_background.Opacity = 0;
-                    else
+                    this.pause_background.Opacity = 0;
+                    if (countdownOn)
                         this.count.Visibility = Visibility.Visible;
                     
                     p1_ship_speed.X = 0;
