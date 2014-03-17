@@ -134,7 +134,7 @@ namespace SpaceAceWPF
                     this.Close();
                     break;
                 case opt.exitGame:
-                    Application.Current.Shutdown();
+                    System.Environment.Exit(0);
                     break;
             }
         }

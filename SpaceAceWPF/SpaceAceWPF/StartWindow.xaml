@@ -43,13 +43,13 @@
 
         <!--Menu-->
         <Viewbox Grid.Row="2" Grid.Column="1">
-            <TextBlock x:Name="play1" Foreground="White" FontWeight="ExtraBold" FontFamily="Fantasy" FontSize="12.5" HorizontalAlignment="Center" Text="PLAY 1 PLAYER GAME" VerticalAlignment="Center"/>
+            <TextBlock x:Name="play1" Foreground="White" FontWeight="ExtraBold" FontFamily="Fantasy" FontSize="12.5" HorizontalAlignment="Center" Text="   PLAY 1 PLAYER GAME   " VerticalAlignment="Center"/>
         </Viewbox>
         <Viewbox Grid.Row="4" Grid.Column="1">
-            <TextBlock x:Name="play2" Foreground="White" FontWeight="ExtraBold" FontFamily="Fantasy" FontSize="12.5" HorizontalAlignment="Center" Text="PLAY 2 PLAYER GAME" VerticalAlignment="Center"/>
+            <TextBlock x:Name="play2" Foreground="White" FontWeight="ExtraBold" FontFamily="Fantasy" FontSize="12.5" HorizontalAlignment="Center" Text="   PLAY 2 PLAYER GAME   " VerticalAlignment="Center"/>
         </Viewbox>
         <Viewbox Grid.Row="6" Grid.Column="1">
-            <TextBlock x:Name="viewHigh"  Foreground="White" FontWeight="ExtraBold" FontFamily="Fantasy" FontSize="12.5" HorizontalAlignment="Center" Text="VIEW HIGH SCORES" VerticalAlignment="Center"/>
+            <TextBlock x:Name="viewHigh"  Foreground="White" FontWeight="ExtraBold" FontFamily="Fantasy" FontSize="12.5" HorizontalAlignment="Center" Text="     VIEW HIGH SCORES     " VerticalAlignment="Center"/>
         </Viewbox>
         <Viewbox Grid.Row="8" Grid.Column="1">
             <TextBlock x:Name="exitGame" Foreground="White" FontWeight="ExtraBold" FontFamily="Fantasy" FontSize="12.5" HorizontalAlignment="Center" Text="EXIT" VerticalAlignment="Center"/>
