@@ -24,9 +24,9 @@ namespace SpaceAceWPF
     {
         private class Projectile
         {
-            public Image image;
+            public System.Windows.Controls.Image image;
             public TransformedBitmap bitmap;
-            public Point speed;
+            public System.Windows.Point speed;
         }
 
         private Projectile p1_ship = new Projectile();
@@ -521,6 +521,7 @@ namespace SpaceAceWPF
 
         private bool checkCollision(Projectile proj1, Projectile proj2)
         {
+            //Perform a basic collision detection using image margins
             double top1, bot1, left1, right1, 
                    top2, bot2, left2, right2, 
                    colTop, colBot, colLeft, colRight, colHeight, colWidth;
@@ -568,9 +569,76 @@ namespace SpaceAceWPF
             colWidth = colRight - colLeft;
 
             //Perform more accurate collision detection using projectile bitmaps
-            //Need to find a way to accurately map actualHeight (collision box) to pixelHeight (bitmap)
+            ImageSource ims1 = proj1.image.Source;
+            BitmapImage bi1 = (BitmapImage)proj1.bitmap.Source;
+            PixelColor[,] pixels1 = CopyPixels(bi1);
 
-            return true;
+            ImageSource ims2 = proj2.image.Source;
+            BitmapImage bi2 = (BitmapImage)proj2.bitmap.Source;
+            PixelColor[,] pixels2 = CopyPixels(bi2);
+
+            int x1, y1, x2, y2;
+            double actToPix_1w, actToPix_1h, actToPix_2w, actToPix_2h;
+            int w1_pix, h1_pix, w2_pix, h2_pix;
+            
+            h1_pix = bi1.PixelHeight - 1;
+            w1_pix = bi1.PixelWidth - 1;
+            h2_pix = bi2.PixelHeight - 1;
+            w2_pix = bi2.PixelWidth - 1;
+
+            actToPix_1h = h1_pix / (bot1 - top1);
+            actToPix_1w = w1_pix / (right1 - left1);
+            actToPix_2h = h2_pix / (bot2 - top2);
+            actToPix_2w = w2_pix / (right2 - left2);
+
+            for (double i = 0; i < colHeight; ++i)
+            {
+                y1 = (int)(actToPix_1h * ((colTop + i) - top1));
+                y2 = (int)(actToPix_2h * ((colTop + i) - top2));
+                for (double j = 0; j < colWidth; ++j)
+                {
+                    x1 = (int)(actToPix_1w * ((colLeft + j) - left1));
+                    x2 = (int)(actToPix_2w * ((colLeft + j) - left2));
+                    if (pixels1[x1, y1].Alpha > 0 && pixels2[x2, y2].Alpha > 0)
+                        return true;
+                }
+            }
+
+            return false;
+        }
+
+        private struct PixelColor
+        {
+            public byte Blue;
+            public byte Green;
+            public byte Red;
+            public byte Alpha;
+        }
+
+        private PixelColor[,] CopyPixels(BitmapSource source)
+        {
+            int height = source.PixelHeight;
+            int width = source.PixelWidth;
+            int stride = width * 4;
+
+            PixelColor[,] pixels = new PixelColor[width, height];
+            var pixelBytes = new byte[height * width * 4];
+            source.CopyPixels(pixelBytes, stride, 0);
+            for (int y = 0; y < height; y++)
+            { 
+                for (int x = 0; x < width; x++)
+                {
+                    pixels[x, y] = new PixelColor
+                    {
+                        Blue = pixelBytes[(y * width + x) * 4 + 0],
+                        Green = pixelBytes[(y * width + x) * 4 + 1],
+                        Red = pixelBytes[(y * width + x) * 4 + 2],
+                        Alpha = pixelBytes[(y * width + x) * 4 + 3],
+                    };
+                }
+            }
+
+            return pixels;
         }
 
         private void pause_inputEvent(InputType inType, Key key)

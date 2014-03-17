@@ -58,34 +58,28 @@ namespace SpaceAceWPF
                     _scores[i] = defaultEntry;
                 }
 
-                try
+                string path = String.Format("{0}..\\..\\Assets\\scores.txt", System.AppDomain.CurrentDomain.BaseDirectory);
+                if (!System.IO.File.Exists(path))
                 {
-                    string path = String.Format("{0}..\\..\\Assets\\scores.txt", System.AppDomain.CurrentDomain.BaseDirectory); 
-                    if (!System.IO.File.Exists(path))
-                    {
-                        string defaultText = "";
-                        System.IO.File.WriteAllText(path, defaultText);
-                    }
-                    else
-                    {
-                        string readText = System.IO.File.ReadAllText(path);
+                    string defaultText = "";
+                    System.IO.File.WriteAllText(path, defaultText);
+                }
+                else
+                {
+                    string readText = System.IO.File.ReadAllText(path);
 
-                        string delimStr = " \r";
-                        char[] delimiter = delimStr.ToCharArray();
-                        int maxSubstr = 20;
-                        string[] split = readText.Split(delimiter, maxSubstr);
+                    string delimStr = " \r";
+                    char[] delimiter = delimStr.ToCharArray();
+                    int maxSubstr = 20;
+                    string[] split = readText.Split(delimiter, maxSubstr);
 
-                        for (int i = 0; i < split.Length / 2; ++i)
-                        {
-                            _names[i] = Regex.Replace(split[2 * i], @"\t|\n|\r", "");
-                            _scores[i] = Regex.Replace(split[(2 * i) + 1], @"\t|\n|\r", "");
-                        }
+                    for (int i = 0; i < split.Length / 2; ++i)
+                    {
+                        _names[i] = Regex.Replace(split[2 * i], @"\t|\n|\r", "");
+                        _scores[i] = Regex.Replace(split[(2 * i) + 1], @"\t|\n|\r", "");
                     }
                 }
-                catch(Exception e)
-                {
-                    _names[0] = "ERROR LOADING SCOREBOARD";
-                }
+
             }
 
             public event PropertyChangedEventHandler PropertyChanged;
