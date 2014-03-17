@@ -11,7 +11,7 @@
             <ImageBrush ImageSource="/Assets/gameplay_background.png"/>
         </Grid.Background>
         
-        <!--Text Grid-->
+        <!--Pause Grid-->
         <Grid Panel.ZIndex="100">
             <Grid.Background>
                 <ImageBrush x:Name="pause_background" ImageSource="/Assets/gameplay_background.png" Opacity="0"/>
@@ -37,7 +37,7 @@
                 <RowDefinition Height="2*" />
             </Grid.RowDefinitions>
 
-            <!--Name and Score Templates-->
+            <!--Name, Score, and Shield Headers-->
             <Viewbox x:Name="Player1_Label_View" Grid.Row="0" Grid.Column="0">
                 <TextBlock x:Name="Player1_Label" Foreground="Red" HorizontalAlignment="Left" TextAlignment="Left" VerticalAlignment="Top" FontWeight="ExtraBold" FontFamily="Fantasy" Text="PLAYER 1" />
             </Viewbox>
@@ -49,6 +49,12 @@
             </Viewbox>
             <Viewbox Grid.Row="0" Grid.Column="4">
                 <TextBlock x:Name="Score2" Foreground="White" HorizontalAlignment="Center" TextAlignment="Center" VerticalAlignment="Top" FontWeight="ExtraBold" FontFamily="Fantasy" Text="0" Visibility="Collapsed"/>
+            </Viewbox>
+            <Viewbox x:Name="Shield1_View" Grid.Row="1" Grid.Column="0" VerticalAlignment="Top">
+                <TextBlock x:Name="Shield1" Foreground="White" HorizontalAlignment="Center" TextAlignment="Center" VerticalAlignment="Top" FontWeight="ExtraBold" FontFamily="Fantasy" Text="SHIELDS: 100%"/>
+            </Viewbox>
+            <Viewbox Grid.Row="1" Grid.Column="6" VerticalAlignment="Top">
+                <TextBlock x:Name="Shield2" Foreground="White" HorizontalAlignment="Center" TextAlignment="Center" VerticalAlignment="Top" FontWeight="ExtraBold" FontFamily="Fantasy" Text="SHIELDS: 100%" Visibility="Collapsed"/>
             </Viewbox>
             
             <!--Pause Menu Header-->

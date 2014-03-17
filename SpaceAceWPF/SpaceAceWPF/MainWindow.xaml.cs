@@ -29,8 +29,13 @@ namespace SpaceAceWPF
             public System.Windows.Point speed;
         }
 
-        private Projectile p1_ship = new Projectile();
-        private Projectile p2_ship = new Projectile();
+        private class Spaceship : Projectile
+        {
+            public int shield = 100;
+        }
+
+        private Spaceship p1_ship = new Spaceship();
+        private Spaceship p2_ship = new Spaceship();
 
         // Constants
         private const int SHIP_SPEED = 5;
@@ -52,6 +57,7 @@ namespace SpaceAceWPF
 
         private bool TwoPlayer = false;
         private bool game_paused = false;
+        private bool game_over = false;
         private InputType P1, P2;
         private Difficulty diff;
         private long gameClock = 0;
@@ -80,6 +86,7 @@ namespace SpaceAceWPF
                 this.Player2.Visibility = Visibility.Visible;
                 this.Player2_Label.Visibility = Visibility.Visible;
                 this.Score2.Visibility = Visibility.Visible;
+                this.Shield2.Visibility = Visibility.Visible;
             }
 
             //Initialize players' ships
@@ -165,7 +172,7 @@ namespace SpaceAceWPF
             //Update Margins
             Right_Margin = this.ActualWidth - this.Player1.ActualWidth;
             Bottom_Margin = this.ActualHeight - this.Player1.ActualHeight;
-            Top_Margin = this.Player1_Label_View.ActualHeight;
+            Top_Margin = this.Player1_Label_View.ActualHeight + this.Shield1_View.ActualHeight;
 
             //Make sure Player1 is in bounds
             Thickness playerLoc = this.Player1.Margin;
@@ -287,8 +294,11 @@ namespace SpaceAceWPF
 
         public void main_keyDown(object sender, KeyEventArgs e)
         {
-            if (game_paused)
+            if (game_paused || game_over)
+            {
                 pause_inputEvent(InputType.wasd, e.Key);
+                return;
+            }
 
             switch (e.Key)
             {
@@ -331,7 +341,7 @@ namespace SpaceAceWPF
        
         public void main_keyUp(object sender, KeyEventArgs e)
         {
-            if (game_paused)
+            if (game_paused || game_over)
                 return;
 
             switch(e.Key)
@@ -359,7 +369,7 @@ namespace SpaceAceWPF
 
         public void main_joyDown(Key key)
         {
-            if (game_paused)
+            if (game_paused || game_over)
                 pause_inputEvent(InputType.joy, key);
             else if (P1 == InputType.joy)
                 adjustSpeedUp(true, key);
@@ -369,7 +379,7 @@ namespace SpaceAceWPF
 
         public void main_joyUp(Key key)
         {
-            if (game_paused)
+            if (game_paused || game_over)
                 return;
             else if (P1 == InputType.joy)
                 adjustSpeedDown(true, key);
@@ -385,7 +395,7 @@ namespace SpaceAceWPF
             {
                 App.Current.Dispatcher.Invoke((Action)delegate
                 {
-                    if (game_paused)
+                    if (game_paused || game_over)
                         return;
 
                     gameClock++;
@@ -413,6 +423,8 @@ namespace SpaceAceWPF
 
                     //Check for collisions
                     detectCollision();
+                    if (p1_ship.shield <= 0 || p2_ship.shield <= 0)
+                        gameOver();
                 });
             }
         }
@@ -507,10 +519,25 @@ namespace SpaceAceWPF
 
         private void detectCollision()
         {
+            bool collision;
             for (int i = 0; i < asteroids.Count; ++i)
             {
-                if (checkCollision(p1_ship, asteroids[i]) || 
-                    (TwoPlayer && checkCollision(p2_ship, asteroids[i])))
+                collision = false;
+                if (checkCollision(p1_ship, asteroids[i]))
+                {
+                    p1_ship.shield -= 10;
+                    this.Shield1.Text = "SHIELDS: " + p1_ship.shield.ToString() + "%";
+                    collision = true;
+                }
+
+                if(TwoPlayer && checkCollision(p2_ship, asteroids[i]))
+                {
+                    p2_ship.shield -= 10;
+                    this.Shield2.Text = "SHIELDS: " + p2_ship.shield.ToString() + "%";
+                    collision = true;
+                }
+
+                if (collision)
                 {
                     this.MainGrid.Children.Remove(asteroids[i].image);
                     asteroids.RemoveAt(i);
@@ -671,9 +698,12 @@ namespace SpaceAceWPF
                     selectOpt();
                     break;
                 case Key.Escape:
-                    updateFont(opt.resume);
-                    App.menuDelay++;
-                    selectOpt();
+                    if (!game_over)
+                    {
+                        updateFont(opt.resume);
+                        App.menuDelay++;
+                        selectOpt();
+                    }
                     break;
             }
         }
@@ -714,21 +744,31 @@ namespace SpaceAceWPF
             switch(curOpt)
             {
                 case opt.resume:
-                    this.pause_header.Visibility = Visibility.Collapsed;
-                    this.pause_leftShip.Visibility = Visibility.Collapsed;
-                    this.pause_rightShip.Visibility = Visibility.Collapsed;
-                    this.pause_resume.Visibility = Visibility.Collapsed;
-                    this.pause_returnToStart.Visibility = Visibility.Collapsed;
-                    this.pause_exitGame.Visibility = Visibility.Collapsed;
-                    this.pause_background.Opacity = 0;
-                    if (countdownOn)
-                        this.count.Visibility = Visibility.Visible;
-                    
-                    p1_ship.speed.X = 0;
-                    p1_ship.speed.Y = 0;
-                    p2_ship.speed.X = 0;
-                    p2_ship.speed.Y = 0;
-                    game_paused = false;
+                    if (game_paused)
+                    {
+                        this.pause_header.Visibility = Visibility.Collapsed;
+                        this.pause_leftShip.Visibility = Visibility.Collapsed;
+                        this.pause_rightShip.Visibility = Visibility.Collapsed;
+                        this.pause_resume.Visibility = Visibility.Collapsed;
+                        this.pause_returnToStart.Visibility = Visibility.Collapsed;
+                        this.pause_exitGame.Visibility = Visibility.Collapsed;
+                        this.pause_background.Opacity = 0;
+                        if (countdownOn)
+                            this.count.Visibility = Visibility.Visible;
+
+                        p1_ship.speed.X = 0;
+                        p1_ship.speed.Y = 0;
+                        p2_ship.speed.X = 0;
+                        p2_ship.speed.Y = 0;
+                        game_paused = false;
+                    }
+                    else
+                    {
+                        MainWindow main = new MainWindow(TwoPlayer, diff, P1, P2);
+                        App.Current.MainWindow = main;
+                        main.Show();
+                        this.Close();
+                    }
                     break;
                 case opt.returnToStart:
                     StartWindow start = new StartWindow();
@@ -740,6 +780,20 @@ namespace SpaceAceWPF
                     Application.Current.Shutdown();
                     break;
             }
+        }
+
+        private void gameOver()
+        {
+            game_over = true;
+            this.pause_header.Text = "GAME OVER";
+            this.pause_resume.Text = "     PLAY AGAIN     ";
+            this.pause_header.Visibility = Visibility.Visible;
+            this.pause_leftShip.Visibility = Visibility.Visible;
+            this.pause_rightShip.Visibility = Visibility.Visible;
+            this.pause_resume.Visibility = Visibility.Visible;
+            this.pause_returnToStart.Visibility = Visibility.Visible;
+            this.pause_exitGame.Visibility = Visibility.Visible;
+            this.pause_background.Opacity = 1;
         }
     }
 }
