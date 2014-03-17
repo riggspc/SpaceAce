@@ -121,6 +121,8 @@ namespace SpaceAceWPF
                 p2_ship.bitmap.EndInit();
                 this.Player2.Source = p2_ship.bitmap;
             }
+
+            this.WindowState = System.Windows.WindowState.Maximized;
         }
 
         private void countdown()
@@ -134,14 +136,14 @@ namespace SpaceAceWPF
                         player1Loc.Left = Left_Margin;
                         if (TwoPlayer)
                         {
-                            player1Loc.Top = (Bottom_Margin - Top_Margin + this.Player1_Label_View.ActualHeight)/3;
+                            player1Loc.Top = (Bottom_Margin + Top_Margin)/3;
                             Thickness player2Loc = this.Player2.Margin;
                             player2Loc.Top = 2*player1Loc.Top;
                             player2Loc.Left = Left_Margin;
                             this.Player2.Margin = player2Loc;
                         }
                         else
-                            player1Loc.Top = (Bottom_Margin - Top_Margin + this.Player1_Label_View.ActualHeight) / 2;
+                            player1Loc.Top = (Bottom_Margin + Top_Margin) / 2;
                         this.Player1.Margin = player1Loc;
 
                         this.count.Visibility = Visibility.Visible;
@@ -525,14 +527,14 @@ namespace SpaceAceWPF
                 collision = false;
                 if (checkCollision(p1_ship, asteroids[i]))
                 {
-                    p1_ship.shield -= 10;
+                    calculateDamage(p1_ship, asteroids[i]);
                     this.Shield1.Text = "SHIELDS: " + p1_ship.shield.ToString() + "%";
                     collision = true;
                 }
 
                 if(TwoPlayer && checkCollision(p2_ship, asteroids[i]))
                 {
-                    p2_ship.shield -= 10;
+                    calculateDamage(p2_ship, asteroids[i]);
                     this.Shield2.Text = "SHIELDS: " + p2_ship.shield.ToString() + "%";
                     collision = true;
                 }
@@ -666,6 +668,14 @@ namespace SpaceAceWPF
             }
 
             return pixels;
+        }
+
+        private void calculateDamage(Spaceship ship, Projectile asteroid)
+        {
+            double speed = ship.speed.X + asteroid.speed.X;
+            double sizeRatio = (asteroid.image.ActualHeight * asteroid.image.ActualWidth) / (ship.image.ActualHeight * ship.image.ActualWidth);
+
+            ship.shield = Math.Max(0, ship.shield - Math.Max(1, ((int)(speed * sizeRatio)/4)));
         }
 
         private void pause_inputEvent(InputType inType, Key key)
