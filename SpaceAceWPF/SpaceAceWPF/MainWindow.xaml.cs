@@ -32,6 +32,12 @@ namespace SpaceAceWPF
         private class Spaceship : Projectile
         {
             public int shield = 100;
+            public long score = 0;
+        }
+
+        private class Coin : Projectile
+        {
+            public int value;
         }
 
         private Spaceship p1_ship = new Spaceship();
@@ -39,8 +45,8 @@ namespace SpaceAceWPF
 
         // Constants
         private const int SHIP_SPEED = 5;
-        private const int MAX_ASTEROID_SPEED = 10;
-        private const int MIN_ASTEROID_SPEED = 6;
+        private const int MAX_PROJECTILE_SPEED = 10;
+        private const int MIN_PROJECTILE_SPEED = 6;
 
         // Margins may need to change depending on screen size and resolution
         private double Left_Margin = 0;
@@ -48,9 +54,9 @@ namespace SpaceAceWPF
         private double Top_Margin = 75;
         private double Bottom_Margin = 650;
 
-        private long score = 0;
         // public List<Image> asteroids = new List<Image>();
         private List<Projectile> asteroids = new List<Projectile>();
+        private List<Coin> coins = new List<Coin>();
 
         private enum opt { resume, returnToStart, exitGame };
         private opt curOpt = opt.resume;
@@ -412,19 +418,25 @@ namespace SpaceAceWPF
                     if(TwoPlayer)
                         moveShip(false);
                     
-                    //Update Scores
-                    score++;
-                    this.Score1.Text = score.ToString();
-                    this.Score2.Text = score.ToString();
-
-                    //Generate Asteroids
+                    
+                    //Generate asteroids and coins
                     generateAsteroids();
+                    generateCoins();
 
-                    //Update asteroid positions
-                    moveAsteroids();
+                    //Update asteroid and coin positions
+                    moveProjectiles(asteroids, this.Asteroid_Grid);
+                    moveProjectiles(coins.OfType<Projectile>().ToList(), this.Coin_Grid);
 
                     //Check for collisions
                     detectCollision();
+
+                    //Update Scores
+                    p1_ship.score++;
+                    p2_ship.score++;
+                    this.Score1.Text = p1_ship.score.ToString();
+                    this.Score2.Text = p2_ship.score.ToString();
+
+                    //Check if game is over
                     if (p1_ship.shield <= 0 || p2_ship.shield <= 0)
                         gameOver();
                 });
@@ -492,36 +504,90 @@ namespace SpaceAceWPF
                 newAsteroid.bitmap.EndInit();
                 newAsteroid.image.Source = newAsteroid.bitmap;
 
-                this.MainGrid.Children.Add(newAsteroid.image);
-                newAsteroid.speed.X = rand.Next(MIN_ASTEROID_SPEED, MAX_ASTEROID_SPEED);
+                this.Asteroid_Grid.Children.Add(newAsteroid.image);
+                newAsteroid.speed.X = rand.Next(MIN_PROJECTILE_SPEED, MAX_PROJECTILE_SPEED);
                 newAsteroid.speed.Y = 0;
                 asteroids.Add(newAsteroid);
             }
         }
 
-        private void moveAsteroids()
+        private const int COIN_WIDTH = 50;
+        private const int COIN_HEIGHT = 50;
+        private void generateCoins()
         {
-            //Update asteroid positions
-            for (int i = 0; i < asteroids.Count; i++)
+            Random rand = new Random();
+            // Modify the RHS below to change asteroid creation
+            // frequency
+            if (rand.Next(0, 1000) > 980)
             {
-                Thickness loc = asteroids[i].image.Margin;
-                loc.Left -= asteroids[i].speed.X;
+                Coin newCoin = new Coin();
+                newCoin.image = new Image();
+
+                // Randomly place the coin somewhere along the edge
+                Thickness loc = newCoin.image.Margin;
+                loc.Left = Right_Margin + 200;
+                newCoin.image.VerticalAlignment = System.Windows.VerticalAlignment.Top;
+                newCoin.image.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
+                loc.Top = Math.Max(Bottom_Margin - rand.Next(0, (int)Bottom_Margin), Top_Margin);
+                newCoin.image.Margin = loc;
+
+                //Size the image
+                newCoin.image.Width = COIN_WIDTH;
+                newCoin.image.Height = COIN_HEIGHT;
+
+                // Initialize coin's bitmap
+                Uri uri = new Uri(@"../../Assets/gold_coin.png", UriKind.Relative);
+                newCoin.bitmap = new TransformedBitmap();
+                BitmapImage bi = new BitmapImage();
+                bi.BeginInit();
+                bi.UriSource = uri;
+                bi.EndInit();
+                newCoin.bitmap.BeginInit();
+                newCoin.bitmap.Source = bi;
+                RotateTransform transform = new RotateTransform(0);
+                newCoin.bitmap.Transform = transform;
+                newCoin.bitmap.EndInit();
+                newCoin.image.Source = newCoin.bitmap;
+
+                // Initialize coin's speed
+                newCoin.speed.X = rand.Next(MIN_PROJECTILE_SPEED, MAX_PROJECTILE_SPEED);
+                newCoin.speed.Y = 0;
+
+                //Initialize coin's value
+                newCoin.value = 100;
+
+                //Add coin to grid
+                coins.Add(newCoin);
+                this.Coin_Grid.Children.Add(newCoin.image);
+            }
+        }
+
+        private void moveProjectiles(List<Projectile> projectiles, Canvas grid)
+        {
+            //Update projectile positions
+            for (int i = 0; i < projectiles.Count; i++)
+            {
+                Thickness loc = projectiles[i].image.Margin;
+                loc.Left -= projectiles[i].speed.X;
+                loc.Top += projectiles[i].speed.Y;
 
                 // If it's off the screen delete it, otherwise update position
-                if (loc.Left + asteroids[i].image.Width < 0)
+                if (loc.Left + projectiles[i].image.ActualWidth < 0 ||
+                    loc.Top + projectiles[i].image.ActualHeight < 0)
                 {
-                    this.MainGrid.Children.Remove(asteroids[i].image);
-                    asteroids.RemoveAt(i);
+                    grid.Children.Remove(projectiles[i].image);
+                    projectiles.RemoveAt(i);
                     i--;
                 }
                 else
-                    asteroids[i].image.Margin = loc;
+                    projectiles[i].image.Margin = loc;
             }
         }
 
         private void detectCollision()
         {
             bool collision;
+            //Check for collisions with asteroids
             for (int i = 0; i < asteroids.Count; ++i)
             {
                 collision = false;
@@ -541,8 +607,32 @@ namespace SpaceAceWPF
 
                 if (collision)
                 {
-                    this.MainGrid.Children.Remove(asteroids[i].image);
+                    this.Asteroid_Grid.Children.Remove(asteroids[i].image);
                     asteroids.RemoveAt(i);
+                    i--;
+                }
+            }
+
+            //Check for collision with coins
+            for (int i = 0; i < coins.Count; ++i)
+            {
+                collision = false;
+                if (checkCollision(p1_ship, coins[i]))
+                {
+                    p1_ship.score += coins[i].value;
+                    collision = true;
+                }
+
+                if (TwoPlayer && checkCollision(p2_ship, coins[i]))
+                {
+                    p2_ship.score += coins[i].value;
+                    collision = true;
+                }
+
+                if (collision)
+                {
+                    this.Coin_Grid.Children.Remove(coins[i].image);
+                    coins.RemoveAt(i);
                     i--;
                 }
             }

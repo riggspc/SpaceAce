@@ -88,5 +88,8 @@
         <!--Players-->
         <Image x:Name="Player1" HorizontalAlignment="Left" Height="100" Margin="93,184,0,0" VerticalAlignment="Top" Width="100" Source="Assets/player1_small_with_fire.png" RenderTransformOrigin="-2.77,2.43" Panel.ZIndex="10"/>
         <Image x:Name="Player2" HorizontalAlignment="Left" Height="100" Margin="93,284,0,0" VerticalAlignment="Top" Width="100" Source="Assets/player2_small_with_fire.png" RenderTransformOrigin="-2.77,2.43" Panel.ZIndex="10" Visibility="Collapsed"/>
+        
+        <Canvas x:Name="Asteroid_Grid" Panel.ZIndex="10"></Canvas>
+        <Canvas x:Name="Coin_Grid" Panel.ZIndex="5"></Canvas>
     </Grid>
 </Window>
