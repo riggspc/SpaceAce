@@ -91,6 +91,6 @@ namespace SpaceAceWPF
     }
 
     public enum Difficulty { easy, med, hard };
-    public enum InputType { joy, wasd, arrows };
+    public enum InputType { joy, wasd, arrows, none };
 
 }

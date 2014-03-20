@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Text.RegularExpressions;
 using System.Timers;
 
 namespace SpaceAceWPF
@@ -19,7 +20,7 @@ namespace SpaceAceWPF
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-   
+
     public partial class MainWindow : Window
     {
         private class Projectile
@@ -40,9 +41,6 @@ namespace SpaceAceWPF
             public int value;
         }
 
-        private Spaceship p1_ship = new Spaceship();
-        private Spaceship p2_ship = new Spaceship();
-
         // Constants
         private const int SHIP_SPEED = 5;
         private const int MAX_PROJECTILE_SPEED = 10;
@@ -54,28 +52,34 @@ namespace SpaceAceWPF
         private double Top_Margin = 75;
         private double Bottom_Margin = 650;
 
-        // public List<Image> asteroids = new List<Image>();
+        // Ships, coins, and asteroids
+        private Spaceship p1_ship = new Spaceship();
+        private Spaceship p2_ship = new Spaceship();
         private List<Projectile> asteroids = new List<Projectile>();
         private List<Coin> coins = new List<Coin>();
 
+        // Menu Options
         private enum opt { resume, returnToStart, exitGame };
         private opt curOpt = opt.resume;
+
+        // Scoreboard
+        Scoreboard scoreboard = new Scoreboard();
 
         private bool TwoPlayer = false;
         private bool game_paused = false;
         private bool game_over = false;
-        private InputType P1, P2;
+        private InputType p1_in, p2_in;
         private Difficulty diff;
         private long gameClock = 0;
         private bool countdownOn = true;
-        public MainWindow(bool num_players, Difficulty _diff, InputType p1_in, InputType p2_in)
+        public MainWindow(bool num_players, Difficulty _diff, InputType P1, InputType P2)
         {
             InitializeComponent();
             App.timer.Elapsed += main_timerElapsed;
 
             diff = _diff;
-            P1 = p1_in;
-            P2 = p2_in;
+            p1_in = P1;
+            p2_in = P2;
 
             //Check if a joystick is used
             if (p1_in == InputType.joy || p2_in == InputType.joy)
@@ -142,9 +146,9 @@ namespace SpaceAceWPF
                         player1Loc.Left = Left_Margin;
                         if (TwoPlayer)
                         {
-                            player1Loc.Top = (Bottom_Margin + Top_Margin)/3;
+                            player1Loc.Top = (Bottom_Margin + Top_Margin) / 3;
                             Thickness player2Loc = this.Player2.Margin;
-                            player2Loc.Top = 2*player1Loc.Top;
+                            player2Loc.Top = 2 * player1Loc.Top;
                             player2Loc.Left = Left_Margin;
                             this.Player2.Margin = player2Loc;
                         }
@@ -193,7 +197,7 @@ namespace SpaceAceWPF
             this.Player1.Margin = playerLoc;
 
             //Make sure Player2 is in bounds
-            if(TwoPlayer)
+            if (TwoPlayer)
             {
                 playerLoc = this.Player2.Margin;
                 if (playerLoc.Top < Top_Margin)
@@ -240,23 +244,23 @@ namespace SpaceAceWPF
             else
                 ship_speed = p2_ship.speed;
 
-            switch(key)
+            switch (key)
             {
                 case Key.A:
                 case Key.Left:
-                    ship_speed.X = Math.Max(-SHIP_SPEED, ship_speed.X - SHIP_SPEED); 
+                    ship_speed.X = Math.Max(-SHIP_SPEED, ship_speed.X - SHIP_SPEED);
                     break;
                 case Key.D:
                 case Key.Right:
-                    ship_speed.X = Math.Min(SHIP_SPEED, ship_speed.X + SHIP_SPEED); 
+                    ship_speed.X = Math.Min(SHIP_SPEED, ship_speed.X + SHIP_SPEED);
                     break;
                 case Key.W:
                 case Key.Up:
-                    ship_speed.Y = Math.Max(-SHIP_SPEED, ship_speed.Y - SHIP_SPEED); 
+                    ship_speed.Y = Math.Max(-SHIP_SPEED, ship_speed.Y - SHIP_SPEED);
                     break;
                 case Key.S:
                 case Key.Down:
-                    ship_speed.Y = Math.Min(SHIP_SPEED, ship_speed.Y + SHIP_SPEED); 
+                    ship_speed.Y = Math.Min(SHIP_SPEED, ship_speed.Y + SHIP_SPEED);
                     break;
             }
 
@@ -302,7 +306,21 @@ namespace SpaceAceWPF
 
         public void main_keyDown(object sender, KeyEventArgs e)
         {
-            if (game_paused || game_over)
+            if (highScoreInput == InputType.wasd)
+            {
+                if(e.Key == Key.W || e.Key == Key.A || e.Key == Key.S || 
+                   e.Key == Key.D || e.Key == Key.Space || e.Key == Key.Enter)
+                    hs_inputEvent(InputType.wasd, e.Key);
+                return;
+            }
+            else if (highScoreInput == InputType.arrows)
+            {
+                if (e.Key == Key.Up || e.Key == Key.Left || e.Key == Key.Down || 
+                    e.Key == Key.Right || e.Key == Key.Space || e.Key == Key.Enter)
+                    hs_inputEvent(InputType.arrows, e.Key);
+                return;
+            }
+            else if (game_paused || game_over)
             {
                 pause_inputEvent(InputType.wasd, e.Key);
                 return;
@@ -314,18 +332,18 @@ namespace SpaceAceWPF
                 case Key.Right:
                 case Key.Up:
                 case Key.Down:
-                    if (P1 == InputType.arrows)
+                    if (p1_in == InputType.arrows)
                         adjustSpeedUp(true, e.Key);
-                    else if (TwoPlayer && P2 == InputType.arrows)
+                    else if (TwoPlayer && p2_in == InputType.arrows)
                         adjustSpeedUp(false, e.Key);
                     break;
                 case Key.A:
                 case Key.D:
                 case Key.W:
                 case Key.S:
-                    if (P1 == InputType.wasd)
+                    if (p1_in == InputType.wasd)
                         adjustSpeedUp(true, e.Key);
-                    else if (TwoPlayer && P2 == InputType.wasd)
+                    else if (TwoPlayer && p2_in == InputType.wasd)
                         adjustSpeedUp(false, e.Key);
                     break;
                 case Key.Escape:
@@ -346,30 +364,30 @@ namespace SpaceAceWPF
                     break;
             }
         }
-       
+
         public void main_keyUp(object sender, KeyEventArgs e)
         {
             if (game_paused || game_over)
                 return;
 
-            switch(e.Key)
+            switch (e.Key)
             {
                 case Key.Left:
                 case Key.Right:
                 case Key.Up:
                 case Key.Down:
-                    if(P1 == InputType.arrows)
+                    if (p1_in == InputType.arrows)
                         adjustSpeedDown(true, e.Key);
-                    else if(TwoPlayer && P2 == InputType.arrows)
+                    else if (TwoPlayer && p2_in == InputType.arrows)
                         adjustSpeedDown(false, e.Key);
                     break;
                 case Key.A:
                 case Key.D:
                 case Key.W:
                 case Key.S:
-                    if (P1 == InputType.wasd)
+                    if (p1_in == InputType.wasd)
                         adjustSpeedDown(true, e.Key);
-                    else if (TwoPlayer && P2 == InputType.wasd)
+                    else if (TwoPlayer && p2_in == InputType.wasd)
                         adjustSpeedDown(false, e.Key);
                     break;
             }
@@ -377,11 +395,13 @@ namespace SpaceAceWPF
 
         public void main_joyDown(Key key)
         {
-            if (game_paused || game_over)
+            if (highScoreInput == InputType.joy)
+                hs_inputEvent(InputType.joy, key);
+            else if (game_paused || game_over)
                 pause_inputEvent(InputType.joy, key);
-            else if (P1 == InputType.joy)
+            else if (p1_in == InputType.joy)
                 adjustSpeedUp(true, key);
-            else if (TwoPlayer && P2 == InputType.joy)
+            else if (TwoPlayer && p2_in == InputType.joy)
                 adjustSpeedUp(false, key);
         }
 
@@ -389,9 +409,9 @@ namespace SpaceAceWPF
         {
             if (game_paused || game_over)
                 return;
-            else if (P1 == InputType.joy)
+            else if (p1_in == InputType.joy)
                 adjustSpeedDown(true, key);
-            else if (TwoPlayer && P2 == InputType.joy)
+            else if (TwoPlayer && p2_in == InputType.joy)
                 adjustSpeedDown(false, key);
         }
 
@@ -415,10 +435,10 @@ namespace SpaceAceWPF
 
                     //Move the players
                     moveShip(true);
-                    if(TwoPlayer)
+                    if (TwoPlayer)
                         moveShip(false);
-                    
-                    
+
+
                     //Generate asteroids and coins
                     generateAsteroids();
                     generateCoins();
@@ -463,7 +483,7 @@ namespace SpaceAceWPF
                 // Randomly place the asteroid somewhere along the edge,
                 // sizes it, sets the image, and the rotation
                 // basically makes it unique
-                loc.Top = Math.Max(Bottom_Margin - rand.Next(0, (int) Bottom_Margin), Top_Margin);
+                loc.Top = Math.Max(Bottom_Margin - rand.Next(0, (int)Bottom_Margin), Top_Margin);
                 newAsteroid.image.Margin = loc;
                 newAsteroid.image.Width = rand.Next(MIN_ASTEROID_WIDTH, MAX_ASTEROID_WIDTH);
 
@@ -598,7 +618,7 @@ namespace SpaceAceWPF
                     collision = true;
                 }
 
-                if(TwoPlayer && checkCollision(p2_ship, asteroids[i]))
+                if (TwoPlayer && checkCollision(p2_ship, asteroids[i]))
                 {
                     calculateDamage(p2_ship, asteroids[i]);
                     this.Shield2.Text = "SHIELDS: " + p2_ship.shield.ToString() + "%";
@@ -641,8 +661,8 @@ namespace SpaceAceWPF
         private bool checkCollision(Projectile proj1, Projectile proj2)
         {
             //Perform a basic collision detection using image margins
-            double top1, bot1, left1, right1, 
-                   top2, bot2, left2, right2, 
+            double top1, bot1, left1, right1,
+                   top2, bot2, left2, right2,
                    colTop, colBot, colLeft, colRight, colHeight, colWidth;
 
             //proj1 Dimensions
@@ -658,14 +678,14 @@ namespace SpaceAceWPF
             right2 = proj2.image.Margin.Left + proj2.image.ActualWidth;
 
             //Check for collision on y-axis
-            if((top1 > top2 && top1 <= bot2) || (top1 == top2))
+            if ((top1 > top2 && top1 <= bot2) || (top1 == top2))
                 colTop = top1;
-            else if(top1 < top2 && bot1 >= top2)
+            else if (top1 < top2 && bot1 >= top2)
                 colTop = top2;
             else
                 return false;
 
-            if(bot1 < bot2)
+            if (bot1 < bot2)
                 colBot = bot1;
             else
                 colBot = bot2;
@@ -699,7 +719,7 @@ namespace SpaceAceWPF
             int x1, y1, x2, y2;
             double actToPix_1w, actToPix_1h, actToPix_2w, actToPix_2h;
             int w1_pix, h1_pix, w2_pix, h2_pix;
-            
+
             h1_pix = bi1.PixelHeight - 1;
             w1_pix = bi1.PixelWidth - 1;
             h2_pix = bi2.PixelHeight - 1;
@@ -744,7 +764,7 @@ namespace SpaceAceWPF
             var pixelBytes = new byte[height * width * 4];
             source.CopyPixels(pixelBytes, stride, 0);
             for (int y = 0; y < height; y++)
-            { 
+            {
                 for (int x = 0; x < width; x++)
                 {
                     pixels[x, y] = new PixelColor
@@ -765,7 +785,7 @@ namespace SpaceAceWPF
             double speed = ship.speed.X + asteroid.speed.X;
             double sizeRatio = (asteroid.image.ActualHeight * asteroid.image.ActualWidth) / (ship.image.ActualHeight * ship.image.ActualWidth);
 
-            ship.shield = Math.Max(0, ship.shield - Math.Max(1, ((int)(speed * sizeRatio)/4)));
+            ship.shield = Math.Max(0, ship.shield - Math.Max(1, ((int)(speed * sizeRatio) / 4)));
         }
 
         private void pause_inputEvent(InputType inType, Key key)
@@ -778,37 +798,37 @@ namespace SpaceAceWPF
                 case Key.Up:
                 case Key.W:
                     if (curOpt == opt.resume)
-                        updateFont(opt.exitGame);
+                        pause_updateFont(opt.exitGame);
                     else
-                        updateFont(curOpt - 1);
+                        pause_updateFont(curOpt - 1);
                     App.menuDelay++;
                     App.lastInputType = inType;
                     break;
                 case Key.Down:
                 case Key.S:
                     if (curOpt == opt.exitGame)
-                        updateFont(opt.resume);
+                        pause_updateFont(opt.resume);
                     else
-                        updateFont(curOpt + 1);
+                        pause_updateFont(curOpt + 1);
                     App.menuDelay++;
                     App.lastInputType = inType;
                     break;
                 case Key.Space:
                 case Key.Enter:
-                    selectOpt();
+                    pause_selectOpt();
                     break;
                 case Key.Escape:
                     if (!game_over)
                     {
-                        updateFont(opt.resume);
+                        pause_updateFont(opt.resume);
                         App.menuDelay++;
-                        selectOpt();
+                        pause_selectOpt();
                     }
                     break;
             }
         }
 
-        private void updateFont(opt nextOpt)
+        private void pause_updateFont(opt nextOpt)
         {
             switch (curOpt)
             {
@@ -839,9 +859,9 @@ namespace SpaceAceWPF
             curOpt = nextOpt;
         }
 
-        private void selectOpt()
+        private void pause_selectOpt()
         {
-            switch(curOpt)
+            switch (curOpt)
             {
                 case opt.resume:
                     if (game_paused)
@@ -864,7 +884,7 @@ namespace SpaceAceWPF
                     }
                     else
                     {
-                        MainWindow main = new MainWindow(TwoPlayer, diff, P1, P2);
+                        MainWindow main = new MainWindow(TwoPlayer, diff, p1_in, p2_in);
                         App.Current.MainWindow = main;
                         main.Show();
                         this.Close();
@@ -885,15 +905,360 @@ namespace SpaceAceWPF
         private void gameOver()
         {
             game_over = true;
-            this.pause_header.Text = "GAME OVER";
-            this.pause_resume.Text = "     PLAY AGAIN     ";
-            this.pause_header.Visibility = Visibility.Visible;
-            this.pause_leftShip.Visibility = Visibility.Visible;
-            this.pause_rightShip.Visibility = Visibility.Visible;
-            this.pause_resume.Visibility = Visibility.Visible;
-            this.pause_returnToStart.Visibility = Visibility.Visible;
-            this.pause_exitGame.Visibility = Visibility.Visible;
+
+            // Check for high scores
+            if (scoreboard.checkHighScore(p1_ship.score))
+                enterHighScore(true);
+            else if (TwoPlayer && scoreboard.checkHighScore(p2_ship.score))
+                enterHighScore(false);
+            else
+            {
+                //Show game over menu
+                this.pause_header.Text = "GAME OVER";
+                this.pause_resume.Text = "     PLAY AGAIN     ";
+                this.pause_header.Visibility = Visibility.Visible;
+                this.pause_leftShip.Visibility = Visibility.Visible;
+                this.pause_rightShip.Visibility = Visibility.Visible;
+                this.pause_resume.Visibility = Visibility.Visible;
+                this.pause_returnToStart.Visibility = Visibility.Visible;
+                this.pause_exitGame.Visibility = Visibility.Visible;
+                this.pause_background.Opacity = 1;
+            }
+        }
+
+        private InputType highScoreInput = InputType.none;
+        private char[] hs_letters = new char[10];
+        private int hs_curLetter = 0;
+        private void enterHighScore(bool player1)
+        {
+            this.hs_header.Visibility = System.Windows.Visibility.Visible;
+            this.hs_leftShip.Visibility = System.Windows.Visibility.Visible;
+            this.hs_rightShip.Visibility = System.Windows.Visibility.Visible;
+            this.hs_info.Visibility = System.Windows.Visibility.Visible;
+            this.hs_name0.Visibility = System.Windows.Visibility.Visible;
+            this.hs_name1.Visibility = System.Windows.Visibility.Visible;
+            this.hs_name2.Visibility = System.Windows.Visibility.Visible;
+            this.hs_name3.Visibility = System.Windows.Visibility.Visible;
+            this.hs_name4.Visibility = System.Windows.Visibility.Visible;
+            this.hs_name5.Visibility = System.Windows.Visibility.Visible;
+            this.hs_name6.Visibility = System.Windows.Visibility.Visible;
+            this.hs_name7.Visibility = System.Windows.Visibility.Visible;
+            this.hs_name8.Visibility = System.Windows.Visibility.Visible;
+            this.hs_name9.Visibility = System.Windows.Visibility.Visible;
+            this.hs_border0.Visibility = System.Windows.Visibility.Visible;
+            this.hs_border1.Visibility = System.Windows.Visibility.Visible;
+            this.hs_border2.Visibility = System.Windows.Visibility.Visible;
+            this.hs_border3.Visibility = System.Windows.Visibility.Visible;
+            this.hs_border4.Visibility = System.Windows.Visibility.Visible;
+            this.hs_border5.Visibility = System.Windows.Visibility.Visible;
+            this.hs_border6.Visibility = System.Windows.Visibility.Visible;
+            this.hs_border7.Visibility = System.Windows.Visibility.Visible;
+            this.hs_border8.Visibility = System.Windows.Visibility.Visible;
+            this.hs_border9.Visibility = System.Windows.Visibility.Visible;
             this.pause_background.Opacity = 1;
+
+            if(player1)
+            {
+                highScoreInput = p1_in;
+                this.hs_info.Text = "     PLAYER 1 PLEASE ENTER NAME     ";
+            }
+            else
+            {
+                highScoreInput = p2_in;
+                this.hs_info.Text = "     PLAYER 2 PLEASE ENTER NAME     ";
+            }
+
+            hs_letters[0] = 'G';
+            hs_letters[1] = 'R';
+            hs_letters[2] = 'A';
+            hs_letters[3] = 'C';
+            hs_letters[4] = 'E';
+            for (int i = 5; i < 10; ++i)
+                hs_letters[i] = ' ';
+            for(int i = 9; i >= 0; --i)
+                hs_updateFont(i);
+            hs_updateFont(0);
+        }
+
+        private void hs_inputEvent(InputType inType, Key key)
+        {
+            if (App.menuDelay != 0)
+                return;
+
+            switch (key)
+            {
+                case Key.Up:
+                case Key.W:
+                    if (hs_letters[hs_curLetter] == ' ')
+                        hs_letters[hs_curLetter] = 'Z';
+                    else if (hs_letters[hs_curLetter] == 'A')
+                        hs_letters[hs_curLetter] = ' ';
+                    else
+                        hs_letters[hs_curLetter]--;
+                    hs_updateFont(hs_curLetter);
+                    break;
+                case Key.Down:
+                case Key.S:
+                    if (hs_letters[hs_curLetter] == ' ')
+                        hs_letters[hs_curLetter] = 'A';
+                    else if (hs_letters[hs_curLetter] == 'Z')
+                        hs_letters[hs_curLetter] = ' ';
+                    else
+                        hs_letters[hs_curLetter]++;
+                    hs_updateFont(hs_curLetter);
+                    break;
+                case Key.Left:
+                case Key.A:
+                    if (hs_curLetter > 0)
+                        hs_updateFont(hs_curLetter - 1);
+                    break;
+                case Key.Right:
+                case Key.D:
+                    if (hs_curLetter < 9)
+                        hs_updateFont(hs_curLetter + 1);
+                    break;
+                case Key.Space:
+                case Key.Enter:
+                    long score;
+                    if (highScoreInput == p1_in)
+                    {
+                        score = p1_ship.score;
+                        p1_ship.score = 0;
+                    }
+                    else
+                    {
+                        score = p2_ship.score;
+                        p2_ship.score = 0;
+                    }
+
+                    string highScoreName = "";
+                    for (int i = 0; i < 10; ++i)
+                        highScoreName += hs_letters[i];
+                    scoreboard.addHighScore(highScoreName.Trim(), score);
+                    highScoreInput = InputType.none;
+
+                    this.hs_header.Visibility = System.Windows.Visibility.Collapsed;
+                    this.hs_leftShip.Visibility = System.Windows.Visibility.Collapsed;
+                    this.hs_rightShip.Visibility = System.Windows.Visibility.Collapsed;
+                    this.hs_info.Visibility = System.Windows.Visibility.Collapsed;
+                    this.hs_name0.Visibility = System.Windows.Visibility.Collapsed;
+                    this.hs_name1.Visibility = System.Windows.Visibility.Collapsed;
+                    this.hs_name2.Visibility = System.Windows.Visibility.Collapsed;
+                    this.hs_name3.Visibility = System.Windows.Visibility.Collapsed;
+                    this.hs_name4.Visibility = System.Windows.Visibility.Collapsed;
+                    this.hs_name5.Visibility = System.Windows.Visibility.Collapsed;
+                    this.hs_name6.Visibility = System.Windows.Visibility.Collapsed;
+                    this.hs_name7.Visibility = System.Windows.Visibility.Collapsed;
+                    this.hs_name8.Visibility = System.Windows.Visibility.Collapsed;
+                    this.hs_name9.Visibility = System.Windows.Visibility.Collapsed;
+                    this.hs_border0.Visibility = System.Windows.Visibility.Collapsed;
+                    this.hs_border1.Visibility = System.Windows.Visibility.Collapsed;
+                    this.hs_border2.Visibility = System.Windows.Visibility.Collapsed;
+                    this.hs_border3.Visibility = System.Windows.Visibility.Collapsed;
+                    this.hs_border4.Visibility = System.Windows.Visibility.Collapsed;
+                    this.hs_border5.Visibility = System.Windows.Visibility.Collapsed;
+                    this.hs_border6.Visibility = System.Windows.Visibility.Collapsed;
+                    this.hs_border7.Visibility = System.Windows.Visibility.Collapsed;
+                    this.hs_border8.Visibility = System.Windows.Visibility.Collapsed;
+                    this.hs_border9.Visibility = System.Windows.Visibility.Collapsed;
+                    this.pause_background.Opacity = 0;
+
+                    highScoreInput = InputType.none;
+                    gameOver();
+                    break;
+            }
+        }
+
+        private void hs_updateFont(int hs_nextLetter)
+        {
+            switch (hs_curLetter)
+            {
+                case 0:
+                    this.hs_name0.Text = hs_letters[0].ToString();
+                    this.hs_name0.Foreground = Brushes.White;
+                    this.hs_border0.BorderBrush = Brushes.White;
+                    break;
+                case 1:
+                    this.hs_name1.Text = hs_letters[1].ToString();
+                    this.hs_name1.Foreground = Brushes.White;
+                    this.hs_border1.BorderBrush = Brushes.White;
+                    break;
+                case 2:
+                    this.hs_name2.Text = hs_letters[2].ToString();
+                    this.hs_name2.Foreground = Brushes.White;
+                    this.hs_border2.BorderBrush = Brushes.White;
+                    break;
+                case 3:
+                    this.hs_name3.Text = hs_letters[3].ToString();
+                    this.hs_name3.Foreground = Brushes.White;
+                    this.hs_border3.BorderBrush = Brushes.White;
+                    break;
+                case 4:
+                    this.hs_name4.Text = hs_letters[4].ToString();
+                    this.hs_name4.Foreground = Brushes.White;
+                    this.hs_border4.BorderBrush = Brushes.White;
+                    break;
+                case 5:
+                    this.hs_name5.Text = hs_letters[5].ToString();
+                    this.hs_name5.Foreground = Brushes.White;
+                    this.hs_border5.BorderBrush = Brushes.White;
+                    break;
+                case 6:
+                    this.hs_name6.Text = hs_letters[6].ToString();
+                    this.hs_name6.Foreground = Brushes.White;
+                    this.hs_border6.BorderBrush = Brushes.White;
+                    break;
+                case 7:
+                    this.hs_name7.Text = hs_letters[7].ToString();
+                    this.hs_name7.Foreground = Brushes.White;
+                    this.hs_border7.BorderBrush = Brushes.White;
+                    break;
+                case 8:
+                    this.hs_name8.Text = hs_letters[8].ToString();
+                    this.hs_name8.Foreground = Brushes.White;
+                    this.hs_border8.BorderBrush = Brushes.White;
+                    break;
+                case 9:
+                    this.hs_name9.Text = hs_letters[9].ToString();
+                    this.hs_name9.Foreground = Brushes.White;
+                    this.hs_border9.BorderBrush = Brushes.White;
+                    break;
+            }
+
+            switch (hs_nextLetter)
+            {
+                case 0:
+                    this.hs_name0.Foreground = Brushes.Yellow;
+                    this.hs_border0.BorderBrush = Brushes.Yellow;
+                    break;
+                case 1:
+                    this.hs_name1.Foreground = Brushes.Yellow;
+                    this.hs_border1.BorderBrush = Brushes.Yellow;
+                    break;
+                case 2:
+                    this.hs_name2.Foreground = Brushes.Yellow;
+                    this.hs_border2.BorderBrush = Brushes.Yellow;
+                    break;
+                case 3:
+                    this.hs_name3.Foreground = Brushes.Yellow;
+                    this.hs_border3.BorderBrush = Brushes.Yellow;
+                    break;
+                case 4:
+                    this.hs_name4.Foreground = Brushes.Yellow;
+                    this.hs_border4.BorderBrush = Brushes.Yellow;
+                    break;
+                case 5:
+                    this.hs_name5.Foreground = Brushes.Yellow;
+                    this.hs_border5.BorderBrush = Brushes.Yellow;
+                    break;
+                case 6:
+                    this.hs_name6.Foreground = Brushes.Yellow;
+                    this.hs_border6.BorderBrush = Brushes.Yellow;
+                    break;
+                case 7:
+                    this.hs_name7.Foreground = Brushes.Yellow;
+                    this.hs_border7.BorderBrush = Brushes.Yellow;
+                    break;
+                case 8:
+                    this.hs_name8.Foreground = Brushes.Yellow;
+                    this.hs_border8.BorderBrush = Brushes.Yellow;
+                    break;
+                case 9:
+                    this.hs_name9.Foreground = Brushes.Yellow;
+                    this.hs_border9.BorderBrush = Brushes.Yellow;
+                    break;
+            }
+
+            hs_curLetter = hs_nextLetter;
+        }
+
+        private class Scoreboard
+        {
+            public string[] names;
+            public long[] scores;
+            private int highScoreIndex;
+            private string path;
+
+            public Scoreboard()
+            {
+                names = new string[10];
+                scores = new long[10];
+                highScoreIndex = -1;
+                path = String.Format("{0}..\\..\\Assets\\scores.txt", System.AppDomain.CurrentDomain.BaseDirectory);
+
+                readInScoreboard();
+            }
+
+            private void readInScoreboard()
+            {
+                for (int i = 0; i < 10; ++i)
+                {
+                    names[i] = "";
+                    scores[i] = 0;
+                }
+
+                if (!System.IO.File.Exists(path))
+                {
+                    string defaultText = "";
+                    System.IO.File.WriteAllText(path, defaultText);
+                }
+                else
+                {
+                    string readText = System.IO.File.ReadAllText(path);
+
+                    string delimStr = "\r\n\t";
+                    char[] delimiter = delimStr.ToCharArray();
+                    int maxSubstr = 20;
+                    string[] split = readText.Split(delimiter, maxSubstr);
+
+                    for (int i = 0; i < split.Length / 2; ++i)
+                    {
+                        names[i] = Regex.Replace(split[2 * i], @"\t|\n|\r", "");
+                        scores[i] = Convert.ToInt64(Regex.Replace(split[(2 * i) + 1], @"\t|\n|\r", ""));
+                    }
+                }
+            }
+
+            public bool checkHighScore(long score)
+            {
+                highScoreIndex = -1;
+                for(int i = 9; i >= 0; --i)
+                {
+                    if (score > scores[i])
+                        highScoreIndex = i;
+                    else
+                        break; ;
+                }
+
+                if (highScoreIndex > -1)
+                    return true;
+                else
+                    return false;
+            }
+
+            public void addHighScore(string name, long score)
+            {
+                System.Diagnostics.Debug.Assert(highScoreIndex > -1);
+                for(int i = 9; i > highScoreIndex; --i)
+                {
+                    names[i] = names[i - 1];
+                    scores[i] = scores[i - 1];
+                }
+
+                names[highScoreIndex] = name;
+                scores[highScoreIndex] = score;
+
+                string writeText = "";
+                for(int i = 0; i < 10; ++i)
+                {
+                    if (scores[i] > 0)
+                        writeText += names[i] + "\t" + scores[i] + "\n";
+                    else
+                        break;
+                }
+
+                System.IO.File.WriteAllText(path, writeText);
+            }
         }
     }
 }

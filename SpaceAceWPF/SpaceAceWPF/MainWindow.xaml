@@ -84,11 +84,112 @@
                 <TextBlock x:Name="count" Foreground="White" HorizontalAlignment="Left" TextAlignment="Left" VerticalAlignment="Top" FontWeight="ExtraBold" FontFamily="Fantasy" Text="3" Visibility="Collapsed"/>
             </Viewbox>
         </Grid>
+        
+        <!--High Score Grid-->
+        <Grid Panel.ZIndex="100">
+            <Grid.Background>
+                <ImageBrush x:Name="hs_background" ImageSource="/Assets/gameplay_background.png" Opacity="0"/>
+            </Grid.Background>
+
+            <!--Setup-->
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width=".25*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width=".25*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width=".25*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width=".25*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width=".25*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width=".25*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width=".25*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width=".25*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width=".25*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="2*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1.5*"/>
+                <RowDefinition Height="1.5*"/>
+                <RowDefinition Height="1.25*"/>
+                <RowDefinition Height="1.25*"/>
+                <RowDefinition Height="1.5*" />
+            </Grid.RowDefinitions>
+
+            <!--High Score Menu Header-->
+            <Viewbox Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="19">
+                <TextBlock x:Name="hs_header" Foreground="White" HorizontalAlignment="Left" TextAlignment="Left" VerticalAlignment="Top" FontWeight="ExtraBold" FontFamily="Fantasy" Text="!!! NEW HIGH SCORE !!!" Visibility="Collapsed"/>
+            </Viewbox>
+            <Viewbox Grid.Row="1" Grid.Column="1">
+                <Image x:Name="hs_leftShip" HorizontalAlignment="Right"  VerticalAlignment="Center" Source="/Assets/player1_large.png" Visibility="Collapsed"/>
+            </Viewbox>
+            <Viewbox Grid.Row="1" Grid.Column="21">
+                <Image x:Name="hs_rightShip" HorizontalAlignment="Left" VerticalAlignment="Center" Source="/Assets/player2_large.png" Visibility="Collapsed"/>
+            </Viewbox>
+            <Viewbox Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="19">
+                <TextBlock x:Name="hs_info" Foreground="White" HorizontalAlignment="Left" TextAlignment="Left" VerticalAlignment="Top" FontWeight="ExtraBold" FontFamily="Fantasy" Text="     PLAYER 1 PLEASE ENTER NAME     " Visibility="Collapsed" />
+            </Viewbox>
+            
+            
+            <!--Letter Squares-->
+            <Border x:Name="hs_border0" Grid.Row="3" Grid.Column="2" BorderBrush="White" BorderThickness="0,0,0,10" Visibility="Collapsed"></Border>
+            <Border x:Name="hs_border1" Grid.Row="3" Grid.Column="4" BorderBrush="White" BorderThickness="0,0,0,10" Visibility="Collapsed"></Border>
+            <Border x:Name="hs_border2" Grid.Row="3" Grid.Column="6" BorderBrush="White" BorderThickness="0,0,0,10" Visibility="Collapsed"></Border>
+            <Border x:Name="hs_border3" Grid.Row="3" Grid.Column="8" BorderBrush="White" BorderThickness="0,0,0,10" Visibility="Collapsed"></Border>
+            <Border x:Name="hs_border4" Grid.Row="3" Grid.Column="10" BorderBrush="White" BorderThickness="0,0,0,10" Visibility="Collapsed"></Border>
+            <Border x:Name="hs_border5" Grid.Row="3" Grid.Column="12" BorderBrush="White" BorderThickness="0,0,0,10" Visibility="Collapsed"></Border>
+            <Border x:Name="hs_border6" Grid.Row="3" Grid.Column="14" BorderBrush="White" BorderThickness="0,0,0,10" Visibility="Collapsed"></Border>
+            <Border x:Name="hs_border7" Grid.Row="3" Grid.Column="16" BorderBrush="White" BorderThickness="0,0,0,10" Visibility="Collapsed"></Border>
+            <Border x:Name="hs_border8" Grid.Row="3" Grid.Column="18" BorderBrush="White" BorderThickness="0,0,0,10" Visibility="Collapsed"></Border>
+            <Border x:Name="hs_border9" Grid.Row="3" Grid.Column="20" BorderBrush="White" BorderThickness="0,0,0,10" Visibility="Collapsed"></Border>
+            
+            <Viewbox Grid.Row="3" Grid.Column="2">
+                <TextBlock x:Name="hs_name0" Foreground="White" HorizontalAlignment="Left" TextAlignment="Left" VerticalAlignment="Top" FontWeight="ExtraBold" FontFamily="Fantasy" Text="G" Visibility="Collapsed"/>
+            </Viewbox>
+            <Viewbox Grid.Row="3" Grid.Column="4">
+                <TextBlock x:Name="hs_name1" Foreground="White" HorizontalAlignment="Left" TextAlignment="Left" VerticalAlignment="Top" FontWeight="ExtraBold" FontFamily="Fantasy" Text="R" Visibility="Collapsed"/>
+            </Viewbox>
+            <Viewbox Grid.Row="3" Grid.Column="6">
+                <TextBlock x:Name="hs_name2" Foreground="White" HorizontalAlignment="Left" TextAlignment="Left" VerticalAlignment="Top" FontWeight="ExtraBold" FontFamily="Fantasy" Text="A" Visibility="Collapsed"/>
+            </Viewbox>
+            <Viewbox Grid.Row="3" Grid.Column="8">
+                <TextBlock x:Name="hs_name3" Foreground="White" HorizontalAlignment="Left" TextAlignment="Left" VerticalAlignment="Top" FontWeight="ExtraBold" FontFamily="Fantasy" Text="C" Visibility="Collapsed"/>
+            </Viewbox>
+            <Viewbox Grid.Row="3" Grid.Column="10">
+                <TextBlock x:Name="hs_name4" Foreground="White" HorizontalAlignment="Left" TextAlignment="Left" VerticalAlignment="Top" FontWeight="ExtraBold" FontFamily="Fantasy" Text="E" Visibility="Collapsed"/>
+            </Viewbox>
+            <Viewbox Grid.Row="3" Grid.Column="12">
+                <TextBlock x:Name="hs_name5" Foreground="White" HorizontalAlignment="Left" TextAlignment="Left" VerticalAlignment="Top" FontWeight="ExtraBold" FontFamily="Fantasy" Text=" " Visibility="Collapsed"/>
+            </Viewbox>
+            <Viewbox Grid.Row="3" Grid.Column="14">
+                <TextBlock x:Name="hs_name6" Foreground="White" HorizontalAlignment="Left" TextAlignment="Left" VerticalAlignment="Top" FontWeight="ExtraBold" FontFamily="Fantasy" Text=" " Visibility="Collapsed"/>
+            </Viewbox>
+            <Viewbox Grid.Row="3" Grid.Column="16">
+                <TextBlock x:Name="hs_name7" Foreground="White" HorizontalAlignment="Left" TextAlignment="Left" VerticalAlignment="Top" FontWeight="ExtraBold" FontFamily="Fantasy" Text=" " Visibility="Collapsed"/>
+            </Viewbox>
+            <Viewbox Grid.Row="3" Grid.Column="18">
+                <TextBlock x:Name="hs_name8" Foreground="White" HorizontalAlignment="Left" TextAlignment="Left" VerticalAlignment="Top" FontWeight="ExtraBold" FontFamily="Fantasy" Text=" " Visibility="Collapsed"/>
+            </Viewbox>
+            <Viewbox Grid.Row="3" Grid.Column="20">
+                <TextBlock x:Name="hs_name9" Foreground="White" HorizontalAlignment="Left" TextAlignment="Left" VerticalAlignment="Top" FontWeight="ExtraBold" FontFamily="Fantasy" Text=" " Visibility="Collapsed"/>
+            </Viewbox>
+
+        </Grid>
 
         <!--Players-->
         <Image x:Name="Player1" HorizontalAlignment="Left" Height="100" Margin="93,184,0,0" VerticalAlignment="Top" Width="100" Source="Assets/player1_small_with_fire.png" RenderTransformOrigin="-2.77,2.43" Panel.ZIndex="10"/>
         <Image x:Name="Player2" HorizontalAlignment="Left" Height="100" Margin="93,284,0,0" VerticalAlignment="Top" Width="100" Source="Assets/player2_small_with_fire.png" RenderTransformOrigin="-2.77,2.43" Panel.ZIndex="10" Visibility="Collapsed"/>
         
+        <!--Asteroids and Coins-->
         <Canvas x:Name="Asteroid_Grid" Panel.ZIndex="10"></Canvas>
         <Canvas x:Name="Coin_Grid" Panel.ZIndex="5"></Canvas>
     </Grid>

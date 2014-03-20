@@ -26,10 +26,11 @@ namespace SpaceAceWPF
         enum opt { returnStart, clearScores, confirmNo, confirmYes };
         opt curOpt = opt.returnStart;
 
-        public class ScoreboardContext : INotifyPropertyChanged
+        public class ScoreboardContext
         {   
             private string[] _names;
             private string[] _scores;
+            private string path;
 
             public string[] names
             {
@@ -45,7 +46,7 @@ namespace SpaceAceWPF
             {
                 _names = new string[10];
                 _scores = new string[10];
-
+                path = String.Format("{0}..\\..\\Assets\\scores.txt", System.AppDomain.CurrentDomain.BaseDirectory);
                 readInScoreboard();
             }
 
@@ -58,7 +59,6 @@ namespace SpaceAceWPF
                     _scores[i] = defaultEntry;
                 }
 
-                string path = String.Format("{0}..\\..\\Assets\\scores.txt", System.AppDomain.CurrentDomain.BaseDirectory);
                 if (!System.IO.File.Exists(path))
                 {
                     string defaultText = "";
@@ -68,7 +68,7 @@ namespace SpaceAceWPF
                 {
                     string readText = System.IO.File.ReadAllText(path);
 
-                    string delimStr = " \r";
+                    string delimStr = "\r\n\t";
                     char[] delimiter = delimStr.ToCharArray();
                     int maxSubstr = 20;
                     string[] split = readText.Split(delimiter, maxSubstr);
@@ -79,18 +79,12 @@ namespace SpaceAceWPF
                         _scores[i] = Regex.Replace(split[(2 * i) + 1], @"\t|\n|\r", "");
                     }
                 }
-
             }
 
-            public event PropertyChangedEventHandler PropertyChanged;
-            public void updateBoard()
+            public void resetBoard()
             {
-                readInScoreboard();
-                for(int i = 0; i < 10; ++i)
-                {
-                    PropertyChanged(this, new PropertyChangedEventArgs("names[" + i + "]"));
-                    PropertyChanged(this, new PropertyChangedEventArgs("scores[" + i + "]"));
-                }
+                string defaultText = "";
+                System.IO.File.WriteAllText(path, defaultText);
             }
         }
 
@@ -206,14 +200,12 @@ namespace SpaceAceWPF
                     this.clearScores.Visibility = Visibility.Collapsed;
                     updateFont(opt.confirmNo);
                     break;
-                case opt.confirmYes: //Still needs some work
-                    scoreboardContext.updateBoard();
-                    this.confirmNo.Visibility = Visibility.Collapsed;
-                    this.confirmYes.Visibility = Visibility.Collapsed;
-                    this.confirmAsk.Visibility = Visibility.Collapsed;
-                    this.returnStart.Visibility = Visibility.Visible;
-                    this.clearScores.Visibility = Visibility.Visible;
-                    updateFont(opt.clearScores);
+                case opt.confirmYes:
+                    scoreboardContext.resetBoard();
+                    ScoreboardWindow score = new ScoreboardWindow();
+                    App.Current.MainWindow = score;
+                    score.Show();
+                    this.Close();
                     break;
                 case opt.confirmNo:
                     this.confirmNo.Visibility = Visibility.Collapsed;

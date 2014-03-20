@@ -27,7 +27,7 @@ namespace SpaceAceWPF
         private string[] diffString = { "     EASY     ", "    MEDIUM    ", "     HARD     " };
 
         InputType p1_in = InputType.wasd;
-        InputType p2_in = InputType.arrows;
+        InputType p2_in = InputType.none;
         private string[] inputOptString = { "   JOYSTICK   ", "     WASD     ", "ARROW KEYS" };
 
         private bool validConfig = true;
@@ -45,6 +45,7 @@ namespace SpaceAceWPF
             TwoPlayer = num_players;
             if(TwoPlayer)
             {
+                p2_in = InputType.arrows;
                 this.P2_Title.Visibility = Visibility.Visible;
                 this.P2_Opt.Visibility = Visibility.Visible;
             }

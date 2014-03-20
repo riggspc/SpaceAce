@@ -5,7 +5,7 @@
         WindowStartupLocation="CenterScreen"
         KeyDown="score_keyDown"
         WindowState="Maximized">
-    <Grid>
+    <Grid x:Name="Scoreboard_Grid">
         <!--Setup-->
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
