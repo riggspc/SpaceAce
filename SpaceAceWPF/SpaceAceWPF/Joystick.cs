@@ -15,7 +15,9 @@ namespace SpaceAceWPF
         public static int NumJoysticks()
         {
             DirectInput direct = new DirectInput();
-            return direct.GetDevices(DeviceClass.GameController, DeviceEnumerationFlags.AttachedOnly).Count;
+            int count = direct.GetDevices(DeviceClass.GameController, DeviceEnumerationFlags.AttachedOnly).Count;
+            direct.Dispose();
+            return count;
         }
 
         public void State(ref Point joyLoc)
