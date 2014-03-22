@@ -41,6 +41,11 @@ namespace SpaceAceWPF
             public int value;
         }
 
+        private class Health : Projectile
+        {
+            public int value;
+        }
+
         // Constants
         private const int SHIP_SPEED = 5;
         private const int BASE_MAX_PROJECTILE_SPEED = 6;
@@ -57,6 +62,7 @@ namespace SpaceAceWPF
         private Spaceship p2_ship = new Spaceship();
         private List<Projectile> asteroids = new List<Projectile>();
         private List<Coin> coins = new List<Coin>();
+        private List<Health> healths = new List<Health>();
 
         // Menu Options
         private enum opt { resume, returnToStart, exitGame };
@@ -458,10 +464,12 @@ namespace SpaceAceWPF
                     //Generate asteroids and coins
                     generateAsteroids();
                     generateCoins();
+                    generateHealth();
 
                     //Update asteroid and coin positions
                     moveProjectiles(asteroids, this.Asteroid_Grid);
                     moveProjectiles(coins.OfType<Projectile>().ToList(), this.Coin_Grid);
+                    moveProjectiles(healths.OfType<Projectile>().ToList(), this.Health_Grid);
 
                     //Check for collisions
                     detectCollision();
@@ -481,6 +489,56 @@ namespace SpaceAceWPF
 
         private const int MIN_ASTEROID_WIDTH = 100;
         private const int MAX_ASTEROID_WIDTH = 250;
+        private const int HEALTH_WIDTH = 50;
+        private const int HEALTH_HEIGHT = 50;
+        private void generateHealth()
+        {
+            Random rand = new Random();
+
+            if (rand.Next(0, 1000) > 500)
+            {
+                Health newHealth = new Health();
+                newHealth.image = new Image();
+
+                // Randomly place the health somewhere along the edge
+                Thickness loc = newHealth.image.Margin;
+                loc.Left = Right_Margin + 200;
+                newHealth.image.VerticalAlignment = System.Windows.VerticalAlignment.Top;
+                newHealth.image.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
+                loc.Top = Math.Max(Bottom_Margin - rand.Next(0, (int)Bottom_Margin), Top_Margin);
+                newHealth.image.Margin = loc;
+
+                //Size the image
+                newHealth.image.Width = HEALTH_HEIGHT;
+                newHealth.image.Height = HEALTH_HEIGHT;
+
+                // Initialize coin's bitmap
+                Uri uri = new Uri(@"../../Assets/health.png", UriKind.Relative);
+                newHealth.bitmap = new TransformedBitmap();
+                BitmapImage bi = new BitmapImage();
+                bi.BeginInit();
+                bi.UriSource = uri;
+                bi.EndInit();
+                newHealth.bitmap.BeginInit();
+                newHealth.bitmap.Source = bi;
+                RotateTransform transform = new RotateTransform(0);
+                newHealth.bitmap.Transform = transform;
+                newHealth.bitmap.EndInit();
+                newHealth.image.Source = newHealth.bitmap;
+
+                // Initialize coin's speed
+                newHealth.speed.X = rand.Next(BASE_MIN_PROJECTILE_SPEED, BASE_MAX_PROJECTILE_SPEED) * difficulty_multiplier;
+                newHealth.speed.Y = 0;
+
+                //Initialize coin's value
+                newHealth.value = 25;
+
+                //Add coin to grid
+                healths.Add(newHealth);
+                this.Coin_Grid.Children.Add(newHealth.image);
+            }
+            
+        }
         private void generateAsteroids()
         {
             Random rand = new Random();
@@ -568,7 +626,7 @@ namespace SpaceAceWPF
         private void generateCoins()
         {
             Random rand = new Random();
-            // Modify the RHS below to change asteroid creation
+            // Modify the RHS below to change coin creation
             // frequency
             if (rand.Next(0, 1000) > 980)
             {
@@ -685,6 +743,30 @@ namespace SpaceAceWPF
                 {
                     this.Coin_Grid.Children.Remove(coins[i].image);
                     coins.RemoveAt(i);
+                    i--;
+                }
+            }
+
+            //Check for collision with healths
+            for (int i = 0; i < healths.Count; ++i)
+            {
+                collision = false;
+                if (checkCollision(p1_ship, healths[i]))
+                {
+                    p1_ship.score += healths[i].value;
+                    collision = true;
+                }
+
+                if (TwoPlayer && checkCollision(p2_ship, healths[i]))
+                {
+                    p2_ship.score += healths[i].value;
+                    collision = true;
+                }
+
+                if (collision)
+                {
+                    this.Health_Grid.Children.Remove(healths[i].image);
+                    healths.RemoveAt(i);
                     i--;
                 }
             }
