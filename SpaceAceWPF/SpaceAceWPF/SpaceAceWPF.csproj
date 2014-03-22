@@ -158,9 +158,6 @@
     <Resource Include="Assets\StoreLogo.scale-100.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Assets\scores.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="player1_large.ico" />
   </ItemGroup>
   <ItemGroup>
