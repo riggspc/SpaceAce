@@ -79,6 +79,10 @@ namespace SpaceAceWPF
         private int difficulty_multiplier;
         private long gameClock = 0;
         private bool countdownOn = true;
+
+        // Source of all randomness, to prevent multiple Random objects
+        // being seeded with the same number
+        private Random rand = new Random();
         public MainWindow(bool num_players, Difficulty _diff, InputType P1, InputType P2)
         {
             InitializeComponent();
@@ -493,9 +497,9 @@ namespace SpaceAceWPF
         private const int HEALTH_HEIGHT = 50;
         private void generateHealth()
         {
-            Random rand = new Random();
+            // Random rand = new Random();
 
-            if (rand.Next(0, 1000) > 500)
+            if (rand.Next(0, 1000) > 997)
             {
                 Health newHealth = new Health();
                 newHealth.image = new Image();
@@ -512,7 +516,7 @@ namespace SpaceAceWPF
                 newHealth.image.Width = HEALTH_HEIGHT;
                 newHealth.image.Height = HEALTH_HEIGHT;
 
-                // Initialize coin's bitmap
+                // Initialize health's bitmap
                 Uri uri = new Uri(@"../../Assets/health.png", UriKind.Relative);
                 newHealth.bitmap = new TransformedBitmap();
                 BitmapImage bi = new BitmapImage();
@@ -526,7 +530,7 @@ namespace SpaceAceWPF
                 newHealth.bitmap.EndInit();
                 newHealth.image.Source = newHealth.bitmap;
 
-                // Initialize coin's speed
+                // Initialize health's speed
                 newHealth.speed.X = rand.Next(BASE_MIN_PROJECTILE_SPEED, BASE_MAX_PROJECTILE_SPEED) * difficulty_multiplier;
                 newHealth.speed.Y = 0;
 
@@ -535,13 +539,13 @@ namespace SpaceAceWPF
 
                 //Add coin to grid
                 healths.Add(newHealth);
-                this.Coin_Grid.Children.Add(newHealth.image);
+                this.Health_Grid.Children.Add(newHealth.image);
             }
             
         }
         private void generateAsteroids()
         {
-            Random rand = new Random();
+            // Random rand = new Random();
             // Modify the RHS below to change asteroid creation
             // frequency
             int threshold;
@@ -625,7 +629,7 @@ namespace SpaceAceWPF
         private const int COIN_HEIGHT = 50;
         private void generateCoins()
         {
-            Random rand = new Random();
+            // Random rand = new Random();
             // Modify the RHS below to change coin creation
             // frequency
             if (rand.Next(0, 1000) > 980)
@@ -753,13 +757,15 @@ namespace SpaceAceWPF
                 collision = false;
                 if (checkCollision(p1_ship, healths[i]))
                 {
-                    p1_ship.score += healths[i].value;
+                    p1_ship.shield = Math.Min(100, p1_ship.shield + healths[i].value);
+                    this.Shield1.Text = "SHIELDS: " + p1_ship.shield.ToString() + "%";
                     collision = true;
                 }
 
                 if (TwoPlayer && checkCollision(p2_ship, healths[i]))
                 {
-                    p2_ship.score += healths[i].value;
+                    p2_ship.shield = Math.Min(100, p2_ship.shield + healths[i].value);
+                    this.Shield2.Text = "SHIELDS: " + p2_ship.shield.ToString() + "%";
                     collision = true;
                 }
 
