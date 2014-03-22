@@ -43,8 +43,8 @@ namespace SpaceAceWPF
 
         // Constants
         private const int SHIP_SPEED = 5;
-        private const int MAX_PROJECTILE_SPEED = 10;
-        private const int MIN_PROJECTILE_SPEED = 6;
+        private const int BASE_MAX_PROJECTILE_SPEED = 6;
+        private const int BASE_MIN_PROJECTILE_SPEED = 4;
 
         // Margins may need to change depending on screen size and resolution
         private double Left_Margin = 0;
@@ -70,6 +70,7 @@ namespace SpaceAceWPF
         private bool game_over = false;
         private InputType p1_in, p2_in;
         private Difficulty diff;
+        private int difficulty_multiplier;
         private long gameClock = 0;
         private bool countdownOn = true;
         public MainWindow(bool num_players, Difficulty _diff, InputType P1, InputType P2)
@@ -80,6 +81,21 @@ namespace SpaceAceWPF
             diff = _diff;
             p1_in = P1;
             p2_in = P2;
+
+            // Note: this can probably be done by casting enum to an int
+            // but this is more readable
+            switch (diff)
+            {
+                case Difficulty.easy:
+                    difficulty_multiplier = 1;
+                    break;
+                case Difficulty.med:
+                    difficulty_multiplier = 2;
+                    break;
+                case Difficulty.hard:
+                    difficulty_multiplier = 3;
+                    break;
+            }
 
             //Check if a joystick is used
             if (p1_in == InputType.joy || p2_in == InputType.joy)
@@ -470,6 +486,19 @@ namespace SpaceAceWPF
             Random rand = new Random();
             // Modify the RHS below to change asteroid creation
             // frequency
+            int threshold;
+            switch (diff)
+            {
+                case Difficulty.easy:
+                    threshold = 975;
+                    break;
+                case Difficulty.med:
+                    threshold = 970;
+                    break;
+                case Difficulty.hard:
+                    threshold = 965;
+                    break;
+            }
             if (rand.Next(0, 1000) > 975)
             {
                 Projectile newAsteroid = new Projectile();
@@ -525,7 +554,7 @@ namespace SpaceAceWPF
                 newAsteroid.image.Source = newAsteroid.bitmap;
 
                 this.Asteroid_Grid.Children.Add(newAsteroid.image);
-                newAsteroid.speed.X = rand.Next(MIN_PROJECTILE_SPEED, MAX_PROJECTILE_SPEED);
+                newAsteroid.speed.X = rand.Next(BASE_MIN_PROJECTILE_SPEED, BASE_MAX_PROJECTILE_SPEED) * difficulty_multiplier;
                 newAsteroid.speed.Y = 0;
                 asteroids.Add(newAsteroid);
             }
@@ -570,7 +599,7 @@ namespace SpaceAceWPF
                 newCoin.image.Source = newCoin.bitmap;
 
                 // Initialize coin's speed
-                newCoin.speed.X = rand.Next(MIN_PROJECTILE_SPEED, MAX_PROJECTILE_SPEED);
+                newCoin.speed.X = rand.Next(BASE_MIN_PROJECTILE_SPEED, BASE_MAX_PROJECTILE_SPEED) * difficulty_multiplier;
                 newCoin.speed.Y = 0;
 
                 //Initialize coin's value
