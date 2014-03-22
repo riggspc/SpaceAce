@@ -493,13 +493,16 @@ namespace SpaceAceWPF
                     threshold = 975;
                     break;
                 case Difficulty.med:
-                    threshold = 970;
-                    break;
-                case Difficulty.hard:
                     threshold = 965;
                     break;
+                case Difficulty.hard:
+                    threshold = 945;
+                    break;
+                default:
+                    threshold = 975;
+                    break;
             }
-            if (rand.Next(0, 1000) > 975)
+            if (rand.Next(0, 1000) > threshold)
             {
                 Projectile newAsteroid = new Projectile();
                 newAsteroid.image = new Image();
