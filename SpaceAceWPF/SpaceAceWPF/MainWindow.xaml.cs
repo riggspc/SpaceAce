@@ -57,7 +57,7 @@ namespace SpaceAceWPF
         private double Top_Margin = 75;
         private double Bottom_Margin = 650;
 
-        // Ships, coins, and asteroids
+        // Ships, coins, asteroids, and health
         private Spaceship p1_ship = new Spaceship();
         private Spaceship p2_ship = new Spaceship();
         private List<Projectile> asteroids = new List<Projectile>();
@@ -126,39 +126,49 @@ namespace SpaceAceWPF
             }
 
             //Initialize players' ships
-            p1_ship.image = this.Player1;
-            p1_ship.speed.X = 0;
-            p1_ship.speed.Y = 0;
-            p1_ship.bitmap = new TransformedBitmap();
-            BitmapImage bmpImage = new BitmapImage();
-            bmpImage.BeginInit();
-            bmpImage.UriSource = new Uri(@"../../Assets/player1_small_with_fire.png", UriKind.Relative);
-            bmpImage.EndInit();
-            p1_ship.bitmap.BeginInit();
-            p1_ship.bitmap.Source = bmpImage;
-            ScaleTransform transform = new ScaleTransform(1, 1);
-            p1_ship.bitmap.Transform = transform;
-            p1_ship.bitmap.EndInit();
-            this.Player1.Source = p1_ship.bitmap;
+            initializePlayer(1, p1_ship);
 
             if (TwoPlayer)
             {
-                p2_ship.image = this.Player2;
-                p2_ship.speed.X = 0;
-                p2_ship.speed.Y = 0;
-                p2_ship.bitmap = new TransformedBitmap();
-                bmpImage = new BitmapImage();
-                bmpImage.BeginInit();
-                bmpImage.UriSource = new Uri(@"../../Assets/player2_small_with_fire.png", UriKind.Relative);
-                bmpImage.EndInit();
-                p2_ship.bitmap.BeginInit();
-                p2_ship.bitmap.Source = bmpImage;
-                p2_ship.bitmap.Transform = transform;
-                p2_ship.bitmap.EndInit();
-                this.Player2.Source = p2_ship.bitmap;
+                initializePlayer(2, p2_ship);
             }
 
+
             this.WindowState = System.Windows.WindowState.Maximized;
+        }
+
+        private void initializePlayer(int playerNum, Spaceship player)
+        {
+            // p2_ship.image = this.Player2;
+            player.speed.X = 0;
+            player.speed.Y = 0;
+            player.bitmap = new TransformedBitmap();
+            BitmapImage bmpImage = new BitmapImage();
+            bmpImage.BeginInit();
+            bmpImage.UriSource = new Uri(@"../../Assets/player" + playerNum.ToString() + @"_small_with_fire.png", UriKind.Relative);
+            bmpImage.EndInit();
+            player.bitmap.BeginInit();
+            player.bitmap.Source = bmpImage;
+            player.bitmap.Transform = new ScaleTransform(1, 1);
+            player.bitmap.EndInit();
+
+            switch (playerNum)
+            {
+                case 1:
+                    player.image = this.Player1;
+                    this.Player1.Source = player.bitmap;
+                    break;
+                case 2:
+                    player.image = this.Player2;
+                    this.Player2.Source = player.bitmap;
+                    break;
+                default:
+                    player.image = this.Player1;
+                    this.Player1.Source = player.bitmap;
+                    break;
+            }
+
+
         }
 
         private void countdown()
@@ -493,8 +503,8 @@ namespace SpaceAceWPF
 
         private const int MIN_ASTEROID_WIDTH = 100;
         private const int MAX_ASTEROID_WIDTH = 250;
-        private const int HEALTH_WIDTH = 50;
-        private const int HEALTH_HEIGHT = 50;
+        private const int HEALTH_WIDTH = 80;
+        private const int HEALTH_HEIGHT = 80;
         private void generateHealth()
         {
             // Random rand = new Random();
