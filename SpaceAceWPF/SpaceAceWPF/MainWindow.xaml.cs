@@ -1146,103 +1146,15 @@ namespace SpaceAceWPF
 
         private void hs_updateFont(int hs_nextLetter)
         {
-            switch (hs_curLetter)
-            {
-                case 0:
-                    this.hs_name0.Text = hs_letters[0].ToString();
-                    this.hs_name0.Foreground = Brushes.White;
-                    this.hs_border0.BorderBrush = Brushes.White;
-                    break;
-                case 1:
-                    this.hs_name1.Text = hs_letters[1].ToString();
-                    this.hs_name1.Foreground = Brushes.White;
-                    this.hs_border1.BorderBrush = Brushes.White;
-                    break;
-                case 2:
-                    this.hs_name2.Text = hs_letters[2].ToString();
-                    this.hs_name2.Foreground = Brushes.White;
-                    this.hs_border2.BorderBrush = Brushes.White;
-                    break;
-                case 3:
-                    this.hs_name3.Text = hs_letters[3].ToString();
-                    this.hs_name3.Foreground = Brushes.White;
-                    this.hs_border3.BorderBrush = Brushes.White;
-                    break;
-                case 4:
-                    this.hs_name4.Text = hs_letters[4].ToString();
-                    this.hs_name4.Foreground = Brushes.White;
-                    this.hs_border4.BorderBrush = Brushes.White;
-                    break;
-                case 5:
-                    this.hs_name5.Text = hs_letters[5].ToString();
-                    this.hs_name5.Foreground = Brushes.White;
-                    this.hs_border5.BorderBrush = Brushes.White;
-                    break;
-                case 6:
-                    this.hs_name6.Text = hs_letters[6].ToString();
-                    this.hs_name6.Foreground = Brushes.White;
-                    this.hs_border6.BorderBrush = Brushes.White;
-                    break;
-                case 7:
-                    this.hs_name7.Text = hs_letters[7].ToString();
-                    this.hs_name7.Foreground = Brushes.White;
-                    this.hs_border7.BorderBrush = Brushes.White;
-                    break;
-                case 8:
-                    this.hs_name8.Text = hs_letters[8].ToString();
-                    this.hs_name8.Foreground = Brushes.White;
-                    this.hs_border8.BorderBrush = Brushes.White;
-                    break;
-                case 9:
-                    this.hs_name9.Text = hs_letters[9].ToString();
-                    this.hs_name9.Foreground = Brushes.White;
-                    this.hs_border9.BorderBrush = Brushes.White;
-                    break;
-            }
+            TextBlock[] nameChars = { hs_name0, hs_name1, hs_name2, hs_name3, hs_name4, hs_name5, hs_name6, hs_name7, hs_name8, hs_name9 };
+            Border[] borders = { hs_border0, hs_border1, hs_border2, hs_border3, hs_border4, hs_border5, hs_border6, hs_border7, hs_border8, hs_border9 };
 
-            switch (hs_nextLetter)
-            {
-                case 0:
-                    this.hs_name0.Foreground = Brushes.Yellow;
-                    this.hs_border0.BorderBrush = Brushes.Yellow;
-                    break;
-                case 1:
-                    this.hs_name1.Foreground = Brushes.Yellow;
-                    this.hs_border1.BorderBrush = Brushes.Yellow;
-                    break;
-                case 2:
-                    this.hs_name2.Foreground = Brushes.Yellow;
-                    this.hs_border2.BorderBrush = Brushes.Yellow;
-                    break;
-                case 3:
-                    this.hs_name3.Foreground = Brushes.Yellow;
-                    this.hs_border3.BorderBrush = Brushes.Yellow;
-                    break;
-                case 4:
-                    this.hs_name4.Foreground = Brushes.Yellow;
-                    this.hs_border4.BorderBrush = Brushes.Yellow;
-                    break;
-                case 5:
-                    this.hs_name5.Foreground = Brushes.Yellow;
-                    this.hs_border5.BorderBrush = Brushes.Yellow;
-                    break;
-                case 6:
-                    this.hs_name6.Foreground = Brushes.Yellow;
-                    this.hs_border6.BorderBrush = Brushes.Yellow;
-                    break;
-                case 7:
-                    this.hs_name7.Foreground = Brushes.Yellow;
-                    this.hs_border7.BorderBrush = Brushes.Yellow;
-                    break;
-                case 8:
-                    this.hs_name8.Foreground = Brushes.Yellow;
-                    this.hs_border8.BorderBrush = Brushes.Yellow;
-                    break;
-                case 9:
-                    this.hs_name9.Foreground = Brushes.Yellow;
-                    this.hs_border9.BorderBrush = Brushes.Yellow;
-                    break;
-            }
+            nameChars[hs_curLetter].Text = hs_letters[hs_curLetter].ToString();
+            nameChars[hs_curLetter].Foreground = Brushes.White;
+            borders[hs_curLetter].BorderBrush = Brushes.White;
+            
+            nameChars[hs_nextLetter].Foreground = Brushes.Yellow;
+            borders[hs_nextLetter].BorderBrush = Brushes.Yellow;
 
             hs_curLetter = hs_nextLetter;
         }
