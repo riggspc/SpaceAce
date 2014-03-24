@@ -1026,30 +1026,19 @@ namespace SpaceAceWPF
         private int hs_curLetter = 0;
         private void enterHighScore(bool player1)
         {
+            TextBlock[] nameChars = { hs_name0, hs_name1, hs_name2, hs_name3, hs_name4, hs_name5, hs_name6, hs_name7, hs_name8, hs_name9 };
+            Border[] borders = { hs_border0, hs_border1, hs_border2, hs_border3, hs_border4, hs_border5, hs_border6, hs_border7, hs_border8, hs_border9 };
+
             this.hs_header.Visibility = System.Windows.Visibility.Visible;
             this.hs_leftShip.Visibility = System.Windows.Visibility.Visible;
             this.hs_rightShip.Visibility = System.Windows.Visibility.Visible;
-            this.hs_info.Visibility = System.Windows.Visibility.Visible;
-            this.hs_name0.Visibility = System.Windows.Visibility.Visible;
-            this.hs_name1.Visibility = System.Windows.Visibility.Visible;
-            this.hs_name2.Visibility = System.Windows.Visibility.Visible;
-            this.hs_name3.Visibility = System.Windows.Visibility.Visible;
-            this.hs_name4.Visibility = System.Windows.Visibility.Visible;
-            this.hs_name5.Visibility = System.Windows.Visibility.Visible;
-            this.hs_name6.Visibility = System.Windows.Visibility.Visible;
-            this.hs_name7.Visibility = System.Windows.Visibility.Visible;
-            this.hs_name8.Visibility = System.Windows.Visibility.Visible;
-            this.hs_name9.Visibility = System.Windows.Visibility.Visible;
-            this.hs_border0.Visibility = System.Windows.Visibility.Visible;
-            this.hs_border1.Visibility = System.Windows.Visibility.Visible;
-            this.hs_border2.Visibility = System.Windows.Visibility.Visible;
-            this.hs_border3.Visibility = System.Windows.Visibility.Visible;
-            this.hs_border4.Visibility = System.Windows.Visibility.Visible;
-            this.hs_border5.Visibility = System.Windows.Visibility.Visible;
-            this.hs_border6.Visibility = System.Windows.Visibility.Visible;
-            this.hs_border7.Visibility = System.Windows.Visibility.Visible;
-            this.hs_border8.Visibility = System.Windows.Visibility.Visible;
-            this.hs_border9.Visibility = System.Windows.Visibility.Visible;
+            foreach (TextBlock nameChar in nameChars) {
+                nameChar.Visibility = System.Windows.Visibility.Visible;
+            }
+            foreach (Border border in borders)
+            {
+                border.Visibility = System.Windows.Visibility.Visible;
+            }
             this.pause_background.Opacity = 1;
 
             if(player1)
@@ -1132,30 +1121,21 @@ namespace SpaceAceWPF
                     scoreboard.addHighScore(highScoreName.Trim(), score);
                     highScoreInput = InputType.none;
 
+                    TextBlock[] nameChars = { hs_name0, hs_name1, hs_name2, hs_name3, hs_name4, hs_name5, hs_name6, hs_name7, hs_name8, hs_name9 };
+                    Border[] borders = { hs_border0, hs_border1, hs_border2, hs_border3, hs_border4, hs_border5, hs_border6, hs_border7, hs_border8, hs_border9 };
+
                     this.hs_header.Visibility = System.Windows.Visibility.Collapsed;
                     this.hs_leftShip.Visibility = System.Windows.Visibility.Collapsed;
                     this.hs_rightShip.Visibility = System.Windows.Visibility.Collapsed;
-                    this.hs_info.Visibility = System.Windows.Visibility.Collapsed;
-                    this.hs_name0.Visibility = System.Windows.Visibility.Collapsed;
-                    this.hs_name1.Visibility = System.Windows.Visibility.Collapsed;
-                    this.hs_name2.Visibility = System.Windows.Visibility.Collapsed;
-                    this.hs_name3.Visibility = System.Windows.Visibility.Collapsed;
-                    this.hs_name4.Visibility = System.Windows.Visibility.Collapsed;
-                    this.hs_name5.Visibility = System.Windows.Visibility.Collapsed;
-                    this.hs_name6.Visibility = System.Windows.Visibility.Collapsed;
-                    this.hs_name7.Visibility = System.Windows.Visibility.Collapsed;
-                    this.hs_name8.Visibility = System.Windows.Visibility.Collapsed;
-                    this.hs_name9.Visibility = System.Windows.Visibility.Collapsed;
-                    this.hs_border0.Visibility = System.Windows.Visibility.Collapsed;
-                    this.hs_border1.Visibility = System.Windows.Visibility.Collapsed;
-                    this.hs_border2.Visibility = System.Windows.Visibility.Collapsed;
-                    this.hs_border3.Visibility = System.Windows.Visibility.Collapsed;
-                    this.hs_border4.Visibility = System.Windows.Visibility.Collapsed;
-                    this.hs_border5.Visibility = System.Windows.Visibility.Collapsed;
-                    this.hs_border6.Visibility = System.Windows.Visibility.Collapsed;
-                    this.hs_border7.Visibility = System.Windows.Visibility.Collapsed;
-                    this.hs_border8.Visibility = System.Windows.Visibility.Collapsed;
-                    this.hs_border9.Visibility = System.Windows.Visibility.Collapsed;
+                    foreach (TextBlock nameChar in nameChars)
+                    {
+                        nameChar.Visibility = System.Windows.Visibility.Collapsed;
+                    }
+                    foreach (Border border in borders)
+                    {
+                        border.Visibility = System.Windows.Visibility.Collapsed;
+                    }
+
                     this.pause_background.Opacity = 0;
 
                     highScoreInput = InputType.none;
