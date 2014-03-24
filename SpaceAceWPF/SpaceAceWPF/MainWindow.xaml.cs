@@ -23,6 +23,7 @@ namespace SpaceAceWPF
 
     public partial class MainWindow : Window
     {
+        // Game classes
         private class Projectile
         {
             public System.Windows.Controls.Image image;
@@ -46,10 +47,24 @@ namespace SpaceAceWPF
             public int value;
         }
 
-        // Constants
+        /***** Constants *****/
+        // Speeds
         private const int SHIP_SPEED = 5;
         private const int BASE_MAX_PROJECTILE_SPEED = 6;
         private const int BASE_MIN_PROJECTILE_SPEED = 4;
+        // Thresholds for creation
+        private const int ASTEROID_THRESHOLD_EASY = 975;
+        private const int ASTEROID_THRESHOLD_MEDIUM = 965;
+        private const int ASTEROID_THRESHOLD_HARD = 945;
+        private const int COIN_THRESHOLD = 980;
+        private const int HEALTH_THRESHOLD = 997;
+        // Sizes of projectiles
+        private const int MIN_ASTEROID_WIDTH = 100;
+        private const int MAX_ASTEROID_WIDTH = 250;
+        private const int HEALTH_WIDTH = 80;
+        private const int HEALTH_HEIGHT = 80;
+        private const int COIN_WIDTH = 50;
+        private const int COIN_HEIGHT = 50;
 
         // Margins may need to change depending on screen size and resolution
         private double Left_Margin = 0;
@@ -476,9 +491,10 @@ namespace SpaceAceWPF
 
 
                     //Generate asteroids and coins
-                    generateAsteroids();
-                    generateCoins();
-                    generateHealth();
+                    // generateAsteroids();
+                    // generateCoins();
+                    // generateHealth();
+                    generateProjectiles();
 
                     //Update asteroid and coin positions
                     moveProjectiles(asteroids, this.Asteroid_Grid);
@@ -501,44 +517,74 @@ namespace SpaceAceWPF
             }
         }
 
-        private const int MIN_ASTEROID_WIDTH = 100;
-        private const int MAX_ASTEROID_WIDTH = 250;
-        private const int HEALTH_WIDTH = 80;
-        private const int HEALTH_HEIGHT = 80;
-        private void generateHealth()
+        private Thickness getRandomEdge()
         {
-            // Random rand = new Random();
+            Thickness loc = new Thickness();
+            loc.Left = Right_Margin + 200;
+            loc.Top = Math.Max(Bottom_Margin - rand.Next(0, (int)Bottom_Margin), Top_Margin);
+            return loc;
+        }
 
-            if (rand.Next(0, 1000) > 997)
+        private Image initializeProjectileImage(Uri spriteUri, bool rotate = false)
+        {
+            Image newImage = new Image();
+
+            newImage.VerticalAlignment = System.Windows.VerticalAlignment.Top;
+            newImage.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
+            newImage.Margin = getRandomEdge();
+
+            TransformedBitmap temp = new TransformedBitmap();
+            BitmapImage bi = new BitmapImage();
+            bi.BeginInit();
+            bi.UriSource = spriteUri;
+            bi.EndInit();
+            temp.BeginInit();
+            temp.Source = bi;
+            RotateTransform transform;
+            if (rotate)
+            {
+                transform = new RotateTransform(rand.Next(0, 3) * 90);
+            }
+            else
+            {
+                transform = new RotateTransform(0);
+            }
+            temp.Transform = transform;
+            temp.EndInit();
+            newImage.Source = temp;
+
+
+            return newImage;
+        }
+        private void generateProjectiles()
+        {
+            // Place any threshold/generation changes that need to occur
+            // based on difficulty in this section
+            int asteroid_threshold;
+            switch (diff)
+            {
+                case Difficulty.easy:
+                    asteroid_threshold = ASTEROID_THRESHOLD_EASY;
+                    break;
+                case Difficulty.med:
+                    asteroid_threshold = ASTEROID_THRESHOLD_MEDIUM;
+                    break;
+                case Difficulty.hard:
+                    asteroid_threshold = ASTEROID_THRESHOLD_HARD;
+                    break;
+                default:
+                    asteroid_threshold = ASTEROID_THRESHOLD_EASY;
+                    break;
+            }
+
+            if (rand.Next(0, 1000) > HEALTH_THRESHOLD)
             {
                 Health newHealth = new Health();
-                newHealth.image = new Image();
-
-                // Randomly place the health somewhere along the edge
-                Thickness loc = newHealth.image.Margin;
-                loc.Left = Right_Margin + 200;
-                newHealth.image.VerticalAlignment = System.Windows.VerticalAlignment.Top;
-                newHealth.image.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
-                loc.Top = Math.Max(Bottom_Margin - rand.Next(0, (int)Bottom_Margin), Top_Margin);
-                newHealth.image.Margin = loc;
+                newHealth.image = initializeProjectileImage(new Uri(@"../../Assets/health.png", UriKind.Relative));
 
                 //Size the image
                 newHealth.image.Width = HEALTH_HEIGHT;
                 newHealth.image.Height = HEALTH_HEIGHT;
-
-                // Initialize health's bitmap
-                Uri uri = new Uri(@"../../Assets/health.png", UriKind.Relative);
-                newHealth.bitmap = new TransformedBitmap();
-                BitmapImage bi = new BitmapImage();
-                bi.BeginInit();
-                bi.UriSource = uri;
-                bi.EndInit();
-                newHealth.bitmap.BeginInit();
-                newHealth.bitmap.Source = bi;
-                RotateTransform transform = new RotateTransform(0);
-                newHealth.bitmap.Transform = transform;
-                newHealth.bitmap.EndInit();
-                newHealth.image.Source = newHealth.bitmap;
 
                 // Initialize health's speed
                 newHealth.speed.X = rand.Next(BASE_MIN_PROJECTILE_SPEED, BASE_MAX_PROJECTILE_SPEED) * difficulty_multiplier;
@@ -548,130 +594,51 @@ namespace SpaceAceWPF
                 newHealth.value = 25;
 
                 //Add coin to grid
+                newHealth.bitmap = (TransformedBitmap)newHealth.image.Source;
                 healths.Add(newHealth);
                 this.Health_Grid.Children.Add(newHealth.image);
             }
-            
-        }
-        private void generateAsteroids()
-        {
-            // Random rand = new Random();
-            // Modify the RHS below to change asteroid creation
-            // frequency
-            int threshold;
-            switch (diff)
-            {
-                case Difficulty.easy:
-                    threshold = 975;
-                    break;
-                case Difficulty.med:
-                    threshold = 965;
-                    break;
-                case Difficulty.hard:
-                    threshold = 945;
-                    break;
-                default:
-                    threshold = 975;
-                    break;
-            }
-            if (rand.Next(0, 1000) > threshold)
+
+            if (rand.Next(0, 1000) > asteroid_threshold)
             {
                 Projectile newAsteroid = new Projectile();
-                newAsteroid.image = new Image();
-                // newAsteroid.Source = this.LargeAsteroidSource.Source;
-                Thickness loc = newAsteroid.image.Margin;
-                loc.Left = Right_Margin + 200;
-                newAsteroid.image.VerticalAlignment = System.Windows.VerticalAlignment.Top;
-                newAsteroid.image.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
 
-                // Randomly place the asteroid somewhere along the edge,
-                // sizes it, sets the image, and the rotation
-                // basically makes it unique
-                loc.Top = Math.Max(Bottom_Margin - rand.Next(0, (int)Bottom_Margin), Top_Margin);
-                newAsteroid.image.Margin = loc;
-                newAsteroid.image.Width = rand.Next(MIN_ASTEROID_WIDTH, MAX_ASTEROID_WIDTH);
-
-                // Determines which sprite the new asteroid will have
+                // Determines which image the new asteroid will be
                 int asteroidType = rand.Next(0, 3);
-                Uri uri;
                 switch (asteroidType)
                 {
                     case 0:
-                        // newAsteroid.Source = this.LargeAsteroidSource.Source;
-                        uri = new Uri(@"../../Assets/asteroid_large.png", UriKind.Relative);
+                        newAsteroid.image = initializeProjectileImage(new Uri(@"../../Assets/asteroid_large.png", UriKind.Relative), true);
                         break;
                     case 1:
-                        // newAsteroid.Source = this.MediumAsteroidSource.Source;
-                        uri = new Uri(@"../../Assets/asteroid_small.png", UriKind.Relative);
+                        newAsteroid.image = initializeProjectileImage(new Uri(@"../../Assets/asteroid_small.png", UriKind.Relative), true);
                         break;
                     case 2:
-                        // newAsteroid.Source = this.SmallAsteroidSource.Source;
-                        uri = new Uri(@"../../Assets/asteroid_medium.png", UriKind.Relative);
+                        newAsteroid.image = initializeProjectileImage(new Uri(@"../../Assets/asteroid_medium.png", UriKind.Relative), true);
                         break;
                     default:
-                        // newAsteroid.Source = this.LargeAsteroidSource.Source;
-                        uri = new Uri(@"../../Assets/asteroid_large.png", UriKind.Relative);
+                        newAsteroid.image = initializeProjectileImage(new Uri(@"../../Assets/asteroid_large.png", UriKind.Relative), true);
                         break;
 
                 }
 
-                // Set the asteroid's rotation
-                newAsteroid.bitmap = new TransformedBitmap();
-                BitmapImage bi = new BitmapImage();
-                bi.BeginInit();
-                bi.UriSource = uri;
-                bi.EndInit();
-                newAsteroid.bitmap.BeginInit();
-                newAsteroid.bitmap.Source = bi;
-                RotateTransform transform = new RotateTransform(rand.Next(0, 3) * 90);
-                newAsteroid.bitmap.Transform = transform;
-                newAsteroid.bitmap.EndInit();
-                newAsteroid.image.Source = newAsteroid.bitmap;
-
+                newAsteroid.bitmap = (TransformedBitmap)newAsteroid.image.Source;
+                newAsteroid.image.Width = rand.Next(MIN_ASTEROID_WIDTH, MAX_ASTEROID_WIDTH);
                 this.Asteroid_Grid.Children.Add(newAsteroid.image);
                 newAsteroid.speed.X = rand.Next(BASE_MIN_PROJECTILE_SPEED, BASE_MAX_PROJECTILE_SPEED) * difficulty_multiplier;
                 newAsteroid.speed.Y = 0;
                 asteroids.Add(newAsteroid);
             }
-        }
 
-        private const int COIN_WIDTH = 50;
-        private const int COIN_HEIGHT = 50;
-        private void generateCoins()
-        {
-            // Random rand = new Random();
-            // Modify the RHS below to change coin creation
-            // frequency
-            if (rand.Next(0, 1000) > 980)
+            if (rand.Next(0, 1000) > COIN_THRESHOLD)
             {
                 Coin newCoin = new Coin();
-                newCoin.image = new Image();
-
-                // Randomly place the coin somewhere along the edge
-                Thickness loc = newCoin.image.Margin;
-                loc.Left = Right_Margin + 200;
-                newCoin.image.VerticalAlignment = System.Windows.VerticalAlignment.Top;
-                newCoin.image.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
-                loc.Top = Math.Max(Bottom_Margin - rand.Next(0, (int)Bottom_Margin), Top_Margin);
-                newCoin.image.Margin = loc;
+                // newCoin.image = new Image();
+                newCoin.image = initializeProjectileImage(new Uri(@"../../Assets/gold_coin.png", UriKind.Relative));
 
                 //Size the image
                 newCoin.image.Width = COIN_WIDTH;
                 newCoin.image.Height = COIN_HEIGHT;
-
-                // Initialize coin's bitmap
-                Uri uri = new Uri(@"../../Assets/gold_coin.png", UriKind.Relative);
-                newCoin.bitmap = new TransformedBitmap();
-                BitmapImage bi = new BitmapImage();
-                bi.BeginInit();
-                bi.UriSource = uri;
-                bi.EndInit();
-                newCoin.bitmap.BeginInit();
-                newCoin.bitmap.Source = bi;
-                RotateTransform transform = new RotateTransform(0);
-                newCoin.bitmap.Transform = transform;
-                newCoin.bitmap.EndInit();
-                newCoin.image.Source = newCoin.bitmap;
 
                 // Initialize coin's speed
                 newCoin.speed.X = rand.Next(BASE_MIN_PROJECTILE_SPEED, BASE_MAX_PROJECTILE_SPEED) * difficulty_multiplier;
@@ -679,6 +646,7 @@ namespace SpaceAceWPF
 
                 //Initialize coin's value
                 newCoin.value = 100;
+                newCoin.bitmap = (TransformedBitmap)newCoin.image.Source;
 
                 //Add coin to grid
                 coins.Add(newCoin);
