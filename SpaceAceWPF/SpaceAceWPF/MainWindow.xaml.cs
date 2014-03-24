@@ -491,9 +491,6 @@ namespace SpaceAceWPF
 
 
                     //Generate asteroids and coins
-                    // generateAsteroids();
-                    // generateCoins();
-                    // generateHealth();
                     generateProjectiles();
 
                     //Update asteroid and coin positions
