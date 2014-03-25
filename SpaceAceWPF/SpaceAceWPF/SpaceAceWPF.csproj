@@ -158,9 +158,6 @@
     <Resource Include="Assets\StoreLogo.scale-100.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Assets\scores.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="player1_large.ico" />
   </ItemGroup>
   <ItemGroup>
@@ -183,6 +180,12 @@
   <ItemGroup>
     <Resource Include="Assets\gold_coin.png" />
     <Resource Include="Assets\silver_coin.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\shield.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\boost.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -34,11 +34,34 @@ namespace SpaceAceWPF
         {
             public int shield = 100;
             public long score = 0;
+            public int Invincible = 0;
+            public int booster = 1;
+            public int boost_time = 0;
         }
 
         private class Coin : Projectile
         {
             public int value;
+        }
+
+        private class PowerUp : Projectile
+        {
+            public string type;
+
+            public PowerUp()
+            {
+                Random rand = new Random();
+                int x = rand.Next() % 2;
+
+                if(x == 0)
+                {
+                    type = "shield";
+                }
+                else 
+                {
+                    type = "boost";
+                }
+            }
         }
 
         // Constants
@@ -57,6 +80,7 @@ namespace SpaceAceWPF
         private Spaceship p2_ship = new Spaceship();
         private List<Projectile> asteroids = new List<Projectile>();
         private List<Coin> coins = new List<Coin>();
+        private List<PowerUp> powerUps = new List<PowerUp>();
 
         // Menu Options
         private enum opt { resume, returnToStart, exitGame };
@@ -239,28 +263,37 @@ namespace SpaceAceWPF
         private void adjustSpeedUp(bool player1, Key key)
         {
             Point ship_speed;
+            int multiplier;
             if (player1)
+            {
                 ship_speed = p1_ship.speed;
+                multiplier = p1_ship.booster;
+            }
             else
+            {
                 ship_speed = p2_ship.speed;
+                multiplier = p2_ship.booster;
+            }
+
+            int adjusted_speed = SHIP_SPEED*multiplier;
 
             switch (key)
             {
                 case Key.A:
                 case Key.Left:
-                    ship_speed.X = Math.Max(-SHIP_SPEED, ship_speed.X - SHIP_SPEED);
+                    ship_speed.X = Math.Max(-adjusted_speed, ship_speed.X - adjusted_speed);
                     break;
                 case Key.D:
                 case Key.Right:
-                    ship_speed.X = Math.Min(SHIP_SPEED, ship_speed.X + SHIP_SPEED);
+                    ship_speed.X = Math.Min(adjusted_speed, ship_speed.X + adjusted_speed);
                     break;
                 case Key.W:
                 case Key.Up:
-                    ship_speed.Y = Math.Max(-SHIP_SPEED, ship_speed.Y - SHIP_SPEED);
+                    ship_speed.Y = Math.Max(-adjusted_speed, ship_speed.Y - adjusted_speed);
                     break;
                 case Key.S:
                 case Key.Down:
-                    ship_speed.Y = Math.Min(SHIP_SPEED, ship_speed.Y + SHIP_SPEED);
+                    ship_speed.Y = Math.Min(adjusted_speed, ship_speed.Y + adjusted_speed);
                     break;
             }
 
@@ -273,28 +306,37 @@ namespace SpaceAceWPF
         private void adjustSpeedDown(bool player1, Key key)
         {
             Point ship_speed;
+            int multiplier;
             if (player1)
+            {
                 ship_speed = p1_ship.speed;
+                multiplier = p1_ship.booster;
+            }
             else
+            {
                 ship_speed = p2_ship.speed;
+                multiplier = p2_ship.booster;
+            }
+
+            int adjusted_speed = SHIP_SPEED*multiplier;
 
             switch (key)
             {
                 case Key.A:
                 case Key.Left:
-                    ship_speed.X = Math.Min(SHIP_SPEED, ship_speed.X + SHIP_SPEED);
+                    ship_speed.X = Math.Min(adjusted_speed, ship_speed.X + adjusted_speed);
                     break;
                 case Key.D:
                 case Key.Right:
-                    ship_speed.X = Math.Max(-SHIP_SPEED, ship_speed.X - SHIP_SPEED);
+                    ship_speed.X = Math.Max(-adjusted_speed, ship_speed.X - adjusted_speed);
                     break;
                 case Key.W:
                 case Key.Up:
-                    ship_speed.Y = Math.Min(SHIP_SPEED, ship_speed.Y + SHIP_SPEED);
+                    ship_speed.Y = Math.Min(adjusted_speed, ship_speed.Y + adjusted_speed);
                     break;
                 case Key.S:
                 case Key.Down:
-                    ship_speed.Y = Math.Max(-SHIP_SPEED, ship_speed.Y - SHIP_SPEED);
+                    ship_speed.Y = Math.Max(-adjusted_speed, ship_speed.Y - adjusted_speed);
                     break;
             }
 
@@ -442,13 +484,38 @@ namespace SpaceAceWPF
                     //Generate asteroids and coins
                     generateAsteroids();
                     generateCoins();
+                    generatePowerUps();
 
                     //Update asteroid and coin positions
                     moveProjectiles(asteroids, this.Asteroid_Grid);
                     moveProjectiles(coins.OfType<Projectile>().ToList(), this.Coin_Grid);
+                    moveProjectiles(powerUps.OfType<Projectile>().ToList(), this.PowerUp_Grid);
 
                     //Check for collisions
                     detectCollision();
+
+                    //Decrement time shield is active
+                    if (p1_ship.Invincible > 0)
+                    {
+                        p1_ship.Invincible--;
+                    }
+                    if (p2_ship.Invincible > 0)
+                    {
+                        p2_ship.Invincible--;
+                    }
+                    
+                    // Decrement time speed boost is active
+                    if (p1_ship.boost_time > 0)
+                        p1_ship.boost_time--;
+                    
+                    if (p2_ship.boost_time > 0)
+                        p2_ship.boost_time--;
+
+                    if (p1_ship.boost_time == 0)
+                        p1_ship.booster = 1;
+
+                    if (p2_ship.boost_time == 0)
+                        p2_ship.booster = 1;
 
                     //Update Scores
                     p1_ship.score++;
@@ -582,6 +649,67 @@ namespace SpaceAceWPF
             }
         }
 
+        private const int POWERUP_WIDTH = 75;
+        private const int POWERUP_HEIGHT = 75;
+        private void generatePowerUps()
+        {
+            Random rand = new Random();
+            // Modify the RHS below to change powerup creation
+            // frequency
+            if (rand.Next(0, 1000) > 997)
+            {
+                PowerUp newPowerUp = new PowerUp();
+                newPowerUp.image = new Image();
+
+                // Randomly place the coin somewhere along the edge
+                Thickness loc = newPowerUp.image.Margin;
+                loc.Left = Right_Margin + 200;
+                newPowerUp.image.VerticalAlignment = System.Windows.VerticalAlignment.Top;
+                newPowerUp.image.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
+                loc.Top = Math.Max(Bottom_Margin - rand.Next()% ((int)Bottom_Margin), Top_Margin);
+                newPowerUp.image.Margin = loc;
+
+                //Size the image
+                newPowerUp.image.Width = POWERUP_WIDTH;
+                newPowerUp.image.Height = POWERUP_HEIGHT;
+
+                Uri uri;
+                // Initialize powerup's bitmap
+                if (newPowerUp.type.Equals("shield"))
+                {
+                    uri = new Uri(@"../../Assets/shield.png", UriKind.Relative);
+                }
+                else if (newPowerUp.type.Equals("boost"))
+                {
+                    uri = new Uri(@"../../Assets/boost.png", UriKind.Relative);
+                }
+                else // debugging
+                {
+                    uri = new Uri(@"../../Assets/silver_coin.png", UriKind.Relative);
+                }
+
+                newPowerUp.bitmap = new TransformedBitmap();
+                BitmapImage bi = new BitmapImage();
+                bi.BeginInit();
+                bi.UriSource = uri;
+                bi.EndInit();
+                newPowerUp.bitmap.BeginInit();
+                newPowerUp.bitmap.Source = bi;
+                RotateTransform transform = new RotateTransform(0);
+                newPowerUp.bitmap.Transform = transform;
+                newPowerUp.bitmap.EndInit();
+                newPowerUp.image.Source = newPowerUp.bitmap;
+
+                // Initialize powerups's speed
+                newPowerUp.speed.X = rand.Next(MIN_PROJECTILE_SPEED, MAX_PROJECTILE_SPEED);
+                newPowerUp.speed.Y = 0;
+
+                //Add coin to grid
+                powerUps.Add(newPowerUp);
+                this.PowerUp_Grid.Children.Add(newPowerUp.image);
+            }
+        }
+
         private void moveProjectiles(List<Projectile> projectiles, Canvas grid)
         {
             //Update projectile positions
@@ -653,6 +781,46 @@ namespace SpaceAceWPF
                 {
                     this.Coin_Grid.Children.Remove(coins[i].image);
                     coins.RemoveAt(i);
+                    i--;
+                }
+            }
+
+            //Check for collision with powerUps
+            for (int i = 0; i < powerUps.Count; ++i)
+            {
+                collision = false;
+                if (checkCollision(p1_ship, powerUps[i]))
+                {
+                    if (powerUps[i].type.Equals("shield"))
+                    {
+                        p1_ship.Invincible = 500;
+                    }
+                    else
+                    {
+                        p1_ship.booster = 2;
+                        p1_ship.boost_time = 500;
+                    }
+                    collision = true;
+                }
+
+                if (TwoPlayer && checkCollision(p2_ship, powerUps[i]))
+                {
+                    if (powerUps[i].type.Equals("shield"))
+                    {
+                        p2_ship.Invincible = 500;
+                    }
+                    else
+                    {
+                        p2_ship.booster = 2;
+                        p2_ship.boost_time = 500;
+                    }
+                    collision = true;
+                }
+
+                if (collision)
+                {
+                    this.PowerUp_Grid.Children.Remove(powerUps[i].image);
+                    powerUps.RemoveAt(i);
                     i--;
                 }
             }
@@ -785,7 +953,11 @@ namespace SpaceAceWPF
             double speed = ship.speed.X + asteroid.speed.X;
             double sizeRatio = (asteroid.image.ActualHeight * asteroid.image.ActualWidth) / (ship.image.ActualHeight * ship.image.ActualWidth);
 
-            ship.shield = Math.Max(0, ship.shield - Math.Max(1, ((int)(speed * sizeRatio) / 4)));
+            // only apply damage if ship does not have shield powerup
+            if (ship.Invincible == 0)
+            {
+                ship.shield = Math.Max(0, ship.shield - Math.Max(1, ((int) (speed*sizeRatio)/4)));
+            }
         }
 
         private void pause_inputEvent(InputType inType, Key key)

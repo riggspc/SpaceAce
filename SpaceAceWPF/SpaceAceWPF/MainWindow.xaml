@@ -192,5 +192,6 @@
         <!--Asteroids and Coins-->
         <Canvas x:Name="Asteroid_Grid" Panel.ZIndex="10"></Canvas>
         <Canvas x:Name="Coin_Grid" Panel.ZIndex="5"></Canvas>
+        <Canvas x:Name="PowerUp_Grid" Panel.ZIndex="15"></Canvas>
     </Grid>
 </Window>
