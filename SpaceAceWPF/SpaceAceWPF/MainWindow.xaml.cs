@@ -103,6 +103,30 @@ namespace SpaceAceWPF
             InitializeComponent();
             App.timer.Elapsed += main_timerElapsed;
 
+            
+            scoreboard.nameChars.Add(hs_name0);
+            scoreboard.nameChars.Add(hs_name1);
+            scoreboard.nameChars.Add(hs_name2);
+            scoreboard.nameChars.Add(hs_name3);
+            scoreboard.nameChars.Add(hs_name4);
+            scoreboard.nameChars.Add(hs_name5);
+            scoreboard.nameChars.Add(hs_name6);
+            scoreboard.nameChars.Add(hs_name7);
+            scoreboard.nameChars.Add(hs_name8);
+            scoreboard.nameChars.Add(hs_name9);
+
+            scoreboard.borders.Add(hs_border0);
+            scoreboard.borders.Add(hs_border1);
+            scoreboard.borders.Add(hs_border2);
+            scoreboard.borders.Add(hs_border3);
+            scoreboard.borders.Add(hs_border4);
+            scoreboard.borders.Add(hs_border5);
+            scoreboard.borders.Add(hs_border6);
+            scoreboard.borders.Add(hs_border7);
+            scoreboard.borders.Add(hs_border8);
+            scoreboard.borders.Add(hs_border9);
+            
+
             diff = _diff;
             p1_in = P1;
             p2_in = P2;
@@ -1026,16 +1050,13 @@ namespace SpaceAceWPF
         private int hs_curLetter = 0;
         private void enterHighScore(bool player1)
         {
-            TextBlock[] nameChars = { hs_name0, hs_name1, hs_name2, hs_name3, hs_name4, hs_name5, hs_name6, hs_name7, hs_name8, hs_name9 };
-            Border[] borders = { hs_border0, hs_border1, hs_border2, hs_border3, hs_border4, hs_border5, hs_border6, hs_border7, hs_border8, hs_border9 };
-
             this.hs_header.Visibility = System.Windows.Visibility.Visible;
             this.hs_leftShip.Visibility = System.Windows.Visibility.Visible;
             this.hs_rightShip.Visibility = System.Windows.Visibility.Visible;
-            foreach (TextBlock nameChar in nameChars) {
+            foreach (TextBlock nameChar in scoreboard.nameChars) {
                 nameChar.Visibility = System.Windows.Visibility.Visible;
             }
-            foreach (Border border in borders)
+            foreach (Border border in scoreboard.borders)
             {
                 border.Visibility = System.Windows.Visibility.Visible;
             }
@@ -1121,17 +1142,14 @@ namespace SpaceAceWPF
                     scoreboard.addHighScore(highScoreName.Trim(), score);
                     highScoreInput = InputType.none;
 
-                    TextBlock[] nameChars = { hs_name0, hs_name1, hs_name2, hs_name3, hs_name4, hs_name5, hs_name6, hs_name7, hs_name8, hs_name9 };
-                    Border[] borders = { hs_border0, hs_border1, hs_border2, hs_border3, hs_border4, hs_border5, hs_border6, hs_border7, hs_border8, hs_border9 };
-
                     this.hs_header.Visibility = System.Windows.Visibility.Collapsed;
                     this.hs_leftShip.Visibility = System.Windows.Visibility.Collapsed;
                     this.hs_rightShip.Visibility = System.Windows.Visibility.Collapsed;
-                    foreach (TextBlock nameChar in nameChars)
+                    foreach (TextBlock nameChar in scoreboard.nameChars)
                     {
                         nameChar.Visibility = System.Windows.Visibility.Collapsed;
                     }
-                    foreach (Border border in borders)
+                    foreach (Border border in scoreboard.borders)
                     {
                         border.Visibility = System.Windows.Visibility.Collapsed;
                     }
@@ -1146,15 +1164,12 @@ namespace SpaceAceWPF
 
         private void hs_updateFont(int hs_nextLetter)
         {
-            TextBlock[] nameChars = { hs_name0, hs_name1, hs_name2, hs_name3, hs_name4, hs_name5, hs_name6, hs_name7, hs_name8, hs_name9 };
-            Border[] borders = { hs_border0, hs_border1, hs_border2, hs_border3, hs_border4, hs_border5, hs_border6, hs_border7, hs_border8, hs_border9 };
-
-            nameChars[hs_curLetter].Text = hs_letters[hs_curLetter].ToString();
-            nameChars[hs_curLetter].Foreground = Brushes.White;
-            borders[hs_curLetter].BorderBrush = Brushes.White;
+            scoreboard.nameChars[hs_curLetter].Text = hs_letters[hs_curLetter].ToString();
+            scoreboard.nameChars[hs_curLetter].Foreground = Brushes.White;
+            scoreboard.borders[hs_curLetter].BorderBrush = Brushes.White;
             
-            nameChars[hs_nextLetter].Foreground = Brushes.Yellow;
-            borders[hs_nextLetter].BorderBrush = Brushes.Yellow;
+            scoreboard.nameChars[hs_nextLetter].Foreground = Brushes.Yellow;
+            scoreboard.borders[hs_nextLetter].BorderBrush = Brushes.Yellow;
 
             hs_curLetter = hs_nextLetter;
         }
@@ -1165,6 +1180,8 @@ namespace SpaceAceWPF
             public long[] scores;
             private int highScoreIndex;
             private string path;
+            public List<TextBlock> nameChars;
+            public List<Border> borders;
 
             public Scoreboard()
             {
@@ -1174,6 +1191,8 @@ namespace SpaceAceWPF
                 path = String.Format("{0}..\\..\\Assets\\scores.txt", System.AppDomain.CurrentDomain.BaseDirectory);
 
                 readInScoreboard();
+                nameChars = new List<TextBlock>();
+                borders = new List<Border>();
             }
 
             private void readInScoreboard()
