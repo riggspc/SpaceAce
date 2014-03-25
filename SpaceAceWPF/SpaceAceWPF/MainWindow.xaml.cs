@@ -107,6 +107,7 @@ namespace SpaceAceWPF
         private const int COIN_HEIGHT = 50;
         // Other
         private const int MAX_TIME_INVULNERABLE = 100;
+        private const int MIN_COLLISION_DAMAGE = 5;
 
         // Margins may need to change depending on screen size and resolution
         private double Left_Margin = 0;
@@ -938,7 +939,7 @@ namespace SpaceAceWPF
             double speed = ship.speed.X + asteroid.speed.X;
             double sizeRatio = (asteroid.image.ActualHeight * asteroid.image.ActualWidth) / (ship.image.ActualHeight * ship.image.ActualWidth);
 
-            ship.shield = Math.Max(0, ship.shield - Math.Max(1, ((int)(speed * sizeRatio) / 4)));
+            ship.shield = Math.Max(0, ship.shield - Math.Max(MIN_COLLISION_DAMAGE, ((int)(speed * sizeRatio) / 4)));
         }
 
         private void pause_inputEvent(InputType inType, Key key)
