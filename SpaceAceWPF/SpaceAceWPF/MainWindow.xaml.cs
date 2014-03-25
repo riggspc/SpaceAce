@@ -35,6 +35,46 @@ namespace SpaceAceWPF
         {
             public int shield = 100;
             public long score = 0;
+            private bool invulnerable = false;
+            private int timeLeftInvulnerable = MAX_TIME_INVULNERABLE;
+
+            public void becomeInvulnerable()
+            {
+                timeLeftInvulnerable = MAX_TIME_INVULNERABLE;
+                invulnerable = true;
+            }
+
+            public bool isInvulnerable()
+            {
+                return invulnerable;
+            }
+
+            public void checkInvulnerability()
+            {
+                if (invulnerable)
+                {
+                    timeLeftInvulnerable--;
+
+                    if (timeLeftInvulnerable <= 0)
+                    {
+                        invulnerable = false;
+                        this.image.Visibility = System.Windows.Visibility.Visible;
+                    }
+                    else
+                    {
+                        // the mod 3 is to make the blinking more obvious 
+                        if ((this.image.Visibility == System.Windows.Visibility.Visible) && (timeLeftInvulnerable % 3 == 0))
+                        {
+                            this.image.Visibility = System.Windows.Visibility.Hidden;
+                        }
+                        else if(timeLeftInvulnerable % 3 == 0)
+                        {
+                            this.image.Visibility = System.Windows.Visibility.Visible;
+                        }
+                    }
+                }
+            }
+
         }
 
         private class Coin : Projectile
@@ -65,6 +105,8 @@ namespace SpaceAceWPF
         private const int HEALTH_HEIGHT = 80;
         private const int COIN_WIDTH = 50;
         private const int COIN_HEIGHT = 50;
+        // Other
+        private const int MAX_TIME_INVULNERABLE = 100;
 
         // Margins may need to change depending on screen size and resolution
         private double Left_Margin = 0;
@@ -511,7 +553,16 @@ namespace SpaceAceWPF
                     //Move the players
                     moveShip(true);
                     if (TwoPlayer)
+                    {
                         moveShip(false);
+                    }
+
+                    // Blink players if invulnerable
+                    p1_ship.checkInvulnerability();
+                    if (TwoPlayer)
+                    {
+                        p2_ship.checkInvulnerability();
+                    }
 
 
                     //Generate asteroids and coins
@@ -704,17 +755,21 @@ namespace SpaceAceWPF
             for (int i = 0; i < asteroids.Count; ++i)
             {
                 collision = false;
-                if (checkCollision(p1_ship, asteroids[i]))
+                if (checkCollision(p1_ship, asteroids[i]) && ! p1_ship.isInvulnerable())
                 {
                     calculateDamage(p1_ship, asteroids[i]);
                     this.Shield1.Text = "SHIELDS: " + p1_ship.shield.ToString() + "%";
+                    p1_ship.becomeInvulnerable();
+                    
                     collision = true;
                 }
 
-                if (TwoPlayer && checkCollision(p2_ship, asteroids[i]))
+                if (TwoPlayer && checkCollision(p2_ship, asteroids[i]) && ! p2_ship.isInvulnerable())
                 {
                     calculateDamage(p2_ship, asteroids[i]);
                     this.Shield2.Text = "SHIELDS: " + p2_ship.shield.ToString() + "%";
+                    p2_ship.becomeInvulnerable();
+
                     collision = true;
                 }
 
