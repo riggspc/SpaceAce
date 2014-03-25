@@ -750,13 +750,14 @@ namespace SpaceAceWPF
 
                     collision = true;
                 }
-
+                /*
                 if (collision)
                 {
                     this.Asteroid_Grid.Children.Remove(asteroids[i].image);
                     asteroids.RemoveAt(i);
                     i--;
                 }
+                */ 
             }
 
             //Check for collision with coins
