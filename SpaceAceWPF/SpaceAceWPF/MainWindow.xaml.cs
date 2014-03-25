@@ -311,7 +311,7 @@ namespace SpaceAceWPF
                 this.Player2.Margin = playerLoc;
         }
 
-        private void adjustSpeedUp(bool player1, Key key)
+        private void adjustSpeed(bool player1, Key key, bool increaseSpeed)
         {
             Point ship_speed;
             if (player1)
@@ -323,53 +323,31 @@ namespace SpaceAceWPF
             {
                 case Key.A:
                 case Key.Left:
-                    ship_speed.X = Math.Max(-SHIP_SPEED, ship_speed.X - SHIP_SPEED);
+                    if(increaseSpeed)
+                        ship_speed.X = Math.Max(-SHIP_SPEED, ship_speed.X - SHIP_SPEED);
+                    else
+                        ship_speed.X = Math.Min(SHIP_SPEED, ship_speed.X + SHIP_SPEED);
                     break;
                 case Key.D:
                 case Key.Right:
-                    ship_speed.X = Math.Min(SHIP_SPEED, ship_speed.X + SHIP_SPEED);
+                    if (increaseSpeed)
+                        ship_speed.X = Math.Min(SHIP_SPEED, ship_speed.X + SHIP_SPEED);
+                    else
+                        ship_speed.X = Math.Max(-SHIP_SPEED, ship_speed.X - SHIP_SPEED);
                     break;
                 case Key.W:
                 case Key.Up:
-                    ship_speed.Y = Math.Max(-SHIP_SPEED, ship_speed.Y - SHIP_SPEED);
+                    if (increaseSpeed)
+                        ship_speed.Y = Math.Max(-SHIP_SPEED, ship_speed.Y - SHIP_SPEED);
+                    else
+                        ship_speed.Y = Math.Min(SHIP_SPEED, ship_speed.Y + SHIP_SPEED);
                     break;
                 case Key.S:
                 case Key.Down:
-                    ship_speed.Y = Math.Min(SHIP_SPEED, ship_speed.Y + SHIP_SPEED);
-                    break;
-            }
-
-            if (player1)
-                p1_ship.speed = ship_speed;
-            else
-                p2_ship.speed = ship_speed;
-        }
-
-        private void adjustSpeedDown(bool player1, Key key)
-        {
-            Point ship_speed;
-            if (player1)
-                ship_speed = p1_ship.speed;
-            else
-                ship_speed = p2_ship.speed;
-
-            switch (key)
-            {
-                case Key.A:
-                case Key.Left:
-                    ship_speed.X = Math.Min(SHIP_SPEED, ship_speed.X + SHIP_SPEED);
-                    break;
-                case Key.D:
-                case Key.Right:
-                    ship_speed.X = Math.Max(-SHIP_SPEED, ship_speed.X - SHIP_SPEED);
-                    break;
-                case Key.W:
-                case Key.Up:
-                    ship_speed.Y = Math.Min(SHIP_SPEED, ship_speed.Y + SHIP_SPEED);
-                    break;
-                case Key.S:
-                case Key.Down:
-                    ship_speed.Y = Math.Max(-SHIP_SPEED, ship_speed.Y - SHIP_SPEED);
+                    if (increaseSpeed)
+                        ship_speed.Y = Math.Min(SHIP_SPEED, ship_speed.Y + SHIP_SPEED);
+                    else
+                        ship_speed.Y = Math.Max(-SHIP_SPEED, ship_speed.Y - SHIP_SPEED);
                     break;
             }
 
@@ -408,18 +386,18 @@ namespace SpaceAceWPF
                 case Key.Up:
                 case Key.Down:
                     if (p1_in == InputType.arrows)
-                        adjustSpeedUp(true, e.Key);
+                        adjustSpeed(true, e.Key, true);
                     else if (TwoPlayer && p2_in == InputType.arrows)
-                        adjustSpeedUp(false, e.Key);
+                        adjustSpeed(false, e.Key, true);
                     break;
                 case Key.A:
                 case Key.D:
                 case Key.W:
                 case Key.S:
                     if (p1_in == InputType.wasd)
-                        adjustSpeedUp(true, e.Key);
+                        adjustSpeed(true, e.Key, true);
                     else if (TwoPlayer && p2_in == InputType.wasd)
-                        adjustSpeedUp(false, e.Key);
+                        adjustSpeed(false, e.Key, true);
                     break;
                 case Key.Escape:
                     if (App.menuDelay != 0)
@@ -452,18 +430,18 @@ namespace SpaceAceWPF
                 case Key.Up:
                 case Key.Down:
                     if (p1_in == InputType.arrows)
-                        adjustSpeedDown(true, e.Key);
+                        adjustSpeed(true, e.Key, false);
                     else if (TwoPlayer && p2_in == InputType.arrows)
-                        adjustSpeedDown(false, e.Key);
+                        adjustSpeed(false, e.Key, false);
                     break;
                 case Key.A:
                 case Key.D:
                 case Key.W:
                 case Key.S:
                     if (p1_in == InputType.wasd)
-                        adjustSpeedDown(true, e.Key);
+                        adjustSpeed(true, e.Key, false);
                     else if (TwoPlayer && p2_in == InputType.wasd)
-                        adjustSpeedDown(false, e.Key);
+                        adjustSpeed(false, e.Key, false);
                     break;
             }
         }
@@ -475,9 +453,9 @@ namespace SpaceAceWPF
             else if (game_paused || game_over)
                 pause_inputEvent(InputType.joy, key);
             else if (p1_in == InputType.joy)
-                adjustSpeedUp(true, key);
+                adjustSpeed(true, key, true);
             else if (TwoPlayer && p2_in == InputType.joy)
-                adjustSpeedUp(false, key);
+                adjustSpeed(false, key, true);
         }
 
         public void main_joyUp(Key key)
@@ -485,9 +463,9 @@ namespace SpaceAceWPF
             if (game_paused || game_over)
                 return;
             else if (p1_in == InputType.joy)
-                adjustSpeedDown(true, key);
+                adjustSpeed(true, key, false);
             else if (TwoPlayer && p2_in == InputType.joy)
-                adjustSpeedDown(false, key);
+                adjustSpeed(false, key, false);
         }
 
         public void main_timerElapsed(object sender, ElapsedEventArgs elapsedEventArgs)
@@ -1053,6 +1031,7 @@ namespace SpaceAceWPF
             this.hs_header.Visibility = System.Windows.Visibility.Visible;
             this.hs_leftShip.Visibility = System.Windows.Visibility.Visible;
             this.hs_rightShip.Visibility = System.Windows.Visibility.Visible;
+            this.hs_info.Visibility = System.Windows.Visibility.Visible;
             foreach (TextBlock nameChar in scoreboard.nameChars) {
                 nameChar.Visibility = System.Windows.Visibility.Visible;
             }
@@ -1145,6 +1124,7 @@ namespace SpaceAceWPF
                     this.hs_header.Visibility = System.Windows.Visibility.Collapsed;
                     this.hs_leftShip.Visibility = System.Windows.Visibility.Collapsed;
                     this.hs_rightShip.Visibility = System.Windows.Visibility.Collapsed;
+                    this.hs_info.Visibility = System.Windows.Visibility.Collapsed;
                     foreach (TextBlock nameChar in scoreboard.nameChars)
                     {
                         nameChar.Visibility = System.Windows.Visibility.Collapsed;
