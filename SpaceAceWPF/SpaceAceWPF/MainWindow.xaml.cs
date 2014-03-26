@@ -110,6 +110,11 @@ namespace SpaceAceWPF
         {
 
         }
+
+        private class Bomb : Projectile
+        {
+
+        }
         /***** Constants *****/
         // Speeds
         private const int SHIP_SPEED = 5;
@@ -133,6 +138,8 @@ namespace SpaceAceWPF
         private const int SHIELD_HEIGHT = 75;
         private const int SPEED_HEIGHT = 75;
         private const int SPEED_WIDTH = 75;
+        private const int BOMB_HEIGHT = 75;
+        private const int BOMB_WIDTH = 75;
         // Other
         private const int MAX_TIME_INVULNERABLE = 100;
         private const int MIN_COLLISION_DAMAGE = 5;
@@ -151,6 +158,7 @@ namespace SpaceAceWPF
         private List<Health> healths = new List<Health>();
         private List<Shield> shields = new List<Shield>();
         private List<Speed_Boost> speedUps = new List<Speed_Boost>();
+        private List<Bomb> bombs = new List<Bomb>();
 
         // Menu Options
         private enum opt { resume, returnToStart, exitGame };
@@ -610,6 +618,7 @@ namespace SpaceAceWPF
                     moveProjectiles(healths.OfType<Projectile>().ToList(), this.Health_Grid);
                     moveProjectiles(shields.OfType<Projectile>().ToList(), this.Shield_Grid);
                     moveProjectiles(speedUps.OfType<Projectile>().ToList(), this.Shield_Grid);
+                    moveProjectiles(bombs.OfType<Projectile>().ToList(), this.Shield_Grid);
 
                     //Check for collisions
                     detectCollision();
@@ -806,6 +815,28 @@ namespace SpaceAceWPF
                 speedUps.Add(newSpeedUp);
                 this.Shield_Grid.Children.Add(newSpeedUp.image);
             }
+
+            //create bombs
+            if (rand.Next(0, 1000) > POWERUP_THRESHOLD+1)
+            {
+                Bomb newBomb = new Bomb();
+                // newCoin.image = new Image();
+                newBomb.image = initializeProjectileImage(new Uri(@"../../Assets/bomb.png", UriKind.Relative));
+
+                //Size the image
+                newBomb.image.Width = BOMB_WIDTH;
+                newBomb.image.Height = BOMB_HEIGHT;
+
+                // Initialize coin's speed
+                newBomb.speed.X = rand.Next(BASE_MIN_PROJECTILE_SPEED, BASE_MAX_PROJECTILE_SPEED) * difficulty_multiplier;
+                newBomb.speed.Y = 0;
+
+                newBomb.bitmap = (TransformedBitmap)newBomb.image.Source;
+
+                //Add coin to grid
+                bombs.Add(newBomb);
+                this.Shield_Grid.Children.Add(newBomb.image);
+            }
         }
 
         private void moveProjectiles(List<Projectile> projectiles, Canvas grid)
@@ -962,6 +993,33 @@ namespace SpaceAceWPF
                 {
                     this.Shield_Grid.Children.Remove(speedUps[i].image);
                     speedUps.RemoveAt(i);
+                    i--;
+                }
+            }
+
+             //Check for collision with bombs
+            for (int i = 0; i < bombs.Count; ++i)
+            {
+                collision = false;
+                if (checkCollision(p1_ship, bombs[i]))
+                {
+                    collision = true;
+                }
+
+                if (TwoPlayer && checkCollision(p2_ship, bombs[i]))
+                {
+                    collision = true;
+                }
+
+                if (collision)
+                {
+                    this.Shield_Grid.Children.Remove(bombs[i].image);
+                    bombs.RemoveAt(i);
+                    for(int j = 0; j < asteroids.Count; ++j){
+                        this.Asteroid_Grid.Children.Remove(asteroids[j].image);
+                        asteroids.RemoveAt(j);
+                        j--;
+                    }
                     i--;
                 }
             }
