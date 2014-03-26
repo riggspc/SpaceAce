@@ -184,6 +184,18 @@
   <ItemGroup>
     <Resource Include="Assets\health.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\shield.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\player1_small_with_shield.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\player2_small_with_shield.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\speed_boost.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
