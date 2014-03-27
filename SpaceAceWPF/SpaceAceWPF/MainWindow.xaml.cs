@@ -1058,9 +1058,16 @@ namespace SpaceAceWPF
             ship.bitmap.Source = bmpImage;
             ship.bitmap.Transform = new ScaleTransform(1, 1);
             ship.bitmap.EndInit();
-            ship.image.Width = 100;
-            ship.image.Height = 100;
-
+            if (shielded)
+            {
+                ship.image.Width = 150;
+                ship.image.Height = 150;
+            }
+            else
+            {
+                ship.image.Width = 100;
+                ship.image.Height = 100;
+            }
             if(playerNum == 1){
                 ship.image = this.Player1;
                 this.Player1.Source = ship.bitmap;
