@@ -468,6 +468,12 @@ namespace SpaceAceWPF
                     hs_inputEvent(InputType.arrows, e.Key);
                 return;
             }
+            else if(highScoreInput == InputType.joy)
+            {
+                if (e.Key == Key.Space || e.Key == Key.Enter)
+                    hs_inputEvent(InputType.arrows, e.Key);
+                return;
+            }
             else if (game_paused || game_over)
             {
                 pause_inputEvent(InputType.wasd, e.Key);
@@ -545,7 +551,7 @@ namespace SpaceAceWPF
         {
             if (highScoreInput == InputType.joy)
                 hs_inputEvent(InputType.joy, e.Key);
-            else if (game_paused || game_over)
+            else if ((game_paused || game_over) && highScoreInput == InputType.none)
                 pause_inputEvent(InputType.joy, e.Key);
             else if (p1_in == InputType.joy)
                 adjustSpeed(true, e.Key, true);
@@ -835,7 +841,7 @@ namespace SpaceAceWPF
             }
 
             //create bombs
-            if (rand.Next(0, 1000) > POWERUP_THRESHOLD+1)
+            if (rand.Next(0, 1000) > POWERUP_THRESHOLD)
             {
                 Bomb newBomb = new Bomb();
                 // newBomb.image = new Image();
