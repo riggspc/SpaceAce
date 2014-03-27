@@ -18,7 +18,7 @@ namespace SpaceAceWPF
     {
         public static Timer timer = new Timer(10);
         public static InputEvent inputEvent = new InputEvent();
-        private static ToddJoystick joy;
+        private static ToddJoystick joy = null;
         private static Point prevJoyLoc, newJoyLoc;
 
         public App()
@@ -26,7 +26,6 @@ namespace SpaceAceWPF
             timer.Interval = 10;
             timer.Enabled = true;
             timer.Elapsed += timerOnElapsed;
-
             prevJoyLoc.X = 0;
             prevJoyLoc.Y = 0;
         }
@@ -51,13 +50,13 @@ namespace SpaceAceWPF
                         joy.State(ref newJoyLoc);
 
                         if (newJoyLoc.X < -5)
-                            inputEvent.joyUp(System.Windows.Input.Key.A);
+                            inputEvent.joyDown(System.Windows.Input.Key.A);
                         if (newJoyLoc.X > 5)
-                            inputEvent.joyUp(System.Windows.Input.Key.D);
+                            inputEvent.joyDown(System.Windows.Input.Key.D);
                         if (newJoyLoc.Y < -5)
-                            inputEvent.joyUp(System.Windows.Input.Key.W);
+                            inputEvent.joyDown(System.Windows.Input.Key.W);
                         if (newJoyLoc.Y > 5)
-                            inputEvent.joyUp(System.Windows.Input.Key.S);
+                            inputEvent.joyDown(System.Windows.Input.Key.S);
 
                         if(newJoyLoc.X >= -5 && prevJoyLoc.X < -5)
                             inputEvent.joyUp(System.Windows.Input.Key.A);

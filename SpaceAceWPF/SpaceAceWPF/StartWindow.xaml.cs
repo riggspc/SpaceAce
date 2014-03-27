@@ -33,6 +33,11 @@ namespace SpaceAceWPF
             updateFont(opt.play1);
         }
 
+        ~StartWindow()
+        {
+            App.inputEvent.HandleJoyDown -= start_joyDown;
+        }
+
         private void updateFont(opt nextOpt)
         {
             switch (curOpt)

@@ -1231,6 +1231,8 @@ namespace SpaceAceWPF
                     break;
                 case Key.Space:
                 case Key.Enter:
+                    App.menuDelay++;
+                    App.lastInputType = inType;
                     pause_selectOpt();
                     break;
                 case Key.Escape:
@@ -1238,6 +1240,7 @@ namespace SpaceAceWPF
                     {
                         pause_updateFont(opt.resume);
                         App.menuDelay++;
+                        App.lastInputType = inType;
                         pause_selectOpt();
                     }
                     break;
@@ -1399,6 +1402,8 @@ namespace SpaceAceWPF
                     else
                         hs_letters[hs_curLetter]--;
                     hs_updateFont(hs_curLetter);
+                    App.menuDelay++;
+                    App.lastInputType = inType;
                     break;
                 case Key.Down:
                 case Key.S:
@@ -1409,16 +1414,22 @@ namespace SpaceAceWPF
                     else
                         hs_letters[hs_curLetter]++;
                     hs_updateFont(hs_curLetter);
+                    App.menuDelay++;
+                    App.lastInputType = inType;
                     break;
                 case Key.Left:
                 case Key.A:
                     if (hs_curLetter > 0)
                         hs_updateFont(hs_curLetter - 1);
+                    App.menuDelay++;
+                    App.lastInputType = inType;
                     break;
                 case Key.Right:
                 case Key.D:
                     if (hs_curLetter < 9)
                         hs_updateFont(hs_curLetter + 1);
+                    App.menuDelay++;
+                    App.lastInputType = inType;
                     break;
                 case Key.Space:
                 case Key.Enter:
@@ -1445,17 +1456,15 @@ namespace SpaceAceWPF
                     this.hs_rightShip.Visibility = System.Windows.Visibility.Collapsed;
                     this.hs_info.Visibility = System.Windows.Visibility.Collapsed;
                     foreach (TextBlock nameChar in scoreboard.nameChars)
-                    {
                         nameChar.Visibility = System.Windows.Visibility.Collapsed;
-                    }
                     foreach (Border border in scoreboard.borders)
-                    {
                         border.Visibility = System.Windows.Visibility.Collapsed;
-                    }
 
                     this.pause_background.Opacity = 0;
 
                     highScoreInput = InputType.none;
+                    App.menuDelay++;
+                    App.lastInputType = inType;
                     gameOver();
                     break;
             }

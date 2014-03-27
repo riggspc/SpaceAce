@@ -14,8 +14,8 @@ namespace SpaceAceWPF
 
         public void joyDown(Key key)
         {
-            if (HandleJoyUp != null) 
-                HandleJoyUp(key);
+            if (HandleJoyDown != null) 
+                HandleJoyDown(key);
         }
 
         public void joyUp(Key key)
