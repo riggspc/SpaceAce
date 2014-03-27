@@ -92,6 +92,7 @@ namespace SpaceAceWPF
 
         public ScoreboardWindow()
         {
+            this.Cursor = Cursors.None;
             InitializeComponent();
             App.checkForJoy();
             App.inputEvent.HandleJoyDown += score_joyDown;

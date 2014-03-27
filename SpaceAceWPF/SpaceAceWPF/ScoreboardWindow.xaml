@@ -4,7 +4,8 @@
         Title="Space Ace" Height="768" Width="1024"
         WindowStartupLocation="CenterScreen"
         KeyDown="score_keyDown"
-        WindowState="Maximized">
+        WindowState="Maximized"
+        WindowStyle="None">
     <Grid x:Name="Scoreboard_Grid">
         <!--Setup-->
         <Grid.ColumnDefinitions>

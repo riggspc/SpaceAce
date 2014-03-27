@@ -25,6 +25,7 @@ namespace SpaceAceWPF
 
         public StartWindow()
         {
+            this.Cursor = Cursors.None;
             InitializeComponent();
             App.checkForJoy();
             App.inputEvent.HandleJoyDown += start_joyDown;

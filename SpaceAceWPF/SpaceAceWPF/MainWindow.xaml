@@ -4,7 +4,8 @@
         Title="Space Ace" Height="768" Width="1024"
         WindowStartupLocation="CenterScreen"
         KeyDown="main_keyDown" KeyUp="main_keyUp" SizeChanged="screenResize" 
-        WindowState="Maximized">
+        WindowState="Maximized"
+        WindowStyle="None">
     <Grid x:Name="MainGrid">
         <!--Background-->
         <Grid.Background>

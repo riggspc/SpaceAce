@@ -34,6 +34,7 @@ namespace SpaceAceWPF
         private bool TwoPlayer = false;
         public SetupWindow(bool num_players)
         {
+            this.Cursor = Cursors.None;
             InitializeComponent();
             App.inputEvent.HandleJoyDown += setup_joyDown;
             if (App.checkForJoy())

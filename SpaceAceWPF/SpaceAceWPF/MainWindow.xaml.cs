@@ -189,6 +189,7 @@ namespace SpaceAceWPF
         private Random rand = new Random();
         public MainWindow(bool num_players, Difficulty _diff, InputType P1, InputType P2)
         {
+            this.Cursor = Cursors.None;
             InitializeComponent();
             App.timer.Elapsed += main_timerElapsed;
 
