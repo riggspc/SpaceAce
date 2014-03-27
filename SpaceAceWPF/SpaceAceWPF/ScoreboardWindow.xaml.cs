@@ -95,7 +95,7 @@ namespace SpaceAceWPF
             this.Cursor = Cursors.None;
             InitializeComponent();
             App.checkForJoy();
-            App.inputEvent.HandleJoyDown += score_joyDown;
+            App.joyDown += new EventHandler<JoyDownArgs>(score_joyDown);
             updateFont(opt.returnStart);
             DataContext = this.scoreboardContext;
         }
@@ -142,9 +142,9 @@ namespace SpaceAceWPF
             scoreboard_inputEvent(InputType.wasd, e.Key);
         }
 
-        private void score_joyDown(Key key)
+        private void score_joyDown(object sender, JoyDownArgs e)
         {
-            scoreboard_inputEvent(InputType.joy, key);
+            scoreboard_inputEvent(InputType.joy, e.Key);
         }
 
         private void scoreboard_inputEvent(InputType inType, Key key)

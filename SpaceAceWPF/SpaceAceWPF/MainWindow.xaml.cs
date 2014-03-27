@@ -240,8 +240,8 @@ namespace SpaceAceWPF
             if (p1_in == InputType.joy || p2_in == InputType.joy)
             {
                 App.checkForJoy();
-                App.inputEvent.HandleJoyUp += main_joyUp;
-                App.inputEvent.HandleJoyDown += main_joyDown;
+                App.joyDown += new EventHandler<JoyDownArgs>(main_joyDown);
+                App.joyUp += new EventHandler<JoyUpArgs>(main_joyUp);
             }
 
             //Check if game is two player
@@ -541,26 +541,26 @@ namespace SpaceAceWPF
             }
         }
 
-        public void main_joyDown(Key key)
+        public void main_joyDown(object sender, JoyDownArgs e)
         {
             if (highScoreInput == InputType.joy)
-                hs_inputEvent(InputType.joy, key);
+                hs_inputEvent(InputType.joy, e.Key);
             else if (game_paused || game_over)
-                pause_inputEvent(InputType.joy, key);
+                pause_inputEvent(InputType.joy, e.Key);
             else if (p1_in == InputType.joy)
-                adjustSpeed(true, key, true);
+                adjustSpeed(true, e.Key, true);
             else if (TwoPlayer && p2_in == InputType.joy)
-                adjustSpeed(false, key, true);
+                adjustSpeed(false, e.Key, true);
         }
 
-        public void main_joyUp(Key key)
+        public void main_joyUp(object sender, JoyUpArgs e)
         {
             if (game_paused || game_over)
                 return;
             else if (p1_in == InputType.joy)
-                adjustSpeed(true, key, false);
+                adjustSpeed(true, e.Key, false);
             else if (TwoPlayer && p2_in == InputType.joy)
-                adjustSpeed(false, key, false);
+                adjustSpeed(false, e.Key, false);
         }
 
         public void main_timerElapsed(object sender, ElapsedEventArgs elapsedEventArgs)
@@ -1354,13 +1354,10 @@ namespace SpaceAceWPF
             this.hs_leftShip.Visibility = System.Windows.Visibility.Visible;
             this.hs_rightShip.Visibility = System.Windows.Visibility.Visible;
             this.hs_info.Visibility = System.Windows.Visibility.Visible;
-            foreach (TextBlock nameChar in scoreboard.nameChars) {
+            foreach (TextBlock nameChar in scoreboard.nameChars)
                 nameChar.Visibility = System.Windows.Visibility.Visible;
-            }
             foreach (Border border in scoreboard.borders)
-            {
                 border.Visibility = System.Windows.Visibility.Visible;
-            }
             this.pause_background.Opacity = 1;
 
             if(player1)

@@ -36,7 +36,7 @@ namespace SpaceAceWPF
         {
             this.Cursor = Cursors.None;
             InitializeComponent();
-            App.inputEvent.HandleJoyDown += setup_joyDown;
+            App.joyDown += new EventHandler<JoyDownArgs>(setup_joyDown);
             if (App.checkForJoy())
             {
                 p1_in = InputType.joy;
@@ -148,9 +148,9 @@ namespace SpaceAceWPF
             setup_inputEvent(InputType.wasd, e.Key);
         }
 
-        private void setup_joyDown(Key key)
+        private void setup_joyDown(object sender, JoyDownArgs e)
         {
-            setup_inputEvent(InputType.joy, key);
+            setup_inputEvent(InputType.joy, e.Key);
         }
 
         private void setup_inputEvent(InputType inType, Key key)

@@ -5,6 +5,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 using System.Timers;
 
 namespace SpaceAceWPF
@@ -17,7 +18,8 @@ namespace SpaceAceWPF
     public partial class App : Application
     {
         public static Timer timer = new Timer(10);
-        public static InputEvent inputEvent = new InputEvent();
+        public static event EventHandler<JoyUpArgs> joyUp;
+        public static event EventHandler<JoyDownArgs> joyDown;
         private static ToddJoystick joy = null;
         private static Point prevJoyLoc, newJoyLoc;
 
@@ -50,26 +52,44 @@ namespace SpaceAceWPF
                         joy.State(ref newJoyLoc);
 
                         if (newJoyLoc.X < -5)
-                            inputEvent.joyDown(System.Windows.Input.Key.A);
+                            RaiseJoyDown(Key.A);
                         if (newJoyLoc.X > 5)
-                            inputEvent.joyDown(System.Windows.Input.Key.D);
+                            RaiseJoyDown(Key.D);
                         if (newJoyLoc.Y < -5)
-                            inputEvent.joyDown(System.Windows.Input.Key.W);
+                            RaiseJoyDown(Key.W);
                         if (newJoyLoc.Y > 5)
-                            inputEvent.joyDown(System.Windows.Input.Key.S);
+                            RaiseJoyDown(Key.S);
 
                         if(newJoyLoc.X >= -5 && prevJoyLoc.X < -5)
-                            inputEvent.joyUp(System.Windows.Input.Key.A);
+                            RaiseJoyUp(Key.A);
                         if (newJoyLoc.X <= 5 && prevJoyLoc.X > 5)
-                            inputEvent.joyUp(System.Windows.Input.Key.D);
+                            RaiseJoyUp(Key.D);
                         if (newJoyLoc.Y >= -5 && prevJoyLoc.Y < -5)
-                            inputEvent.joyUp(System.Windows.Input.Key.W);
+                            RaiseJoyUp(Key.W);
                         if (newJoyLoc.Y <= 5 && prevJoyLoc.Y > 5)
-                            inputEvent.joyUp(System.Windows.Input.Key.S);
+                            RaiseJoyUp(Key.S);
 
                         prevJoyLoc = newJoyLoc;
                     }
                 });
+            }
+        }
+
+        private static void RaiseJoyDown(Key key)
+        {
+            EventHandler<JoyDownArgs> handler = joyDown;
+            if (handler != null)
+            {
+                handler(null, new JoyDownArgs(key));
+            }
+        }
+
+        private static void RaiseJoyUp(Key key)
+        {
+            EventHandler<JoyUpArgs> handler = joyUp;
+            if (handler != null)
+            {
+                handler(null, new JoyUpArgs(key));
             }
         }
 

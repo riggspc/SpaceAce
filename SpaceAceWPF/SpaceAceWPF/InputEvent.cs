@@ -4,24 +4,39 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using System.Windows;
 
 namespace SpaceAceWPF
 {
-    public class InputEvent
+    public class JoyDownArgs : EventArgs
     {
-        public delegate void StatusUpdateHandler(Key key);
-        public event StatusUpdateHandler HandleJoyUp, HandleJoyDown;
+       public Key Key;
 
-        public void joyDown(Key key)
+        public JoyDownArgs(Key _Key)
         {
-            if (HandleJoyDown != null) 
-                HandleJoyDown(key);
+            Key = _Key;
         }
 
-        public void joyUp(Key key)
+        public Key Message
         {
-            if(HandleJoyUp != null)
-                HandleJoyUp(key);
+            get { return Key; }
+            set { Key = value; }
+        }
+    }
+
+    public class JoyUpArgs : EventArgs
+    {
+        public Key Key;
+
+        public JoyUpArgs(Key _Key)
+        {
+            Key = _Key;
+        }
+
+        public Key Message
+        {
+            get { return Key; }
+            set { Key = value; }
         }
     }
 }
