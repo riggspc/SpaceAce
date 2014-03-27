@@ -78,6 +78,14 @@ namespace SpaceAceWPF
                 }
             }
 
+            public bool isAlive()
+            {
+                if (shield > 0)
+                    return true;
+                else
+                    return false;
+            }
+
             public void update_Speed()
             {
                 if (boosted > 0)
@@ -126,7 +134,7 @@ namespace SpaceAceWPF
         private const int ASTEROID_THRESHOLD_HARD = 945;
         private const int COIN_THRESHOLD = 980;
         private const int HEALTH_THRESHOLD = 997;
-        private const int POWERUP_THRESHOLD = 997;
+        private const int POWERUP_THRESHOLD = 998;
         // Sizes of projectiles
         private const int MIN_ASTEROID_WIDTH = 100;
         private const int MAX_ASTEROID_WIDTH = 250;
@@ -573,40 +581,39 @@ namespace SpaceAceWPF
                     }
 
                     //Move the players
-                    moveShip(true);
-                    if (TwoPlayer)
-                    {
+                    if(p1_ship.isAlive())
+                        moveShip(true);
+                    if (TwoPlayer && p2_ship.isAlive())
                         moveShip(false);
-                    }
 
                     // Blink players if invulnerable
-                    p1_ship.checkInvulnerability();
-                    if (TwoPlayer)
-                    {
+                    if(p1_ship.isAlive())
+                        p1_ship.checkInvulnerability();
+                    if (TwoPlayer && p2_ship.isAlive())
                         p2_ship.checkInvulnerability();
-                    }
 
                     //update shield status
                     if (p1_ship.shielded > 0)
                         p1_ship.shielded--;
-                    if (p2_ship.shielded > 0)
+                    if (TwoPlayer && p2_ship.isAlive() && p2_ship.shielded > 0)
                         p2_ship.shielded--;
 
-                    if (p1_ship.shielded == 1)
+                    if (p1_ship.isAlive() && p1_ship.shielded == 1)
                     {
-                        updateShipNormal(1, p1_ship);
+                        updateShip(1, p1_ship, false);
                         p1_ship.shielded = 0;
                     }
 
-                    if (p2_ship.shielded == 1)
+                    if(TwoPlayer && p2_ship.isAlive() && p2_ship.shielded == 1)
                     {
-                        updateShipNormal(2, p2_ship);
+                        updateShip(2, p2_ship, false);
                         p2_ship.shielded = 0;
                     }
 
                     //update speed boost status
-                    p1_ship.update_Speed();
-                    if (TwoPlayer)
+                    if(p1_ship.isAlive())
+                        p1_ship.update_Speed();
+                    if (TwoPlayer && p2_ship.isAlive())
                         p2_ship.update_Speed();
 
                     //Generate asteroids and coins
@@ -616,21 +623,31 @@ namespace SpaceAceWPF
                     moveProjectiles(asteroids, this.Asteroid_Grid);
                     moveProjectiles(coins.OfType<Projectile>().ToList(), this.Coin_Grid);
                     moveProjectiles(healths.OfType<Projectile>().ToList(), this.Health_Grid);
-                    moveProjectiles(shields.OfType<Projectile>().ToList(), this.Shield_Grid);
-                    moveProjectiles(speedUps.OfType<Projectile>().ToList(), this.Shield_Grid);
-                    moveProjectiles(bombs.OfType<Projectile>().ToList(), this.Shield_Grid);
+                    moveProjectiles(shields.OfType<Projectile>().ToList(), this.PowerUp_Grid);
+                    moveProjectiles(speedUps.OfType<Projectile>().ToList(), this.PowerUp_Grid);
+                    moveProjectiles(bombs.OfType<Projectile>().ToList(), this.PowerUp_Grid);
 
                     //Check for collisions
                     detectCollision();
 
                     //Update Scores
-                    p1_ship.score++;
-                    p2_ship.score++;
-                    this.Score1.Text = p1_ship.score.ToString();
-                    this.Score2.Text = p2_ship.score.ToString();
+                    if (p1_ship.isAlive())
+                    {
+                        p1_ship.score++;
+                        this.Score1.Text = p1_ship.score.ToString();
+                    }
+                    if(TwoPlayer && p2_ship.isAlive())
+                    {
+                        p2_ship.score++;
+                        this.Score2.Text = p2_ship.score.ToString();
+                    }
 
-                    //Check if game is over
-                    if (p1_ship.shield <= 0 || p2_ship.shield <= 0)
+                    //Check if players are still alive
+                    if (!p1_ship.isAlive())
+                        Player1.Visibility = System.Windows.Visibility.Collapsed;
+                    if (TwoPlayer && !p2_ship.isAlive())
+                        Player2.Visibility = System.Windows.Visibility.Collapsed;
+                    if (!p1_ship.isAlive() && (!TwoPlayer || (TwoPlayer && !p2_ship.isAlive())))
                         gameOver();
                 });
             }
@@ -709,10 +726,10 @@ namespace SpaceAceWPF
                 newHealth.speed.X = rand.Next(BASE_MIN_PROJECTILE_SPEED, BASE_MAX_PROJECTILE_SPEED) * difficulty_multiplier;
                 newHealth.speed.Y = 0;
 
-                //Initialize coin's value
-                newHealth.value = 25;
+                //Initialize health's value
+                newHealth.value = 10;
 
-                //Add coin to grid
+                //Add health to grid
                 newHealth.bitmap = (TransformedBitmap)newHealth.image.Source;
                 healths.Add(newHealth);
                 this.Health_Grid.Children.Add(newHealth.image);
@@ -776,66 +793,66 @@ namespace SpaceAceWPF
             if (rand.Next(0, 1000) > POWERUP_THRESHOLD)
             {
                 Shield newShield = new Shield();
-                // newCoin.image = new Image();
+                // newShiled.image = new Image();
                 newShield.image = initializeProjectileImage(new Uri(@"../../Assets/shield.png", UriKind.Relative));
 
                 //Size the image
                 newShield.image.Width = SHIELD_WIDTH;
                 newShield.image.Height = SHIELD_HEIGHT;
 
-                // Initialize coin's speed
+                // Initialize shield's speed
                 newShield.speed.X = rand.Next(BASE_MIN_PROJECTILE_SPEED, BASE_MAX_PROJECTILE_SPEED) * difficulty_multiplier;
                 newShield.speed.Y = 0;
 
                 newShield.bitmap = (TransformedBitmap)newShield.image.Source;
 
-                //Add coin to grid
+                //Add shield to grid
                 shields.Add(newShield);
-                this.Shield_Grid.Children.Add(newShield.image);
+                this.PowerUp_Grid.Children.Add(newShield.image);
             }
 
             //create speed boosts
             if (rand.Next(0, 1000) > POWERUP_THRESHOLD)
             {
                 Speed_Boost newSpeedUp = new Speed_Boost();
-                // newCoin.image = new Image();
+                // newSpeed.image = new Image();
                 newSpeedUp.image = initializeProjectileImage(new Uri(@"../../Assets/speed_boost.png", UriKind.Relative));
 
                 //Size the image
                 newSpeedUp.image.Width = SPEED_WIDTH;
                 newSpeedUp.image.Height = SPEED_HEIGHT;
 
-                // Initialize coin's speed
+                // Initialize speed's speed
                 newSpeedUp.speed.X = rand.Next(BASE_MIN_PROJECTILE_SPEED, BASE_MAX_PROJECTILE_SPEED) * difficulty_multiplier;
                 newSpeedUp.speed.Y = 0;
 
                 newSpeedUp.bitmap = (TransformedBitmap)newSpeedUp.image.Source;
 
-                //Add coin to grid
+                //Add speed to grid
                 speedUps.Add(newSpeedUp);
-                this.Shield_Grid.Children.Add(newSpeedUp.image);
+                this.PowerUp_Grid.Children.Add(newSpeedUp.image);
             }
 
             //create bombs
             if (rand.Next(0, 1000) > POWERUP_THRESHOLD+1)
             {
                 Bomb newBomb = new Bomb();
-                // newCoin.image = new Image();
+                // newBomb.image = new Image();
                 newBomb.image = initializeProjectileImage(new Uri(@"../../Assets/bomb.png", UriKind.Relative));
 
                 //Size the image
                 newBomb.image.Width = BOMB_WIDTH;
                 newBomb.image.Height = BOMB_HEIGHT;
 
-                // Initialize coin's speed
+                // Initialize bomb's speed
                 newBomb.speed.X = rand.Next(BASE_MIN_PROJECTILE_SPEED, BASE_MAX_PROJECTILE_SPEED) * difficulty_multiplier;
                 newBomb.speed.Y = 0;
 
                 newBomb.bitmap = (TransformedBitmap)newBomb.image.Source;
 
-                //Add coin to grid
+                //Add bomb to grid
                 bombs.Add(newBomb);
-                this.Shield_Grid.Children.Add(newBomb.image);
+                this.PowerUp_Grid.Children.Add(newBomb.image);
             }
         }
 
@@ -877,7 +894,7 @@ namespace SpaceAceWPF
                     collision = true;
                 }
 
-                if (TwoPlayer && checkCollision(p2_ship, asteroids[i]) && ! p2_ship.isInvulnerable() && p2_ship.shielded == 0)
+                if (TwoPlayer && p2_ship.isAlive() && checkCollision(p2_ship, asteroids[i]) && ! p2_ship.isInvulnerable() && p2_ship.shielded == 0)
                 {
                     calculateDamage(p2_ship, asteroids[i]);
                     this.Shield2.Text = "SHIELDS: " + p2_ship.shield.ToString() + "%";
@@ -899,13 +916,13 @@ namespace SpaceAceWPF
             for (int i = 0; i < coins.Count; ++i)
             {
                 collision = false;
-                if (checkCollision(p1_ship, coins[i]))
+                if (p1_ship.isAlive() && checkCollision(p1_ship, coins[i]))
                 {
                     p1_ship.score += coins[i].value;
                     collision = true;
                 }
 
-                if (TwoPlayer && checkCollision(p2_ship, coins[i]))
+                if (TwoPlayer && p2_ship.isAlive() && checkCollision(p2_ship, coins[i]))
                 {
                     p2_ship.score += coins[i].value;
                     collision = true;
@@ -923,14 +940,14 @@ namespace SpaceAceWPF
             for (int i = 0; i < healths.Count; ++i)
             {
                 collision = false;
-                if (checkCollision(p1_ship, healths[i]))
+                if (p1_ship.isAlive() && checkCollision(p1_ship, healths[i]))
                 {
                     p1_ship.shield = Math.Min(100, p1_ship.shield + healths[i].value);
                     this.Shield1.Text = "SHIELDS: " + p1_ship.shield.ToString() + "%";
                     collision = true;
                 }
 
-                if (TwoPlayer && checkCollision(p2_ship, healths[i]))
+                if (TwoPlayer && p2_ship.isAlive() && checkCollision(p2_ship, healths[i]))
                 {
                     p2_ship.shield = Math.Min(100, p2_ship.shield + healths[i].value);
                     this.Shield2.Text = "SHIELDS: " + p2_ship.shield.ToString() + "%";
@@ -949,23 +966,23 @@ namespace SpaceAceWPF
             for (int i = 0; i < shields.Count; ++i)
             {
                 collision = false;
-                if (checkCollision(p1_ship, shields[i]))
+                if (p1_ship.isAlive() && checkCollision(p1_ship, shields[i]))
                 {
                     p1_ship.shielded = 500;
-                    updateShipShielded(1, p1_ship);
+                    updateShip(1, p1_ship, true);
                     collision = true;
                 }
 
-                if (TwoPlayer && checkCollision(p2_ship, shields[i]))
+                if (TwoPlayer && p2_ship.isAlive() && checkCollision(p2_ship, shields[i]))
                 {
                     p2_ship.shielded = 500;
-                    updateShipShielded(2, p2_ship);
+                    updateShip(2, p2_ship, true);
                     collision = true;
                 }
 
                 if (collision)
                 {
-                    this.Shield_Grid.Children.Remove(shields[i].image);
+                    this.PowerUp_Grid.Children.Remove(shields[i].image);
                     shields.RemoveAt(i);
                     i--;
                 }
@@ -975,14 +992,14 @@ namespace SpaceAceWPF
             for (int i = 0; i < speedUps.Count; ++i)
             {
                 collision = false;
-                if (checkCollision(p1_ship, speedUps[i]))
+                if (p1_ship.isAlive() && checkCollision(p1_ship, speedUps[i]))
                 {
                     p1_ship.boosted = 500;
                     p1_ship.speed_multiplier = 2;
                     collision = true;
                 }
 
-                if (TwoPlayer && checkCollision(p2_ship, speedUps[i]))
+                if (TwoPlayer && p2_ship.isAlive() && checkCollision(p2_ship, speedUps[i]))
                 {
                     p2_ship.boosted = 500;
                     p2_ship.speed_multiplier = 2;
@@ -991,7 +1008,7 @@ namespace SpaceAceWPF
 
                 if (collision)
                 {
-                    this.Shield_Grid.Children.Remove(speedUps[i].image);
+                    this.PowerUp_Grid.Children.Remove(speedUps[i].image);
                     speedUps.RemoveAt(i);
                     i--;
                 }
@@ -1001,19 +1018,19 @@ namespace SpaceAceWPF
             for (int i = 0; i < bombs.Count; ++i)
             {
                 collision = false;
-                if (checkCollision(p1_ship, bombs[i]))
+                if (p1_ship.isAlive() && checkCollision(p1_ship, bombs[i]))
                 {
                     collision = true;
                 }
 
-                if (TwoPlayer && checkCollision(p2_ship, bombs[i]))
+                if (TwoPlayer && p2_ship.isAlive() && checkCollision(p2_ship, bombs[i]))
                 {
                     collision = true;
                 }
 
                 if (collision)
                 {
-                    this.Shield_Grid.Children.Remove(bombs[i].image);
+                    this.PowerUp_Grid.Children.Remove(bombs[i].image);
                     bombs.RemoveAt(i);
                     for(int j = 0; j < asteroids.Count; ++j){
                         this.Asteroid_Grid.Children.Remove(asteroids[j].image);
@@ -1025,12 +1042,16 @@ namespace SpaceAceWPF
             }
         }
 
-        private void updateShipNormal(int playerNum, Spaceship ship)
+        private void updateShip(int playerNum, Spaceship ship, bool shielded)
         {
             ship.bitmap = new TransformedBitmap();
             BitmapImage bmpImage = new BitmapImage();
             bmpImage.BeginInit();
-            bmpImage.UriSource = new Uri(@"../../Assets/player" + playerNum.ToString() + @"_small_with_fire.png", UriKind.Relative);
+            if(shielded)
+                bmpImage.UriSource = new Uri(@"../../Assets/player" + playerNum.ToString() + @"_small_with_shield.png", UriKind.Relative);
+            else
+                bmpImage.UriSource = new Uri(@"../../Assets/player" + playerNum.ToString() + @"_small_with_fire.png", UriKind.Relative);
+                
             bmpImage.EndInit();
             ship.bitmap.BeginInit();
             ship.bitmap.Source = bmpImage;
@@ -1044,32 +1065,6 @@ namespace SpaceAceWPF
                 this.Player1.Source = ship.bitmap;
             }
             if(playerNum == 2){
-                ship.image = this.Player2;
-                this.Player2.Source = ship.bitmap;
-            }
-        }
-
-        private void updateShipShielded(int playerNum, Spaceship ship)
-        {
-            ship.bitmap = new TransformedBitmap();
-            BitmapImage bmpImage = new BitmapImage();
-            bmpImage.BeginInit();
-            bmpImage.UriSource = new Uri(@"../../Assets/player" + playerNum.ToString() + @"_small_with_shield.png", UriKind.Relative);
-            bmpImage.EndInit();
-            ship.bitmap.BeginInit();
-            ship.bitmap.Source = bmpImage;
-            ship.bitmap.Transform = new ScaleTransform(1, 1);
-            ship.bitmap.EndInit();
-            ship.image.Width = 150;
-            ship.image.Height = 150;
-
-            if (playerNum == 1)
-            {
-                ship.image = this.Player1;
-                this.Player1.Source = ship.bitmap;
-            }
-            if (playerNum == 2)
-            {
                 ship.image = this.Player2;
                 this.Player2.Source = ship.bitmap;
             }
@@ -1199,7 +1194,7 @@ namespace SpaceAceWPF
 
         private void calculateDamage(Spaceship ship, Projectile asteroid)
         {
-            double speed = ship.speed.X + asteroid.speed.X;
+            double speed = ship.speed.X * ship.speed_multiplier + asteroid.speed.X;
             double sizeRatio = (asteroid.image.ActualHeight * asteroid.image.ActualWidth) / (ship.image.ActualHeight * ship.image.ActualWidth);
 
             if (ship.shielded == 0)
