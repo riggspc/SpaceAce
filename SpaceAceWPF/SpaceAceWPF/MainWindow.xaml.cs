@@ -455,63 +455,59 @@ namespace SpaceAceWPF
                 if(e.Key == Key.W || e.Key == Key.A || e.Key == Key.S || 
                    e.Key == Key.D || e.Key == Key.Space || e.Key == Key.Enter)
                     hs_inputEvent(InputType.wasd, e.Key);
-                return;
             }
             else if (highScoreInput == InputType.arrows)
             {
                 if (e.Key == Key.Up || e.Key == Key.Left || e.Key == Key.Down || 
                     e.Key == Key.Right || e.Key == Key.Space || e.Key == Key.Enter)
                     hs_inputEvent(InputType.arrows, e.Key);
-                return;
             }
-            else if(highScoreInput == InputType.joy)
+            else if (highScoreInput == InputType.joy)
             {
                 if (e.Key == Key.Space || e.Key == Key.Enter)
-                    hs_inputEvent(InputType.arrows, e.Key);
-                return;
+                    hs_inputEvent(InputType.joy, e.Key);
             }
             else if (game_paused || game_over)
-            {
                 pause_inputEvent(InputType.wasd, e.Key);
-                return;
-            }
-
-            switch (e.Key)
+            else
             {
-                case Key.Left:
-                case Key.Right:
-                case Key.Up:
-                case Key.Down:
-                    if (p1_in == InputType.arrows)
-                        adjustSpeed(true, e.Key, true);
-                    else if (TwoPlayer && p2_in == InputType.arrows)
-                        adjustSpeed(false, e.Key, true);
-                    break;
-                case Key.A:
-                case Key.D:
-                case Key.W:
-                case Key.S:
-                    if (p1_in == InputType.wasd)
-                        adjustSpeed(true, e.Key, true);
-                    else if (TwoPlayer && p2_in == InputType.wasd)
-                        adjustSpeed(false, e.Key, true);
-                    break;
-                case Key.Escape:
-                    if (App.menuDelay != 0)
+                switch (e.Key)
+                {
+                    case Key.Left:
+                    case Key.Right:
+                    case Key.Up:
+                    case Key.Down:
+                        if (p1_in == InputType.arrows)
+                            adjustSpeed(true, e.Key, true);
+                        else if (TwoPlayer && p2_in == InputType.arrows)
+                            adjustSpeed(false, e.Key, true);
                         break;
+                    case Key.A:
+                    case Key.D:
+                    case Key.W:
+                    case Key.S:
+                        if (p1_in == InputType.wasd)
+                            adjustSpeed(true, e.Key, true);
+                        else if (TwoPlayer && p2_in == InputType.wasd)
+                            adjustSpeed(false, e.Key, true);
+                        break;
+                    case Key.Escape:
+                        if (App.menuDelay != 0)
+                            break;
 
-                    if (countdownOn)
-                        this.count.Visibility = Visibility.Collapsed;
+                        if (countdownOn)
+                            this.count.Visibility = Visibility.Collapsed;
 
-                    this.pause_header.Visibility = Visibility.Visible;
-                    this.pause_leftShip.Visibility = Visibility.Visible;
-                    this.pause_rightShip.Visibility = Visibility.Visible;
-                    this.pause_resume.Visibility = Visibility.Visible;
-                    this.pause_returnToStart.Visibility = Visibility.Visible;
-                    this.pause_exitGame.Visibility = Visibility.Visible;
-                    this.pause_background.Opacity = 1;
-                    game_paused = true;
-                    break;
+                        this.pause_header.Visibility = Visibility.Visible;
+                        this.pause_leftShip.Visibility = Visibility.Visible;
+                        this.pause_rightShip.Visibility = Visibility.Visible;
+                        this.pause_resume.Visibility = Visibility.Visible;
+                        this.pause_returnToStart.Visibility = Visibility.Visible;
+                        this.pause_exitGame.Visibility = Visibility.Visible;
+                        this.pause_background.Opacity = 1;
+                        game_paused = true;
+                        break;
+                }
             }
         }
 
@@ -564,6 +560,39 @@ namespace SpaceAceWPF
             else if (TwoPlayer && p2_in == InputType.joy)
                 adjustSpeed(false, e.Key, false);
         }
+
+        private void main_leftMouseDown(object sender, MouseEventArgs e)
+        {
+            if (highScoreInput == InputType.wasd)
+                hs_inputEvent(InputType.wasd, Key.Enter);
+            else if (highScoreInput == InputType.arrows)
+                hs_inputEvent(InputType.arrows, Key.Enter);
+            else if (highScoreInput == InputType.joy)
+                hs_inputEvent(InputType.joy, Key.Enter);
+            else if (game_paused || game_over)
+                pause_inputEvent(InputType.joy, Key.Enter);
+        }
+
+        private void main_rightMouseDown(object sender, MouseEventArgs e)
+        {
+            if (game_paused || game_over)
+                pause_inputEvent(InputType.joy, Key.Escape);
+            else if (App.menuDelay == 0)
+            {
+                if (countdownOn)
+                    this.count.Visibility = Visibility.Collapsed;
+
+                this.pause_header.Visibility = Visibility.Visible;
+                this.pause_leftShip.Visibility = Visibility.Visible;
+                this.pause_rightShip.Visibility = Visibility.Visible;
+                this.pause_resume.Visibility = Visibility.Visible;
+                this.pause_returnToStart.Visibility = Visibility.Visible;
+                this.pause_exitGame.Visibility = Visibility.Visible;
+                this.pause_background.Opacity = 1;
+                game_paused = true;
+            }
+        }
+    
 
         public void main_timerElapsed(object sender, ElapsedEventArgs elapsedEventArgs)
         {
@@ -1312,6 +1341,8 @@ namespace SpaceAceWPF
                     }
                     else
                     {
+                        App.joyDown -= new EventHandler<JoyDownArgs>(main_joyDown);
+                        App.joyUp -= new EventHandler<JoyUpArgs>(main_joyUp);
                         MainWindow main = new MainWindow(TwoPlayer, diff, p1_in, p2_in);
                         App.Current.MainWindow = main;
                         main.Show();
@@ -1319,6 +1350,8 @@ namespace SpaceAceWPF
                     }
                     break;
                 case opt.returnToStart:
+                    App.joyDown -= new EventHandler<JoyDownArgs>(main_joyDown);
+                    App.joyUp -= new EventHandler<JoyUpArgs>(main_joyUp);
                     StartWindow start = new StartWindow();
                     App.Current.MainWindow = start;
                     start.Show();
@@ -1390,6 +1423,8 @@ namespace SpaceAceWPF
             for(int i = 9; i >= 0; --i)
                 hs_updateFont(i);
             hs_updateFont(0);
+            App.menuDelay++;
+            App.lastInputType = InputType.joy;
         }
 
         private void hs_inputEvent(InputType inType, Key key)

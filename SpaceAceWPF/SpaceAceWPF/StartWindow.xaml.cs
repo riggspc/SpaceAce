@@ -84,6 +84,11 @@ namespace SpaceAceWPF
             start_inputEvent(InputType.joy, e.Key);
         }
 
+        private void start_leftMouseDown(object sender, MouseEventArgs e)
+        {
+            start_inputEvent(InputType.joy, Key.Enter);
+        }
+
         private void start_inputEvent(InputType inType, Key key)
         {
             if (App.menuDelay != 0)
@@ -111,6 +116,8 @@ namespace SpaceAceWPF
                     break;
                 case Key.Space:
                 case Key.Enter:
+                    App.menuDelay++;
+                    App.lastInputType = inType;
                     selectOpt();
                     break;
             }
@@ -121,18 +128,21 @@ namespace SpaceAceWPF
             switch(curOpt)
             {
                 case opt.play1:
+                    App.joyDown -= new EventHandler<JoyDownArgs>(start_joyDown);
                     SetupWindow setup1 = new SetupWindow(false);
                     App.Current.MainWindow = setup1;
                     setup1.Show();
                     this.Close();
                     break;
                 case opt.play2:
+                    App.joyDown -= new EventHandler<JoyDownArgs>(start_joyDown);
                     SetupWindow setup2 = new SetupWindow(true);
                     App.Current.MainWindow = setup2;
                     setup2.Show();
                     this.Close();
                     break;
                 case opt.viewHigh:
+                    App.joyDown -= new EventHandler<JoyDownArgs>(start_joyDown);
                     ScoreboardWindow scoreboard = new ScoreboardWindow();
                     App.Current.MainWindow = scoreboard;
                     scoreboard.Show();

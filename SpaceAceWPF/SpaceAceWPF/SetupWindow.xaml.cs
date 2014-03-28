@@ -150,6 +150,11 @@ namespace SpaceAceWPF
             setup_inputEvent(InputType.joy, e.Key);
         }
 
+        private void setup_leftMouseDown(object sender, MouseEventArgs e)
+        {
+            setup_inputEvent(InputType.joy, Key.Enter);
+        }
+
         private void setup_inputEvent(InputType inType, Key key)
         {
             if (App.menuDelay != 0)
@@ -211,6 +216,8 @@ namespace SpaceAceWPF
                             updateFont(curOpt);
                             break;
                     }
+                    App.menuDelay++;
+                    App.lastInputType = inType;
                     break;
                 case Key.Right:
                 case Key.D:
@@ -235,9 +242,13 @@ namespace SpaceAceWPF
                             updateFont(curOpt);
                             break;
                     }
+                    App.menuDelay++;
+                    App.lastInputType = inType;
                     break;
                 case Key.Space:
                 case Key.Enter:
+                    App.menuDelay++;
+                    App.lastInputType = inType;
                     selectOpt();
                     break;
             }
@@ -266,6 +277,7 @@ namespace SpaceAceWPF
                 case opt.startGame:
                     if (validConfig)
                     {
+                        App.joyDown -= new EventHandler<JoyDownArgs>(setup_joyDown);
                         MainWindow main = new MainWindow(TwoPlayer, diff, p1_in, p2_in);
                         App.Current.MainWindow = main;
                         main.Show();
@@ -273,6 +285,7 @@ namespace SpaceAceWPF
                     }
                     break;
                 case opt.returnToStart:
+                    App.joyDown -= new EventHandler<JoyDownArgs>(setup_joyDown);
                     StartWindow start = new StartWindow();
                     App.Current.MainWindow = start;
                     start.Show();

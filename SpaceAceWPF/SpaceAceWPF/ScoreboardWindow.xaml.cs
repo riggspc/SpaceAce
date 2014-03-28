@@ -138,15 +138,20 @@ namespace SpaceAceWPF
 
         private void score_keyDown(object sender, KeyEventArgs e)
         {
-            scoreboard_inputEvent(InputType.wasd, e.Key);
+            score_inputEvent(InputType.wasd, e.Key);
         }
 
         private void score_joyDown(object sender, JoyDownArgs e)
         {
-            scoreboard_inputEvent(InputType.joy, e.Key);
+            score_inputEvent(InputType.joy, e.Key);
         }
 
-        private void scoreboard_inputEvent(InputType inType, Key key)
+        private void score_leftMouseDown(object sender, MouseEventArgs e)
+        {
+            score_inputEvent(InputType.joy, Key.Enter);
+        }
+
+        private void score_inputEvent(InputType inType, Key key)
         {
             if (App.menuDelay != 0)
                 return;
@@ -177,6 +182,8 @@ namespace SpaceAceWPF
                     break;
                 case Key.Space:
                 case Key.Enter:
+                    App.menuDelay++;
+                    App.lastInputType = inType;
                     selectOpt();
                     break;
             }
@@ -187,6 +194,7 @@ namespace SpaceAceWPF
             switch (curOpt)
             {
                 case opt.returnStart:
+                    App.joyDown -= new EventHandler<JoyDownArgs>(score_joyDown);
                     StartWindow start = new StartWindow();
                     App.Current.MainWindow = start;
                     start.Show();
@@ -202,6 +210,7 @@ namespace SpaceAceWPF
                     break;
                 case opt.confirmYes:
                     scoreboardContext.resetBoard();
+                    App.joyDown -= new EventHandler<JoyDownArgs>(score_joyDown);
                     ScoreboardWindow score = new ScoreboardWindow();
                     App.Current.MainWindow = score;
                     score.Show();
