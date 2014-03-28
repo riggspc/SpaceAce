@@ -22,6 +22,8 @@ namespace SpaceAceWPF
         public static event EventHandler<JoyDownArgs> joyDown;
         private static ToddJoystick joy = null;
         private static Point prevJoyLoc, newJoyLoc;
+        private static System.Drawing.Point mouseLoc, mouseOrigin, newMouseDelta, prevMouseDelta;
+        private static bool appLostFocus = false;
 
         public App()
         {
@@ -30,6 +32,11 @@ namespace SpaceAceWPF
             timer.Elapsed += timerOnElapsed;
             prevJoyLoc.X = 0;
             prevJoyLoc.Y = 0;
+            mouseOrigin.X = 10;
+            mouseOrigin.Y = 10;
+            prevMouseDelta.X = 0;
+            prevMouseDelta.Y = 0;
+            checkForJoy();
         }
 
         public static int menuDelay = 0;
@@ -60,7 +67,7 @@ namespace SpaceAceWPF
                         if (newJoyLoc.Y > 5)
                             RaiseJoyDown(Key.S);
 
-                        if(newJoyLoc.X >= -5 && prevJoyLoc.X < -5)
+                        if (newJoyLoc.X >= -5 && prevJoyLoc.X < -5)
                             RaiseJoyUp(Key.A);
                         if (newJoyLoc.X <= 5 && prevJoyLoc.X > 5)
                             RaiseJoyUp(Key.D);
@@ -71,6 +78,41 @@ namespace SpaceAceWPF
 
                         prevJoyLoc = newJoyLoc;
                     }
+                    else if (Current.MainWindow.IsMouseOver)
+                    {
+                        if (!appLostFocus)
+                        {
+                            mouseLoc = System.Windows.Forms.Control.MousePosition;
+                            newMouseDelta = new System.Drawing.Point(mouseLoc.X - mouseOrigin.X, mouseLoc.Y - mouseOrigin.Y);
+
+                            if (newMouseDelta.X < -5)
+                                RaiseJoyDown(Key.A);
+                            if (newMouseDelta.X > 5)
+                                RaiseJoyDown(Key.D);
+                            if (newMouseDelta.Y < -5)
+                                RaiseJoyDown(Key.W);
+                            if (newMouseDelta.Y > 5)
+                                RaiseJoyDown(Key.S);
+
+                            if(newMouseDelta.X >= -5 && prevMouseDelta.X < -5)
+                                RaiseJoyUp(Key.A);
+                            if (newMouseDelta.X <= 5 && prevMouseDelta.X > 5)
+                                RaiseJoyUp(Key.D);
+                            if (newMouseDelta.Y >= -5 && prevMouseDelta.Y < -5)
+                                RaiseJoyUp(Key.W);
+                            if (newMouseDelta.Y <= 5 && prevMouseDelta.Y > 5)
+                                RaiseJoyUp(Key.S);
+
+                            prevMouseDelta = newMouseDelta;
+                        }
+                        else
+                            appLostFocus = false;
+                        
+                        System.Windows.Forms.Cursor.Position = mouseOrigin;
+                    }
+                    else
+                        appLostFocus = true;
+
                 });
             }
         }
@@ -93,19 +135,15 @@ namespace SpaceAceWPF
             }
         }
 
-        public static bool checkForJoy()
+        public static void checkForJoy()
         {
             if (ToddJoystick.NumJoysticks() > 0)
             {
                 if (joy == null)
                     joy = new ToddJoystick();
-                return true;
             }
             else
-            {
                 joy = null;
-                return false;
-            }
         }
     }
 

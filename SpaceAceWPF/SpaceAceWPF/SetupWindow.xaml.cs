@@ -37,11 +37,8 @@ namespace SpaceAceWPF
             this.Cursor = Cursors.None;
             InitializeComponent();
             App.joyDown += new EventHandler<JoyDownArgs>(setup_joyDown);
-            if (App.checkForJoy())
-            {
-                p1_in = InputType.joy;
-                this.P1_Opt.Text = inputOptString[(int) p1_in];
-            }
+            p1_in = InputType.joy;
+            this.P1_Opt.Text = inputOptString[(int) p1_in];
 
             TwoPlayer = num_players;
             if(TwoPlayer)
@@ -252,12 +249,6 @@ namespace SpaceAceWPF
             {
                 validConfig = false;
                 this.StartGame.Text = "PLAYERS CAN'T HAVE THE SAME INPUT DEVICES";
-                this.StartGame.Foreground = Brushes.Gray;
-            }
-            else if((p1_in == InputType.joy || (TwoPlayer && (p2_in == InputType.joy))) && !App.checkForJoy())
-            {
-                validConfig = false;
-                this.StartGame.Text = "NO JOYSTICK DETECTED";
                 this.StartGame.Foreground = Brushes.Gray;
             }
             else

@@ -94,7 +94,6 @@ namespace SpaceAceWPF
         {
             this.Cursor = Cursors.None;
             InitializeComponent();
-            App.checkForJoy();
             App.joyDown += new EventHandler<JoyDownArgs>(score_joyDown);
             updateFont(opt.returnStart);
             DataContext = this.scoreboardContext;

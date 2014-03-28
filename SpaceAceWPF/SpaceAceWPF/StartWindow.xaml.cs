@@ -27,10 +27,14 @@ namespace SpaceAceWPF
         {
             this.Cursor = Cursors.None;
             InitializeComponent();
-            App.checkForJoy();
             App.joyDown += new EventHandler<JoyDownArgs>(start_joyDown);
 
             updateFont(opt.play1);
+        }
+
+        ~StartWindow()
+        {
+            App.joyDown -= new EventHandler<JoyDownArgs>(start_joyDown);
         }
 
         private void updateFont(opt nextOpt)

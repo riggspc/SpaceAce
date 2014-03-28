@@ -237,12 +237,8 @@ namespace SpaceAceWPF
             }
 
             //Check if a joystick is used
-            if (p1_in == InputType.joy || p2_in == InputType.joy)
-            {
-                App.checkForJoy();
-                App.joyDown += new EventHandler<JoyDownArgs>(main_joyDown);
-                App.joyUp += new EventHandler<JoyUpArgs>(main_joyUp);
-            }
+            App.joyDown += new EventHandler<JoyDownArgs>(main_joyDown);
+            App.joyUp += new EventHandler<JoyUpArgs>(main_joyUp);
 
             //Check if game is two player
             TwoPlayer = num_players;
