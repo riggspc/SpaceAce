@@ -6,25 +6,24 @@ A project created by [riggspc](https://github.com/riggspc), [brianbeech775](http
 The game will eventually be released on the Windows App Store, or you can download the source and Visual Studio project files and compile yourself to play!
 
 
-Game Info
-=========
+##Game Info
 1-2 players
 
-Controls:
-Joystick/Mouse
-WASD keys
-Directional (Arrow) Keys
-
-Goal:
+#####Goal
 Try to stay alive as long as possible while you navigate your spaceship through an asteroid field! Colliding with asteroids will damage your ship's shields. When your ship's shields reach 0%, your ship will explode! Collect coins and other power-ups along the way.
 
-Power-ups:
-Gold Coin - +100 points
-Health Pack - +10% shields
-Speed Boost - Increased speed
-Shield - Invincibility
-Bomb - Destroys all asteroids
+#####Controls
+* Joystick/Mouse
+* WASD Keys
+* Directional (Arrow) Keys
 
-Requirements:
+#####Power-ups
+* Gold Coin - +100 points
+* Health Pack - +10% shields
+* Speed Boost - Increased speed
+* Shield - Invincibility
+* Bomb - Destroys all asteroids
+
+#####Requirements
 .NET Framework 4.5 (Windows Vista SP2 or Higher)
 
