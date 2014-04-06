@@ -53,10 +53,10 @@
     <ApplicationIcon>player1_large.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>ED9E4BD5FFAE61AEA2173B4E3ACF6D355D468602</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>67787B35540B5D94825A1AF3357B3E9C82E20B90</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>SpaceAceWPF_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestKeyFile>SpaceAceWPF_1_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateManifests>true</GenerateManifests>
@@ -150,6 +150,7 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
+    <None Include="SpaceAceWPF_1_TemporaryKey.pfx" />
     <None Include="SpaceAceWPF_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>

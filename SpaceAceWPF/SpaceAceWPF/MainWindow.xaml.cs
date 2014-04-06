@@ -452,19 +452,14 @@ namespace SpaceAceWPF
         {
             if (highScoreInput == InputType.wasd)
             {
-                if(e.Key == Key.W || e.Key == Key.A || e.Key == Key.S || 
-                   e.Key == Key.D || e.Key == Key.Space || e.Key == Key.Enter)
                     hs_inputEvent(InputType.wasd, e.Key);
             }
             else if (highScoreInput == InputType.arrows)
             {
-                if (e.Key == Key.Up || e.Key == Key.Left || e.Key == Key.Down || 
-                    e.Key == Key.Right || e.Key == Key.Space || e.Key == Key.Enter)
                     hs_inputEvent(InputType.arrows, e.Key);
             }
             else if (highScoreInput == InputType.joy)
             {
-                if (e.Key == Key.Space || e.Key == Key.Enter)
                     hs_inputEvent(InputType.joy, e.Key);
             }
             else if (game_paused || game_over)
@@ -1434,8 +1429,25 @@ namespace SpaceAceWPF
 
             switch (key)
             {
+                case Key.Delete:
+                    for (int i = hs_curLetter; i < hs_letters.Length - 1; ++i)
+                    {
+                        hs_letters[i] = hs_letters[i + 1];
+                    }
+                    hs_letters[hs_letters.Length-1] = ' ';
+                    hs_updateFont(hs_curLetter);
+                    break;
+                case Key.Back:
+                    if (hs_curLetter == 0) return;
+                    int startpos = hs_curLetter - 1;
+                    for (int i = startpos; i < hs_letters.Length-1; ++i)
+                    {
+                        hs_letters[i] = hs_letters[i + 1];
+                    }
+                    hs_letters[hs_letters.Length - 1] = ' ';
+                    hs_updateFont(startpos);
+                    break;
                 case Key.Up:
-                case Key.W:
                     if (hs_letters[hs_curLetter] == ' ')
                         hs_letters[hs_curLetter] = 'Z';
                     else if (hs_letters[hs_curLetter] == 'A')
@@ -1447,7 +1459,6 @@ namespace SpaceAceWPF
                     App.lastInputType = inType;
                     break;
                 case Key.Down:
-                case Key.S:
                     if (hs_letters[hs_curLetter] == ' ')
                         hs_letters[hs_curLetter] = 'A';
                     else if (hs_letters[hs_curLetter] == 'Z')
@@ -1459,20 +1470,17 @@ namespace SpaceAceWPF
                     App.lastInputType = inType;
                     break;
                 case Key.Left:
-                case Key.A:
                     if (hs_curLetter > 0)
                         hs_updateFont(hs_curLetter - 1);
                     App.menuDelay++;
                     App.lastInputType = inType;
                     break;
                 case Key.Right:
-                case Key.D:
                     if (hs_curLetter < 9)
                         hs_updateFont(hs_curLetter + 1);
                     App.menuDelay++;
                     App.lastInputType = inType;
                     break;
-                case Key.Space:
                 case Key.Enter:
                     long score;
                     if (highScoreInput == p1_in)
@@ -1508,11 +1516,44 @@ namespace SpaceAceWPF
                     App.lastInputType = inType;
                     gameOver();
                     break;
+                default:
+
+                    // get char corresponding to buttonpress, weed out all non-alnum and non-whitespace
+                    char t = (char)KeyInterop.VirtualKeyFromKey(key);
+                    if (!char.IsLetterOrDigit(t) && !char.IsWhiteSpace(t)) return;
+
+                    // move current hs_letter contents for insertion
+                    int insertion_point = hs_curLetter + 1;
+
+                    char[] buf = new char[10];
+                    for (int i = insertion_point; i < hs_letters.Length; ++i)
+                    {
+                        buf[i] = hs_letters[i - 1];
+                    }
+                    for (int i = insertion_point; i < hs_letters.Length; ++i)
+                    {
+                        hs_letters[i] = buf[i];
+                    }
+
+                    // do insertion
+                    hs_letters[hs_curLetter] = t;
+                    hs_updateFont(hs_curLetter + 1);
+
+                    break;
             }
         }
 
         private void hs_updateFont(int hs_nextLetter)
         {
+            // refresh text
+            for (int i = 0; i < hs_letters.Length; ++i)
+            {
+                scoreboard.nameChars[i].Text = hs_letters[i].ToString();
+            }
+
+            if (hs_nextLetter >= hs_letters.Length) hs_nextLetter = hs_letters.Length-1;
+
+            // update colors
             scoreboard.nameChars[hs_curLetter].Text = hs_letters[hs_curLetter].ToString();
             scoreboard.nameChars[hs_curLetter].Foreground = Brushes.White;
             scoreboard.borders[hs_curLetter].BorderBrush = Brushes.White;
