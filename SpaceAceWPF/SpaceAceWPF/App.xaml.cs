@@ -85,22 +85,22 @@ namespace SpaceAceWPF
                             mouseLoc = System.Windows.Forms.Control.MousePosition;
                             newMouseDelta = new System.Drawing.Point(mouseLoc.X - mouseOrigin.X, mouseLoc.Y - mouseOrigin.Y);
 
-                            if (newMouseDelta.X < -5)
+                            if (newMouseDelta.X < -2)
                                 RaiseJoyDown(Key.Left);
-                            if (newMouseDelta.X > 5)
+                            if (newMouseDelta.X > 2)
                                 RaiseJoyDown(Key.Right);
-                            if (newMouseDelta.Y < -5)
+                            if (newMouseDelta.Y < -2)
                                 RaiseJoyDown(Key.Up);
-                            if (newMouseDelta.Y > 5)
+                            if (newMouseDelta.Y > 2)
                                 RaiseJoyDown(Key.Down);
 
-                            if(newMouseDelta.X >= -5 && prevMouseDelta.X < -5)
+                            if(newMouseDelta.X >= -2 && prevMouseDelta.X < -2)
                                 RaiseJoyUp(Key.Left);
-                            if (newMouseDelta.X <= 5 && prevMouseDelta.X > 5)
+                            if (newMouseDelta.X <= 2 && prevMouseDelta.X > 2)
                                 RaiseJoyUp(Key.Right);
-                            if (newMouseDelta.Y >= -5 && prevMouseDelta.Y < -5)
+                            if (newMouseDelta.Y >= -2 && prevMouseDelta.Y < -2)
                                 RaiseJoyUp(Key.Up);
-                            if (newMouseDelta.Y <= 5 && prevMouseDelta.Y > 5)
+                            if (newMouseDelta.Y <= 2 && prevMouseDelta.Y > 2)
                                 RaiseJoyUp(Key.Down);
 
                             prevMouseDelta = newMouseDelta;
