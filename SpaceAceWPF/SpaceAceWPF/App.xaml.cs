@@ -59,22 +59,22 @@ namespace SpaceAceWPF
                         joy.State(ref newJoyLoc);
 
                         if (newJoyLoc.X < -5)
-                            RaiseJoyDown(Key.A);
+                            RaiseJoyDown(Key.Left);
                         if (newJoyLoc.X > 5)
-                            RaiseJoyDown(Key.D);
+                            RaiseJoyDown(Key.Right);
                         if (newJoyLoc.Y < -5)
-                            RaiseJoyDown(Key.W);
+                            RaiseJoyDown(Key.Up);
                         if (newJoyLoc.Y > 5)
-                            RaiseJoyDown(Key.S);
+                            RaiseJoyDown(Key.Down);
 
                         if (newJoyLoc.X >= -5 && prevJoyLoc.X < -5)
-                            RaiseJoyUp(Key.A);
+                            RaiseJoyUp(Key.Left);
                         if (newJoyLoc.X <= 5 && prevJoyLoc.X > 5)
-                            RaiseJoyUp(Key.D);
+                            RaiseJoyUp(Key.Right);
                         if (newJoyLoc.Y >= -5 && prevJoyLoc.Y < -5)
-                            RaiseJoyUp(Key.W);
+                            RaiseJoyUp(Key.Up);
                         if (newJoyLoc.Y <= 5 && prevJoyLoc.Y > 5)
-                            RaiseJoyUp(Key.S);
+                            RaiseJoyUp(Key.Down);
 
                         prevJoyLoc = newJoyLoc;
                     }
@@ -86,22 +86,22 @@ namespace SpaceAceWPF
                             newMouseDelta = new System.Drawing.Point(mouseLoc.X - mouseOrigin.X, mouseLoc.Y - mouseOrigin.Y);
 
                             if (newMouseDelta.X < -5)
-                                RaiseJoyDown(Key.A);
+                                RaiseJoyDown(Key.Left);
                             if (newMouseDelta.X > 5)
-                                RaiseJoyDown(Key.D);
+                                RaiseJoyDown(Key.Right);
                             if (newMouseDelta.Y < -5)
-                                RaiseJoyDown(Key.W);
+                                RaiseJoyDown(Key.Up);
                             if (newMouseDelta.Y > 5)
-                                RaiseJoyDown(Key.S);
+                                RaiseJoyDown(Key.Down);
 
                             if(newMouseDelta.X >= -5 && prevMouseDelta.X < -5)
-                                RaiseJoyUp(Key.A);
+                                RaiseJoyUp(Key.Left);
                             if (newMouseDelta.X <= 5 && prevMouseDelta.X > 5)
-                                RaiseJoyUp(Key.D);
+                                RaiseJoyUp(Key.Right);
                             if (newMouseDelta.Y >= -5 && prevMouseDelta.Y < -5)
-                                RaiseJoyUp(Key.W);
+                                RaiseJoyUp(Key.Up);
                             if (newMouseDelta.Y <= 5 && prevMouseDelta.Y > 5)
-                                RaiseJoyUp(Key.S);
+                                RaiseJoyUp(Key.Down);
 
                             prevMouseDelta = newMouseDelta;
                         }

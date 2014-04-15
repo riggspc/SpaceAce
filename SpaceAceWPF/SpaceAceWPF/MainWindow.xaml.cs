@@ -1547,12 +1547,13 @@ namespace SpaceAceWPF
 
                     // get char corresponding to buttonpress, weed out all non-alnum and non-whitespace
                     char t = (char)KeyInterop.VirtualKeyFromKey(key);
-                    if (!char.IsLetterOrDigit(t) && !char.IsWhiteSpace(t)) return;
-
+                    if (!char.IsLetterOrDigit(t) || (t < 65 || t > 90)) return;
+                    
                     // move current hs_letter contents for insertion
                     int insertion_point = hs_curLetter + 1;
 
                     char[] buf = new char[10];
+                    /*
                     for (int i = insertion_point; i < hs_letters.Length; ++i)
                     {
                         buf[i] = hs_letters[i - 1];
@@ -1560,7 +1561,7 @@ namespace SpaceAceWPF
                     for (int i = insertion_point; i < hs_letters.Length; ++i)
                     {
                         hs_letters[i] = buf[i];
-                    }
+                    }*/
 
                     // do insertion
                     hs_letters[hs_curLetter] = t;
