@@ -36,6 +36,7 @@ namespace SpaceAceWPF
             public int shield = 100;
             public long score = 0;
             public int shielded = 0;
+            public int bomb = 0;
             public int boosted = 0;
             public int speed_multiplier = 1;
             private bool invulnerable = false;
@@ -657,6 +658,9 @@ namespace SpaceAceWPF
                     //Check for collisions
                     detectCollision();
 
+                    callFade(p1_ship);
+                    callFade(p2_ship);
+
                     //Update Scores
                     if (p1_ship.isAlive())
                     {
@@ -677,6 +681,27 @@ namespace SpaceAceWPF
                     if (!p1_ship.isAlive() && (!TwoPlayer || (TwoPlayer && !p2_ship.isAlive())))
                         gameOver();
                 });
+            }
+        }
+
+        private void callFade(Spaceship ship)
+        {
+            if (ship.bomb > 0)
+            {
+                if (ship.bomb > 20)
+                    this.Opacity -= 0.05;
+                else if (ship.bomb == 20)
+                {
+                    for (int j = 0; j < asteroids.Count; ++j)
+                    {
+                        this.Asteroid_Grid.Children.Remove(asteroids[j].image);
+                        asteroids.RemoveAt(j);
+                        j--;
+                    }
+                }
+                else
+                    this.Opacity += 0.05;
+                ship.bomb--;
             }
         }
 
@@ -1047,11 +1072,13 @@ namespace SpaceAceWPF
                 collision = false;
                 if (p1_ship.isAlive() && checkCollision(p1_ship, bombs[i]))
                 {
+                    p1_ship.bomb = 40;
                     collision = true;
                 }
 
                 if (TwoPlayer && p2_ship.isAlive() && checkCollision(p2_ship, bombs[i]))
                 {
+                    p2_ship.bomb = 40;
                     collision = true;
                 }
 
@@ -1059,11 +1086,11 @@ namespace SpaceAceWPF
                 {
                     this.PowerUp_Grid.Children.Remove(bombs[i].image);
                     bombs.RemoveAt(i);
-                    for(int j = 0; j < asteroids.Count; ++j){
-                        this.Asteroid_Grid.Children.Remove(asteroids[j].image);
-                        asteroids.RemoveAt(j);
-                        j--;
-                    }
+                    //for(int j = 0; j < asteroids.Count; ++j){
+                     //   this.Asteroid_Grid.Children.Remove(asteroids[j].image);
+                     //   asteroids.RemoveAt(j);
+                     //   j--;
+                    //}
                     i--;
                 }
             }
