@@ -28,7 +28,7 @@ namespace SpaceAceWPF
 
         InputType p1_in = InputType.wasd;
         InputType p2_in = InputType.none;
-        private string[] inputOptString = { "   JOYSTICK   ", "     WASD     ", "ARROW KEYS" };
+        private string[] inputOptString = { "JOYSTICK/MOUSE", "     WASD     ", "ARROW KEYS" };
 
         private bool validConfig = true;
         private bool TwoPlayer = false;
