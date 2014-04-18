@@ -1577,6 +1577,8 @@ namespace SpaceAceWPF
             for (int i = 0; i < hs_letters.Length; ++i)
             {
                 scoreboard.nameChars[i].Text = hs_letters[i].ToString();
+                scoreboard.nameChars[i].MaxHeight = 18;
+                scoreboard.nameChars[i].MinHeight = 18;
             }
 
             if (hs_nextLetter >= hs_letters.Length) hs_nextLetter = hs_letters.Length-1;
