@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -347,6 +348,10 @@ namespace SpaceAceWPF
             Right_Margin = this.ActualWidth - this.Player1.ActualWidth;
             Bottom_Margin = this.ActualHeight - this.Player1.ActualHeight;
             Top_Margin = this.Player1_Label_View.ActualHeight + this.Shield1_View.ActualHeight;
+            this.boundary.Margin = new Thickness(0, this.Shield1_View.Margin.Bottom, 0, 0);
+            Console.WriteLine(Top_Margin);
+            Console.WriteLine(this.ActualHeight);
+            Console.WriteLine(this.ActualHeight - Top_Margin);
 
             //Make sure Player1 is in bounds
             Thickness playerLoc = this.Player1.Margin;
@@ -391,6 +396,7 @@ namespace SpaceAceWPF
                 speedX = ship_speed.X * p2_ship.speed_multiplier;
                 speedY = ship_speed.Y * p2_ship.speed_multiplier;
             }
+
 
             if ((playerLoc.Left + speedX > Left_Margin) && (playerLoc.Left + speedX < Right_Margin))
                 playerLoc.Left += speedX;

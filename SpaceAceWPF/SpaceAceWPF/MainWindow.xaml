@@ -18,7 +18,7 @@
             <Grid.Background>
                 <ImageBrush x:Name="pause_background" ImageSource="/Assets/gameplay_background.png" Opacity="0"/>
             </Grid.Background>
-            
+    
             <!--Setup-->
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="2*"/>
@@ -55,6 +55,7 @@
             <Viewbox x:Name="Shield1_View" Grid.Row="1" Grid.Column="0" VerticalAlignment="Top">
                 <TextBlock x:Name="Shield1" Foreground="White" HorizontalAlignment="Center" TextAlignment="Center" VerticalAlignment="Top" FontWeight="ExtraBold" FontFamily="Fantasy" Text="SHIELDS: 100%"/>
             </Viewbox>
+            <Rectangle x:Name="boundary" HorizontalAlignment="Stretch" Fill="White" Width="Auto" Height="4" Grid.ColumnSpan="23" Margin="0,0,0,0" Grid.Row="1"/>
             <Viewbox Grid.Row="1" Grid.Column="6" VerticalAlignment="Top">
                 <TextBlock x:Name="Shield2" Foreground="White" HorizontalAlignment="Center" TextAlignment="Center" VerticalAlignment="Top" FontWeight="ExtraBold" FontFamily="Fantasy" Text="SHIELDS: 100%" Visibility="Collapsed"/>
             </Viewbox>
@@ -69,7 +70,7 @@
             <Viewbox Grid.Row="2" Grid.Column="5">
                 <Image x:Name="pause_rightShip" HorizontalAlignment="Left" VerticalAlignment="Center" Source="/Assets/player2_large.png" Visibility="Collapsed"/>
             </Viewbox>
-            
+
             <!--Pause Menu Options-->
             <Viewbox Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="3">
                 <TextBlock x:Name="pause_resume" Foreground="Yellow" HorizontalAlignment="Left" TextAlignment="Left" VerticalAlignment="Top" FontWeight="ExtraBold" FontFamily="Fantasy" Text="      RESUME GAME      " Visibility="Collapsed"/>
@@ -80,15 +81,16 @@
             <Viewbox Grid.Row="5" Grid.Column="2" Grid.ColumnSpan="3">
                 <TextBlock x:Name="pause_exitGame" Foreground="White" HorizontalAlignment="Left" TextAlignment="Left" VerticalAlignment="Top" FontWeight="ExtraBold" FontFamily="Fantasy" Text="        EXIT GAME        " Visibility="Collapsed"/>
             </Viewbox>
-            
+
             <!--Countdown-->
             <Viewbox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="7" Grid.RowSpan="6" Stretch="Uniform">
                 <TextBlock x:Name="count" Foreground="White" HorizontalAlignment="Left" TextAlignment="Left" VerticalAlignment="Top" FontWeight="ExtraBold" FontFamily="Fantasy" Text="3" Visibility="Collapsed"/>
             </Viewbox>
+            
         </Grid>
-        
+
         <!--High Score Grid-->
-        <Grid Panel.ZIndex="100">
+        <Grid Panel.ZIndex="100" Margin="0,10,0,-10">
             <Grid.Background>
                 <ImageBrush x:Name="hs_background" ImageSource="/Assets/gameplay_background.png" Opacity="0"/>
             </Grid.Background>
@@ -127,6 +129,8 @@
                 <RowDefinition Height="1.5*" />
             </Grid.RowDefinitions>
 
+            
+            
             <!--High Score Menu Header-->
             <Viewbox Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="19">
                 <TextBlock x:Name="hs_header" Foreground="White" HorizontalAlignment="Left" TextAlignment="Left" VerticalAlignment="Top" FontWeight="ExtraBold" FontFamily="Fantasy" Text="!!! NEW HIGH SCORE !!!" Visibility="Collapsed"/>
@@ -140,8 +144,8 @@
             <Viewbox Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="19">
                 <TextBlock x:Name="hs_info" Foreground="White" HorizontalAlignment="Left" TextAlignment="Left" VerticalAlignment="Top" FontWeight="ExtraBold" FontFamily="Fantasy" Text="     PLAYER 1 PLEASE ENTER NAME     " Visibility="Collapsed" />
             </Viewbox>
-            
-            
+
+
             <!--Letter Squares-->
             <Border x:Name="hs_border0" Grid.Row="3" Grid.Column="2" BorderBrush="White" BorderThickness="0,0,0,10" Visibility="Collapsed"></Border>
             <Border x:Name="hs_border1" Grid.Row="3" Grid.Column="4" BorderBrush="White" BorderThickness="0,0,0,10" Visibility="Collapsed"></Border>
@@ -153,7 +157,7 @@
             <Border x:Name="hs_border7" Grid.Row="3" Grid.Column="16" BorderBrush="White" BorderThickness="0,0,0,10" Visibility="Collapsed"></Border>
             <Border x:Name="hs_border8" Grid.Row="3" Grid.Column="18" BorderBrush="White" BorderThickness="0,0,0,10" Visibility="Collapsed"></Border>
             <Border x:Name="hs_border9" Grid.Row="3" Grid.Column="20" BorderBrush="White" BorderThickness="0,0,0,10" Visibility="Collapsed"></Border>
-            
+
             <Viewbox Grid.Row="3" Grid.Column="2">
                 <TextBlock x:Name="hs_name0" Foreground="White" HorizontalAlignment="Left" TextAlignment="Left" VerticalAlignment="Top" FontWeight="ExtraBold" FontFamily="Fantasy" Text="G" Visibility="Collapsed"/>
             </Viewbox>
