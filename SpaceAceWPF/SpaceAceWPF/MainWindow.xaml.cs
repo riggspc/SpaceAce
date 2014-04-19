@@ -36,7 +36,6 @@ namespace SpaceAceWPF
             public int shield = 100;
             public long score = 0;
             public int shielded = 0;
-            public int bomb = 0;
             public int boosted = 0;
             public int speed_multiplier = 1;
             private bool invulnerable = false;
@@ -168,6 +167,7 @@ namespace SpaceAceWPF
         private List<Shield> shields = new List<Shield>();
         private List<Speed_Boost> speedUps = new List<Speed_Boost>();
         private List<Bomb> bombs = new List<Bomb>();
+        private int bombFadeTimer = 0;
 
         // Menu Options
         private enum opt { resume, returnToStart, exitGame };
@@ -588,7 +588,24 @@ namespace SpaceAceWPF
                 game_paused = true;
             }
         }
-    
+
+        private void updateBombExplosion()
+        {
+            if (bombFadeTimer == 0)
+            {
+                return;
+            }
+            else if (bombFadeTimer == 20)
+            {
+                this.Bomb_Flash.Opacity = .95;
+                bombFadeTimer--;
+            }
+            else if (bombFadeTimer > 0)
+            {
+                this.Bomb_Flash.Opacity -= .05;
+                bombFadeTimer--;
+            }
+        }
 
         public void main_timerElapsed(object sender, ElapsedEventArgs elapsedEventArgs)
         {
@@ -619,6 +636,9 @@ namespace SpaceAceWPF
                         p1_ship.checkInvulnerability();
                     if (TwoPlayer && p2_ship.isAlive())
                         p2_ship.checkInvulnerability();
+
+                    // Bomb flash function update
+                    updateBombExplosion();
 
                     //update shield status
                     if (p1_ship.shielded > 0)
@@ -658,9 +678,6 @@ namespace SpaceAceWPF
                     //Check for collisions
                     detectCollision();
 
-                    callFade(p1_ship);
-                    callFade(p2_ship);
-
                     //Update Scores
                     if (p1_ship.isAlive())
                     {
@@ -681,27 +698,6 @@ namespace SpaceAceWPF
                     if (!p1_ship.isAlive() && (!TwoPlayer || (TwoPlayer && !p2_ship.isAlive())))
                         gameOver();
                 });
-            }
-        }
-
-        private void callFade(Spaceship ship)
-        {
-            if (ship.bomb > 0)
-            {
-                if (ship.bomb > 20)
-                    this.Opacity -= 0.05;
-                else if (ship.bomb == 20)
-                {
-                    for (int j = 0; j < asteroids.Count; ++j)
-                    {
-                        this.Asteroid_Grid.Children.Remove(asteroids[j].image);
-                        asteroids.RemoveAt(j);
-                        j--;
-                    }
-                }
-                else
-                    this.Opacity += 0.05;
-                ship.bomb--;
             }
         }
 
@@ -1072,13 +1068,13 @@ namespace SpaceAceWPF
                 collision = false;
                 if (p1_ship.isAlive() && checkCollision(p1_ship, bombs[i]))
                 {
-                    p1_ship.bomb = 40;
+                    bombFadeTimer = 20;
                     collision = true;
                 }
 
                 if (TwoPlayer && p2_ship.isAlive() && checkCollision(p2_ship, bombs[i]))
                 {
-                    p2_ship.bomb = 40;
+                    bombFadeTimer = 20;
                     collision = true;
                 }
 
@@ -1086,11 +1082,11 @@ namespace SpaceAceWPF
                 {
                     this.PowerUp_Grid.Children.Remove(bombs[i].image);
                     bombs.RemoveAt(i);
-                    //for(int j = 0; j < asteroids.Count; ++j){
-                     //   this.Asteroid_Grid.Children.Remove(asteroids[j].image);
-                     //   asteroids.RemoveAt(j);
-                     //   j--;
-                    //}
+                    for(int j = 0; j < asteroids.Count; ++j){
+                        this.Asteroid_Grid.Children.Remove(asteroids[j].image);
+                        asteroids.RemoveAt(j);
+                        j--;
+                    }
                     i--;
                 }
             }
