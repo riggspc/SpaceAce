@@ -347,7 +347,7 @@ namespace SpaceAceWPF
             //Update Margins
             Right_Margin = this.ActualWidth - this.Player1.ActualWidth;
             Bottom_Margin = this.ActualHeight - this.Player1.ActualHeight;
-            Top_Margin = this.Player1_Label_View.ActualHeight + this.Shield1_View.ActualHeight;
+            Top_Margin = this.Player1_Label_View.ActualHeight + this.Shield1_View.ActualHeight + 22;
             this.boundary.Margin = new Thickness(0, this.Shield1_View.Margin.Bottom, 0, 0);
             Console.WriteLine(Top_Margin);
             Console.WriteLine(this.ActualHeight);
