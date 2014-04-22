@@ -48,7 +48,7 @@ namespace SpaceAceWPF
                 App.Current.Dispatcher.Invoke((Action)delegate
                 {
                     //Simulate menu delay
-                    if (menuDelay > 0 && ((menuDelay < 30 && lastInputType == InputType.joy) || (menuDelay < 8 && (lastInputType == InputType.wasd || lastInputType == InputType.arrows))))
+                    if (menuDelay > 0 && ((menuDelay < 30 && lastInputType == InputType.joy) || (menuDelay < 5 && (lastInputType == InputType.wasd || lastInputType == InputType.arrows))))
                         menuDelay++;
                     else
                         menuDelay = 0;
